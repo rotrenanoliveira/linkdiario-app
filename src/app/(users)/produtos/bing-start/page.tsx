@@ -10,7 +10,7 @@ export default function MicrosoftEdge() {
     <div className="h-screen w-full flex items-center justify-center">
       <Card className={cn('w-[380px]')}>
         <CardHeader>
-          <CardTitle>Smart Bing</CardTitle>
+          <CardTitle>Start Bing</CardTitle>
           <CardDescription>
             Uma experiência completa de aprendizado e crescimento! Tudo reunido em um único plano, simplificado e
             recheado de vantagens..
