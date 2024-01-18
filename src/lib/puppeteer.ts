@@ -7,7 +7,7 @@ import puppeteer from 'puppeteer'
  * @return {Promise<string>} A promise that resolves to the HTML source code of the webpage.
  */
 export async function getHtmlSource(url: string): Promise<string> {
-  const browser = await puppeteer.launch({ headless: 'new' })
+  const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox'] })
   const page = await browser.newPage()
 
   try {
