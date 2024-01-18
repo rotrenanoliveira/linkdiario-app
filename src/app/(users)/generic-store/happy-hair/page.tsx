@@ -1,22 +1,7 @@
-'use client'
+import { getHtmlSource } from '@/lib/puppeteer'
 
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+export default async function GenericStore() {
+  const htmlSource = await getHtmlSource('https://mon.net.br/2nto17')
 
-export default function GenericStore() {
-  const router = useRouter()
-
-  useEffect(() => {
-    setTimeout(() => router.push('https://mon.net.br/2nto17'), 250)
-  })
-
-  return (
-    <div>
-      <h1>Generic Store</h1>
-      <Link href={'https://mon.net.br/2nto17'}>
-        <button>Link para o produtor</button>
-      </Link>
-    </div>
-  )
+  return <div dangerouslySetInnerHTML={{ __html: htmlSource }} />
 }
