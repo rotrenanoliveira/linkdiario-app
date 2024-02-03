@@ -5,11 +5,14 @@ import { Slot } from '@radix-ui/react-slot'
 import { useFormStatus } from 'react-dom'
 import { ButtonProps, buttonVariants } from './ui/button'
 import React from 'react'
+import { Icons } from './icons'
 
-type PendingButtonProps = ButtonProps
+type PendingButtonProps = ButtonProps & {
+  children?: React.ReactNode
+}
 
 const PendingSubmitButton = React.forwardRef<HTMLButtonElement, PendingButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, children, ...props }, ref) => {
     const { pending } = useFormStatus()
 
     const Comp = asChild ? Slot : 'button'
@@ -21,7 +24,10 @@ const PendingSubmitButton = React.forwardRef<HTMLButtonElement, PendingButtonPro
         {...props}
         disabled={pending}
         aria-disabled={pending}
-      />
+      >
+        {pending && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
+        {children}
+      </Comp>
     )
   },
 )

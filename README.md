@@ -1,3 +1,16 @@
-### linkdiario
+# linkdiario web app
 
-v.alpha
+## Folder/Route Structure 
+```ts
+ - app -> Home
+
+  - (app) -> (Auth required)
+    - admin -> Admin dashboard
+    - dashboard -> Users licensed dashboard
+
+  - (client) -> (visible to client without auth)
+    - [company_slug]/[product_name] -> Product page
+```
+---
+
+### v_alpha_riverwood - 01/02/2024

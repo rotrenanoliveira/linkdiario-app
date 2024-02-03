@@ -30,5 +30,20 @@ model User {
   createdAt DateTime    @default(now()) @map("created_at")
   updatedAt DateTime?   @updatedAt() @map("updated_at")
 
+  access_code AccessCode[]
+
   @@map("users")
+}
+
+model AccessCode {
+  id        String    @id @default(uuid())
+  code      String    @unique
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  userId    String    @map("user_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("access_code")
 }

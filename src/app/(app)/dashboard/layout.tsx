@@ -2,21 +2,25 @@ import { jetBrainsMono } from '@/app/fonts'
 import { SidebarNav } from '@/components/sidebar-nav'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
-import Image from 'next/image'
+import { Blocks } from 'lucide-react'
 import React from 'react'
 
 const sidebarNavItems = [
   {
     title: 'Home',
-    href: '/admin',
+    href: '/dashboard',
   },
   {
-    title: 'Usuários',
-    href: '/admin/accounts',
+    title: 'Campanhas',
+    href: '/dashboard/campaigns',
   },
   {
-    title: 'Cadastrar Usuários',
-    href: '/admin/accounts/register',
+    title: 'Sua empresa',
+    href: '/dashboard/company',
+  },
+  {
+    title: 'Sua Conta',
+    href: '/dashboard/profile',
   },
 ]
 
@@ -25,8 +29,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <main className="2xl:max-w-[1440px] 2xl:mx-auto">
       <div className="space-y-6 p-10 pb-16 md:block">
         <div className="flex items-center gap-4">
-          <Image src={'/linkdiario.png'} alt="linkdiario" width={48} height={48} />
-          <h2 className={cn(jetBrainsMono.className, 'text-lg font-medium tracking-tight')}>linkdiario - admin</h2>
+          <Blocks size={48} className="text-yellow-400" />
+
+          <h2 className={cn(jetBrainsMono.className, 'text-lg font-medium tracking-tight')}>linkdiario - dashboard</h2>
         </div>
         <Separator className="my-6" />
         <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">

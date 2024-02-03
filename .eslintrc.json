@@ -1,6 +1,7 @@
 {
   "extends": ["next/core-web-vitals", "@rotrenanoliveira/eslint-config/next"],
   "rules": {
-    "no-useless-constructor": "off"
+    "no-useless-constructor": "off",
+    "camelcase": "off"
   }
 }

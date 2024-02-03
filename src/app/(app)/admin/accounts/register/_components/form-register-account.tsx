@@ -26,6 +26,7 @@ export function FormRegisterAccount() {
 
       formState.success === true && ref.current?.reset()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formState])
 
   return (
@@ -33,7 +34,7 @@ export function FormRegisterAccount() {
       {/* input - account email */}
       <FormItem>
         <Label>Email</Label>
-        <Input type="text" id="account-email" name="account-email" placeholder="Insira o email da conta" required />
+        <Input type="email" id="account-email" name="account-email" placeholder="Insira o email da conta" required />
         <FormDescription>Email da conta cadastrada no sistema.</FormDescription>
       </FormItem>
 
@@ -50,7 +51,9 @@ export function FormRegisterAccount() {
         <FormDescription>Nome completo cadastrado no sistema.</FormDescription>
       </FormItem>
 
-      <PendingSubmitButton type="submit">Cadastrar</PendingSubmitButton>
+      <PendingSubmitButton type="submit" className="min-w-32">
+        Cadastrar
+      </PendingSubmitButton>
     </form>
   )
 }

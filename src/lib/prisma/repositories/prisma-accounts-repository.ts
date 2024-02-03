@@ -1,25 +1,16 @@
-import { Account, UserRole } from '@/core/types/accounts'
-import { PrismaClient } from '@prisma/client'
+import { Account, AccountDetails, UserRole } from '@/core/types/accounts'
 import { PrismaAccountsMapper } from '../mapper/accounts-mapper'
+import { prisma } from '../client'
 
-export class PrismaAccountsRepository {
-  private prisma: PrismaClient
-
-  constructor(prismaClient: PrismaClient) {
-    this.prisma = prismaClient
-    this.connect()
-  }
-
-  private connect() {
-    this.prisma.$connect()
-  }
-
-  disconnect() {
-    return this.prisma.$disconnect()
-  }
-
-  async findByEmail(email: string) {
-    const account = await this.prisma.user.findUnique({
+export const PrismaAccountsRepository = {
+  /**
+   * Find a user by email.
+   *
+   * @param {string} email - the email of the user to find
+   * @return {Promise<AccountDetails | null>} the account corresponding to the email, or null if not found
+   */
+  async findByEmail(email: string): Promise<AccountDetails | null> {
+    const account = await prisma.user.findUnique({
       where: {
         email,
       },
@@ -30,10 +21,15 @@ export class PrismaAccountsRepository {
     }
 
     return PrismaAccountsMapper.toDomain(account)
-  }
-
-  async findById(id: string) {
-    const account = await this.prisma.user.findUnique({
+  },
+  /**
+   * Finds a user by ID.
+   *
+   * @param {string} id - the ID of the user to find
+   * @return {Promise<AccountDetails | null>} the user account, or null if not found
+   */
+  async findById(id: string): Promise<AccountDetails | null> {
+    const account = await prisma.user.findUnique({
       where: {
         id,
       },
@@ -44,27 +40,41 @@ export class PrismaAccountsRepository {
     }
 
     return PrismaAccountsMapper.toDomain(account)
-  }
-
-  async findMany() {
-    const accounts = await this.prisma.user.findMany()
+  },
+  /**
+   * Find many accounts and map them to domain objects.
+   *
+   * @return {Promise<AccountDetails[]>} mapped domain objects
+   */
+  async findMany(): Promise<AccountDetails[]> {
+    const accounts = await prisma.user.findMany()
 
     return accounts.map(PrismaAccountsMapper.toDomain)
-  }
-
-  async findManyByRole(role: UserRole) {
-    const accounts = await this.prisma.user.findMany({
+  },
+  /**
+   * Asynchronously finds many users by role.
+   *
+   * @param {UserRole} role - the role to filter by
+   * @return {Promise<AccountDetails[]>} an array of domain accounts
+   */
+  async findManyByRole(role: UserRole): Promise<AccountDetails[]> {
+    const accounts = await prisma.user.findMany({
       where: {
         role,
       },
     })
 
     return accounts.map(PrismaAccountsMapper.toDomain)
-  }
-
-  async create(data: Account) {
-    await this.prisma.user.create({
+  },
+  /**
+   * Create a new account.
+   *
+   * @param {Account} data - the data for creating the account
+   * @return {Promise<void>} a promise that resolves when the account is created
+   */
+  async create(data: Account): Promise<void> {
+    await prisma.user.create({
       data,
     })
-  }
+  },
 }
