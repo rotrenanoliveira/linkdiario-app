@@ -1,6 +1,6 @@
 import { Account, AccountDetails, UserRole } from '@/core/types/accounts'
 import { PrismaAccountsMapper } from '../mapper/accounts-mapper'
-import { prisma } from '../client'
+import prisma from '../client'
 
 export const PrismaAccountsRepository = {
   /**
@@ -74,6 +74,21 @@ export const PrismaAccountsRepository = {
    */
   async create(data: Account): Promise<void> {
     await prisma.user.create({
+      data,
+    })
+  },
+  /**
+   * Save account data for the given id.
+   *
+   * @param {string} id - The unique identifier of the account.
+   * @param {Partial<Account>} data - The partial data of the account to be saved.
+   * @return {Promise<void>} A promise that resolves when the account data is successfully saved.
+   */
+  async save(id: string, data: Partial<Account>): Promise<void> {
+    await prisma.user.update({
+      where: {
+        id,
+      },
       data,
     })
   },

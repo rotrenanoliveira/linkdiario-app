@@ -1,5 +1,5 @@
 import { Company, CompanyDetails } from '@/core/types/company'
-import { prisma } from '../client'
+import prisma from '../client'
 
 export const PrismaCompaniesRepository = {
   async findById(id: string): Promise<Company | null> {

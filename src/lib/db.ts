@@ -35,6 +35,9 @@ export const AccountsRepository = {
   create(data: Account) {
     return PrismaAccountsRepository.create(data)
   },
+  save(id: string, data: Partial<Account>) {
+    return PrismaAccountsRepository.save(id, data)
+  },
 }
 
 //= Company Repository ==
