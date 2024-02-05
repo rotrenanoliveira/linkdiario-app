@@ -31,6 +31,7 @@ model User {
   updatedAt DateTime?   @updatedAt() @map("updated_at")
 
   access_code AccessCode[]
+  company     Company?
 
   @@map("users")
 }
@@ -46,4 +47,19 @@ model AccessCode {
   user User @relation(fields: [userId], references: [id])
 
   @@map("access_code")
+}
+
+model Company {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String
+  logoUrl     String?
+  contactId   String    @unique @map("contact_id")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt() @map("updated_at")
+
+  user User @relation(fields: [contactId], references: [id])
+
+  @@map("companies")
 }

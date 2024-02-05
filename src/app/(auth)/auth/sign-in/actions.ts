@@ -175,7 +175,7 @@ export async function signIn(prevState: PrevState, formData: FormData) {
     maxAge: 0,
   })
 
-  const jwtToken = jwt.sign({ userId }, Buffer.from(env.JWT_PRIVATE_KEY, 'base64'), {
+  const jwtToken = jwt.sign({ sub: userId }, Buffer.from(env.JWT_PRIVATE_KEY, 'base64'), {
     algorithm: 'RS256',
     expiresIn: '30d',
   })

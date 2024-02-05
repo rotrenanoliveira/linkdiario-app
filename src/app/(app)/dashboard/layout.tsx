@@ -7,6 +7,7 @@ import { SidebarNav } from '@/components/sidebar-nav'
 import { buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
+import { Services } from '@/services/company'
 
 const sidebarNavItems = [
   {
@@ -27,15 +28,18 @@ const sidebarNavItems = [
   },
 ]
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const company = await Services.getCompany()
+
   return (
     <main className="2xl:max-w-[1440px] 2xl:mx-auto">
       <div className="space-y-6 p-10 pb-16 md:block">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <Blocks size={48} className="text-yellow-400" />
+
             <h2 className={cn(jetBrainsMono.className, 'text-lg font-medium tracking-tight')}>
-              linkdiario - dashboard
+              {(company && company.name) || 'linkdiario'} - dashboard
             </h2>
           </div>
 
