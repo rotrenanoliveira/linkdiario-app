@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation'
 
 import { cn } from '@/lib/utils'
 import { buttonVariants } from './ui/button'
-import { LogOut } from 'lucide-react'
 
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
   items: {
@@ -32,13 +31,6 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
           {item.title}
         </Link>
       ))}
-      <Link
-        href={'/api/auth/sign-out'}
-        className={cn(buttonVariants({ variant: 'ghost' }), 'font-light text-md justify-start flex items-center gap-3')}
-      >
-        <LogOut strokeWidth={1} />
-        Sair
-      </Link>
     </nav>
   )
 }
