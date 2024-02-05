@@ -1,16 +1,14 @@
 import { CompaniesRepository } from '@/lib/db'
-import { jwtDecode } from '@/lib/jwt'
-import { cookies } from 'next/headers'
+import { validateUserAccess } from '@/utils/validate-access'
+import { redirect } from 'next/navigation'
 
 async function getCompany() {
-  // Get token
-  const token = cookies().get('_Host:linkdiario:token')
-  if (!token) throw new Error('Token not found')
-  // Decode token
-  const payload = jwtDecode(token.value)
-  if (!payload.sub) throw new Error('Invalid token')
+  const _user = validateUserAccess()
+  if (!_user.isValid) {
+    redirect('/')
+  }
   // Get user ID
-  const userId = payload.sub.toString()
+  const userId = _user.payload.userId
   // Get company
   const company = await CompaniesRepository.findByContactId(userId)
   return company

@@ -1,10 +1,12 @@
 import { Metadata } from 'next'
+import { redirect } from 'next/navigation'
 import Image from 'next/image'
 
 import { cn } from '@/lib/utils'
 
 import { UserAuthForm } from './components/user-auth-form'
 import { jetBrainsMono } from '@/app/fonts'
+import { validateUserAccess } from '@/utils/validate-access'
 
 export const metadata: Metadata = {
   title: 'Entrar | linkdiario',
@@ -12,6 +14,12 @@ export const metadata: Metadata = {
 }
 
 export default function AuthenticationPage() {
+  const userHasAccess = validateUserAccess().isValid
+
+  if (userHasAccess) {
+    redirect('/dashboard')
+  }
+
   return (
     <>
       <div className="container p-4">
