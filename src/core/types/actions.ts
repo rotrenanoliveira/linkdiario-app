@@ -9,5 +9,3 @@ export type FailureActionResponse = {
   title: string
   message: string
 }
-
-export type ActionResponse = SuccessActionResponse | FailureActionResponse

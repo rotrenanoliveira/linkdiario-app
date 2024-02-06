@@ -5,6 +5,8 @@ const envSchema = z.object({
   DATABASE_URL: z.string(),
   JWT_PRIVATE_KEY: z.string(),
   JWT_PUBLIC_KEY: z.string(),
+  UPSTASH_REDIS_REST_URL: z.string(),
+  UPSTASH_REDIS_REST_TOKEN: z.string(),
 })
 
 const _env = envSchema.safeParse(process.env)

@@ -17,6 +17,7 @@
     "@radix-ui/react-slot": "1.0.2",
     "@radix-ui/react-toast": "1.1.5",
     "@tanstack/react-table": "8.11.7",
+    "@upstash/redis": "1.28.3",
     "@vercel/analytics": "1.1.2",
     "axios": "1.6.5",
     "bcryptjs": "2.4.3",
