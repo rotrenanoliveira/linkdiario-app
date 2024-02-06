@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 
-import { FormUpdateProfile } from './components/form-update-profile'
+import { FormUpdateProfile } from './_components/form-update-profile'
 import { Separator } from '@/components/ui/separator'
 import { Services } from '@/services/company'
 

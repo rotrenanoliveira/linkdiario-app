@@ -1,4 +1,4 @@
-import { FormRegisterCompany } from './components/form-register-company'
+import { FormRegisterCompany } from './_components/form-register-company'
 import { Separator } from '@/components/ui/separator'
 import { Services } from '@/services/company'
 
