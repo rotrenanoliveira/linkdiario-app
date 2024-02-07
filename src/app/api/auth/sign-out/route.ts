@@ -3,7 +3,7 @@ import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-  cookies().set('_Host:linkdiario:token', '', {
+  cookies().set('_linkdiario:token', '', {
     path: '/',
     maxAge: 0,
   })

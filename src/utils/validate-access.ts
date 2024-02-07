@@ -23,7 +23,7 @@ type UserAccess = InvalidUserAccess | ValidUserAccess
  * @return {UserAccess} An object containing a boolean indicating if the user access is valid and the user's ID if valid.
  */
 export function validateUserAccess(): UserAccess {
-  const cookie = cookies().get('_Host:linkdiario:token')
+  const cookie = cookies().get('_linkdiario:token')
   if (!cookie) {
     return {
       isValid: false,

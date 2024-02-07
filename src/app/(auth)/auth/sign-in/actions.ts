@@ -75,7 +75,7 @@ export async function requestAccessCode(prevState: PrevState, formData: FormData
   await AccessCodeRepository.create(accessCode)
 
   cookies().set({
-    name: '_Host:linkdiario:access-code',
+    name: '_linkdiario:access-code',
     value: user.id,
     path: '/auth',
     maxAge: 60 * 15, // 15 minutes
@@ -110,7 +110,7 @@ export async function signIn(prevState: PrevState, formData: FormData) {
     }
   }
 
-  const cookie = cookies().get('_Host:linkdiario:access-code')
+  const cookie = cookies().get('_linkdiario:access-code')
 
   if (!cookie) {
     return {
@@ -169,7 +169,7 @@ export async function signIn(prevState: PrevState, formData: FormData) {
   })
 
   cookies().set({
-    name: '_Host:linkdiario:access-code',
+    name: '_linkdiario:access-code',
     value: '',
     path: '/auth',
     maxAge: 0,
@@ -181,7 +181,7 @@ export async function signIn(prevState: PrevState, formData: FormData) {
   })
 
   cookies().set({
-    name: '_Host:linkdiario:token',
+    name: '_linkdiario:token',
     value: jwtToken,
     path: '/',
     maxAge: 60 * 60 * 24 * 30, // 30 days

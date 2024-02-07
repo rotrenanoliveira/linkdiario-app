@@ -62,7 +62,7 @@ export async function actionRegisterCompany(prevState: PrevState, data: FormData
     }
   }
 
-  const token = cookies().get('_Host:linkdiario:token')
+  const token = cookies().get('_linkdiario:token')
   if (!token) {
     return {
       success: false,
