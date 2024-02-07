@@ -1,8 +1,8 @@
-import { Separator } from '@/components/ui/separator'
-import { AccountDetails } from '@/core/types/accounts'
-import { AccountsRepository } from '@/lib/db'
 import { columns } from './columns'
 import { DataTable } from './data-table'
+import { Separator } from '@/components/ui/separator'
+import { AccountDetails } from '@/core/types/accounts'
+import { AccountsRepository } from '@/infra/database/db'
 
 async function getData(): Promise<AccountDetails[]> {
   const accounts = await AccountsRepository.findMany()

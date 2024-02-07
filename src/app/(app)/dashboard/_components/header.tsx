@@ -1,9 +1,10 @@
+import Link from 'next/link'
+import { Blocks, LogOut } from 'lucide-react'
+
 import { jetBrainsMono } from '@/app/fonts'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { Services } from '@/services/company'
-import { Blocks, LogOut } from 'lucide-react'
-import Link from 'next/link'
+import { Services } from '@/services'
 
 export async function DashboardHeader() {
   const company = await Services.getCompany()

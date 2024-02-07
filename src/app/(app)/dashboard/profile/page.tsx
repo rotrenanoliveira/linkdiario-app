@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 
 import { FormUpdateProfile } from './_components/form-update-profile'
 import { Separator } from '@/components/ui/separator'
-import { Services } from '@/services/company'
+import { Services } from '@/services'
 
 export default async function ProfilePage() {
   const user = await Services.getAccount()

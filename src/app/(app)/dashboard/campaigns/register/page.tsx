@@ -1,7 +1,8 @@
-import { Separator } from '@/components/ui/separator'
-import { FormRegisterCampaign } from './_components/form-register-campaign'
-import { Services } from '@/services/company'
 import { redirect } from 'next/navigation'
+
+import { FormRegisterCampaign } from './_components/form-register-campaign'
+import { Separator } from '@/components/ui/separator'
+import { Services } from '@/services'
 
 export default async function RegisterCampaignPage() {
   const company = await Services.getCompany()
