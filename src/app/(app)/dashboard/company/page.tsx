@@ -1,6 +1,6 @@
 import { FormRegisterCompany } from './_components/form-register-company'
 import { Separator } from '@/components/ui/separator'
-import { Services } from '@/services'
+import { Services } from '@/infra/services'
 
 export default async function CompanyPage() {
   const company = await Services.getCompany()

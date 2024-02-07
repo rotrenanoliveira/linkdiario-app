@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 
-import { Services } from '@/services'
+import { Services } from '@/infra/services'
 
 export default async function DashboardPage() {
   const company = await Services.getCompany()

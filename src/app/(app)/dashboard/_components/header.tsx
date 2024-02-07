@@ -4,7 +4,7 @@ import { Blocks, LogOut } from 'lucide-react'
 import { jetBrainsMono } from '@/app/fonts'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { Services } from '@/services'
+import { Services } from '@/infra/services'
 
 export async function DashboardHeader() {
   const company = await Services.getCompany()

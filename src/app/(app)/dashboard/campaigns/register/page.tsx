@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 
 import { FormRegisterCampaign } from './_components/form-register-campaign'
 import { Separator } from '@/components/ui/separator'
-import { Services } from '@/services'
+import { Services } from '@/infra/services'
 
 export default async function RegisterCampaignPage() {
   const company = await Services.getCompany()
