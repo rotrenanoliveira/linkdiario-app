@@ -1,12 +1,13 @@
 'use server'
 
 import { randomUUID } from 'node:crypto'
+import { cookies } from 'next/headers'
 import { fromZodError } from 'zod-validation-error'
 import { z } from 'zod'
 
 import { ActionResponse, Campaign, CampaignWithProduct, ProductCreateInput } from '@/core/types'
-import { ProductsRepository, CampaignsRepository } from '@/lib/db'
 import { RedisCacheRepository } from '@/infra/cache/redis-cache-repository'
+import { ProductsRepository, CampaignsRepository } from '@/infra/database/db'
 import { validateTextLength } from '@/utils/text-length'
 
 type PrevState = ActionResponse | null
@@ -131,11 +132,14 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
     createdAt: new Date(),
     product: {
       ...product,
+      cardImageUrl: '',
       carouselImages: [],
     },
   }
 
-  await RedisCacheRepository.set(`campaign:${campaign.id}:details`, JSON.stringify(campaignWithProduct))
+  await RedisCacheRepository.set(`not-published-campaign:${campaign.id}:details`, JSON.stringify(campaignWithProduct))
+
+  cookies().set('_linkdiario:edit-campaign:id', campaign.id)
 
   return {
     success: true,

@@ -21,6 +21,11 @@ enum USER_STATUS {
   EXPIRED
 }
 
+enum PRODUCT_ATTACHMENT_TYPE {
+  CARD
+  CAROUSEL
+}
+
 enum CAMPAIGN_STATUS {
   NOT_PUBLISHED
   ACTIVE
@@ -90,10 +95,11 @@ model Product {
 }
 
 model ProductAttachments {
-  id        String @id @default(uuid())
+  id        String                  @id @default(uuid())
   file      String
   url       String
-  productId String @map("product_id")
+  type      PRODUCT_ATTACHMENT_TYPE
+  productId String                  @map("product_id")
 
   product Product @relation(fields: [productId], references: [id])
 }

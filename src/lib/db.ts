@@ -1,19 +1,8 @@
-import {
-  AccessCode,
-  Account,
-  Campaign,
-  Company,
-  ProductCreateInput,
-  ProductWithSameSlugAndCompanyArgs,
-  Optional,
-  UserRole,
-} from '@/core/types'
+import { AccessCode, Account, Company, UserRole } from '@/core/types'
 
 import { PrismaAccessCodeRepository } from './prisma/repositories/prisma-access-code-repository'
 import { PrismaAccountsRepository } from './prisma/repositories/prisma-accounts-repository'
 import { PrismaCompaniesRepository } from './prisma/repositories/prisma-companies-repository'
-import { PrismaProductsRepository } from './prisma/repositories/prisma-products-repository'
-import { PrismaCampaignsRepository } from './prisma/repositories/prisma-campaign-repository'
 
 //= Access Code Repository ==//
 export const AccessCodeRepository = {
@@ -50,19 +39,6 @@ export const AccountsRepository = {
 }
 
 //= Company Repository ==
-export const CampaignsRepository = {
-  findManyByCompanyId(companyId: string) {
-    return PrismaCampaignsRepository.findManyByCompanyId(companyId)
-  },
-  create(data: Optional<Campaign, 'createdAt'>) {
-    return PrismaCampaignsRepository.create(data)
-  },
-  save(id: string, data: Partial<Campaign>) {
-    return PrismaCampaignsRepository.save(id, data)
-  },
-}
-
-//= Company Repository ==
 export const CompaniesRepository = {
   findById(id: string) {
     return PrismaCompaniesRepository.findById(id)
@@ -81,15 +57,5 @@ export const CompaniesRepository = {
   },
   save(id: string, data: Partial<Company>) {
     return PrismaCompaniesRepository.save(id, data)
-  },
-}
-
-//= Product Repository ==
-export const ProductsRepository = {
-  findBySlugAndCompanyId(args: ProductWithSameSlugAndCompanyArgs) {
-    return PrismaProductsRepository.findBySlugAndCompanyId(args)
-  },
-  create(data: ProductCreateInput) {
-    return PrismaProductsRepository.create(data)
   },
 }

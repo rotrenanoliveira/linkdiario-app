@@ -1,18 +1,19 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useFormState } from 'react-dom'
 import { useRef, useEffect, useState, ChangeEvent } from 'react'
 
+import { actionSaveCampaign } from '../actions'
 import { FormItem, FormDescription } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useToast } from '@/components/ui/use-toast'
-import { Label } from '@radix-ui/react-label'
+import { Label } from '@/components/ui/label'
 import { PendingSubmitButton } from '@/components/pending-submit-button'
-import { Company } from '@/core/types'
 import { Textarea } from '@/components/ui/textarea'
+import { useToast } from '@/components/ui/use-toast'
+import { Company } from '@/core/types'
 import { cn } from '@/lib/utils'
 import { validateTextLength } from '@/utils/text-length'
-import { actionSaveCampaign } from '../actions'
 
 interface FormRegisterCampaignProps {
   company: Company
@@ -30,6 +31,7 @@ export function FormRegisterCampaign({ company }: FormRegisterCampaignProps) {
 
   const ref = useRef<HTMLFormElement>(null)
   const { toast } = useToast()
+  const router = useRouter()
 
   function resetStates() {
     setProductName(null)
@@ -55,7 +57,8 @@ export function FormRegisterCampaign({ company }: FormRegisterCampaignProps) {
 
       ref.current?.reset()
       resetStates()
-      // router.push('/dashboard/campaigns')
+
+      router.push('/dashboard/campaigns')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formState])

@@ -1,4 +1,6 @@
-import { cache } from '@/lib/cache'
+import { upstashRedis } from '@/lib/upstash-redis'
+
+const cache = upstashRedis
 
 export const RedisCacheRepository = {
   async set(key: string, value: string): Promise<void> {

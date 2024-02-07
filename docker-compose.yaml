@@ -15,7 +15,7 @@ services:
       - ./data/pg:/data/postgres
 
   cache:
-    container_name: nest-clean-cache
+    container_name: linkdiario-alpha-cache
     image: redis
     ports:
       - 6379:6379

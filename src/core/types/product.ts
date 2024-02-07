@@ -21,8 +21,9 @@ export interface Product {
   catchPhrase: string
   about: string
   price: string
+  cardImageUrl: string
   benefits: ProductBenefits[]
   carouselImages: CarouselImage[]
 }
 
-export type ProductCreateInput = Omit<Product, 'carouselImages'>
+export type ProductCreateInput = Omit<Product, 'cardImageUrl' | 'carouselImages'>
