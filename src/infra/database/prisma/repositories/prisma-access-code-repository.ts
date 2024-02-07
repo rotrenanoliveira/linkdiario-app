@@ -1,5 +1,5 @@
 import { AccessCode } from '@/core/types/access-code'
-import prisma from '../client'
+import prisma from '@/lib/prisma'
 
 export const PrismaAccessCodeRepository = {
   async findByUserId(userId: string): Promise<AccessCode | null> {

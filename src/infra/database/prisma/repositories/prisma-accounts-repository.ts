@@ -1,6 +1,6 @@
-import { Account, AccountDetails, UserRole } from '@/core/types/accounts'
 import { PrismaAccountsMapper } from '../mapper/accounts-mapper'
-import prisma from '../client'
+import { Account, AccountDetails, UserRole } from '@/core/types/accounts'
+import prisma from '@/lib/prisma'
 
 export const PrismaAccountsRepository = {
   /**

@@ -1,6 +1,5 @@
-import prisma from '@/lib/prisma/client'
-
 import { Campaign, Optional } from '@/core/types'
+import prisma from '@/lib/prisma'
 
 export const PrismaCampaignsRepository = {
   async findManyByCompanyId(companyId: string): Promise<Campaign[]> {

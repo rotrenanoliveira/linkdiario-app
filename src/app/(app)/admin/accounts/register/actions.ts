@@ -5,9 +5,8 @@ import { revalidatePath } from 'next/cache'
 import { fromZodError } from 'zod-validation-error'
 import { z } from 'zod'
 
-import { ActionResponse } from '@/core/types/actions'
-import { Account } from '@/core/types/accounts'
-import { AccountsRepository } from '@/lib/db'
+import { Account, ActionResponse } from '@/core/types'
+import { AccountsRepository } from '@/infra/database/db'
 
 type PrevState = ActionResponse | null
 

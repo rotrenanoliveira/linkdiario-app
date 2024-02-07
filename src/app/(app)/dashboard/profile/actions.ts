@@ -1,10 +1,11 @@
 'use server'
 
-import { ActionResponse } from '@/core/types'
-import { AccountsRepository } from '@/lib/db'
 import { revalidatePath } from 'next/cache'
-import { z } from 'zod'
 import { fromZodError } from 'zod-validation-error'
+import { z } from 'zod'
+
+import { ActionResponse } from '@/core/types'
+import { AccountsRepository } from '@/infra/database/db'
 
 type PrevState = ActionResponse | null
 

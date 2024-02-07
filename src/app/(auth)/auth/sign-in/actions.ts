@@ -7,10 +7,10 @@ import { compare, hash } from 'bcryptjs'
 import { z } from 'zod'
 import jwt from 'jsonwebtoken'
 
-import { ActionResponse } from '@/core/types/actions'
+import { ActionResponse } from '@/core/types'
 import { env } from '@/env'
+import { AccessCodeRepository, AccountsRepository } from '@/infra/database/db'
 import { genAccessCode } from '@/lib/access-code'
-import { AccessCodeRepository, AccountsRepository } from '@/lib/db'
 
 const requestAccessCodeSchema = z.object({
   email: z.string().email({ message: 'Por favor, insira um e-mail válido.' }),

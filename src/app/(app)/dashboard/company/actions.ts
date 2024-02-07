@@ -6,8 +6,8 @@ import { fromZodError } from 'zod-validation-error'
 import { z } from 'zod'
 import jwt from 'jsonwebtoken'
 
-import { ActionResponse } from '@/core/types/actions'
-import { AccountsRepository, CompaniesRepository } from '@/lib/db'
+import { ActionResponse } from '@/core/types'
+import { AccountsRepository, CompaniesRepository } from '@/infra/database/db'
 
 type PrevState = ActionResponse | null
 

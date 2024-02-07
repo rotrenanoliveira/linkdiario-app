@@ -1,7 +1,6 @@
 import { PrismaProductMapper } from '../mapper/products-mapper'
 import { Product, ProductCreateInput, ProductWithSameSlugAndCompanyArgs } from '@/core/types'
-
-import prisma from '@/lib/prisma/client'
+import prisma from '@/lib/prisma'
 
 export const PrismaProductsRepository = {
   async findBySlugAndCompanyId({ companyId, slug }: ProductWithSameSlugAndCompanyArgs): Promise<Product | null> {
