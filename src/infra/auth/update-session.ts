@@ -10,7 +10,7 @@ export async function updateSession(request: NextRequest) {
 
   const parsed = await decrypt(session)
 
-  const expiresAt = new Date(Date.now() + 2 * 60 * 60 * 1000) // 2 hours from now
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days from now
 
   parsed.expires = expiresAt
 

@@ -41,7 +41,7 @@ export async function signIn(args: SignInArgs) {
     usedAt: new Date(),
   })
 
-  const expiresAt = new Date(Date.now() + 2 * 60 * 60 * 1000) // 2 hours from now
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days from now
   const session = await encrypt({
     user: user.id,
     expires: expiresAt,
