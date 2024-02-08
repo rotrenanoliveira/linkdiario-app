@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 
 import { Account } from '@/core/types'
 import { AccountsRepository } from '@/infra/database/db'
-import { validateUserAccess } from '@/utils/validate-access'
+import { getSession } from '../auth'
 
 /**
  * Retrieves the account associated with the authenticated user.
@@ -10,12 +10,12 @@ import { validateUserAccess } from '@/utils/validate-access'
  * @return {Promise<Account|null>} The account information.
  */
 export async function getAccount(): Promise<Account | null> {
-  const _user = validateUserAccess()
-  if (!_user.isValid) {
+  const session = await getSession()
+  if (!session || !session.user) {
     redirect('/')
   }
   // Get user ID
-  const userId = _user.payload.userId
+  const userId = session.user as string
   // Get accounts
   const account = await AccountsRepository.findById(userId)
   return account

@@ -1,22 +1,22 @@
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import Image from 'next/image'
 
-import { cn } from '@/lib/utils'
-
-import { UserAuthForm } from './components/user-auth-form'
 import { jetBrainsMono } from '@/app/fonts'
-import { validateUserAccess } from '@/utils/validate-access'
+import { cn } from '@/lib/utils'
+import { getSession } from '@/infra/auth'
+import { AuthenticateUserForm } from './components/authenticate-user-form'
 
 export const metadata: Metadata = {
   title: 'Entrar | linkdiario',
   description: 'Faça login para continuar para ter acesso ao linkdiario.',
 }
 
-export default function AuthenticationPage() {
-  const userHasAccess = validateUserAccess().isValid
+export default async function AuthenticationPage() {
+  const session = await getSession()
 
-  if (userHasAccess) {
+  if (session) {
     redirect('/dashboard')
   }
 
@@ -24,8 +24,10 @@ export default function AuthenticationPage() {
     <>
       <div className="container p-4">
         <div className="flex items-center gap-4">
-          <Image src={'/linkdiario.png'} alt="linkdiario" width={48} height={48} />
-          <h2 className={cn(jetBrainsMono.className, 'text-lg font-medium tracking-tight')}>linkdiario</h2>
+          <Link href={'/'} className="flex items-center gap-3">
+            <Image src={'/linkdiario.png'} alt="linkdiario" width={48} height={48} />
+            <h2 className={cn(jetBrainsMono.className, 'text-lg font-medium tracking-tight')}>linkdiario</h2>
+          </Link>
         </div>
 
         <div className="container h-[calc(100dvh-64px)] flex items-center justify-center lg:p-8">
@@ -35,7 +37,7 @@ export default function AuthenticationPage() {
               <p className="text-sm text-muted-foreground">Insira seu e-mail abaixo para continuar</p>
             </div>
 
-            <UserAuthForm />
+            <AuthenticateUserForm />
           </div>
         </div>
       </div>

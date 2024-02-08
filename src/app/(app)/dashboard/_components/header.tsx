@@ -1,10 +1,9 @@
-import Link from 'next/link'
-import { Blocks, LogOut } from 'lucide-react'
+import { Blocks } from 'lucide-react'
 
 import { jetBrainsMono } from '@/app/fonts'
-import { buttonVariants } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { SignOutForm } from '@/components/sign-out-form'
 import { Services } from '@/infra/services'
+import { cn } from '@/lib/utils'
 
 export async function DashboardHeader() {
   const company = await Services.getCompany()
@@ -19,13 +18,7 @@ export async function DashboardHeader() {
         </h2>
       </div>
 
-      <Link
-        href={'/api/auth/sign-out'}
-        className={cn(buttonVariants({ variant: 'ghost' }), 'font-light text-md justify-start flex items-center gap-3')}
-      >
-        <LogOut strokeWidth={1} />
-        Sair
-      </Link>
+      <SignOutForm />
     </div>
   )
 }

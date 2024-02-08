@@ -20,7 +20,7 @@ export const AccessCodeRepository = {
   findByUserId(userId: string) {
     return PrismaAccessCodeRepository.findByUserId(userId)
   },
-  create(data: AccessCode) {
+  create(data: Optional<AccessCode, 'id'>) {
     return PrismaAccessCodeRepository.create(data)
   },
   save(id: string, data: Partial<AccessCode>) {

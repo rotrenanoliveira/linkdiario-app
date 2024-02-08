@@ -1,25 +1,26 @@
+import { Optional } from '@/core/types'
 import { AccessCode } from '@/core/types/access-code'
 import prisma from '@/lib/prisma'
 
 export const PrismaAccessCodeRepository = {
-  async findByUserId(userId: string): Promise<AccessCode | null> {
-    const accessCode = await prisma.accessCode.findFirst({
+  async findByUserId(userId: string) {
+    return await prisma.accessCode.findFirstOrThrow({
       where: {
         userId,
       },
       orderBy: {
         createdAt: 'desc',
       },
+      select: {
+        id: true,
+        code: true,
+        usedAt: true,
+        expiresAt: true,
+      },
     })
-
-    if (!accessCode) {
-      return null
-    }
-
-    return accessCode
   },
 
-  async create(data: AccessCode): Promise<void> {
+  async create(data: Optional<AccessCode, 'id'>): Promise<void> {
     await prisma.accessCode.create({
       data,
     })
