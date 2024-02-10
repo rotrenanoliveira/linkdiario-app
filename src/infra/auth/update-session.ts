@@ -10,6 +10,10 @@ export async function updateSession(request: NextRequest) {
 
   const parsed = await decrypt(session)
 
+  if (!parsed) {
+    return NextResponse.redirect(new URL('/auth/sign-in', request.url))
+  }
+
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days from now
 
   parsed.expires = expiresAt

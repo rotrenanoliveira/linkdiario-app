@@ -96,6 +96,7 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
     }
   }
 
+  // TODO: save image on cloudflare R2
   const carouselImages = {
     file: campaignData.carouselImages.file,
     url: '',
