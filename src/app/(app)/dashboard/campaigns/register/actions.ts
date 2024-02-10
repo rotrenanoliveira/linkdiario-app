@@ -5,139 +5,165 @@ import { cookies } from 'next/headers'
 import { fromZodError } from 'zod-validation-error'
 import { z } from 'zod'
 
-import { ActionResponse, Campaign, CampaignWithProduct, ProductCreateInput } from '@/core/types'
+import { ActionResponse, CampaignQuiz } from '@/core/types'
 import { RedisCacheRepository } from '@/infra/cache/redis-cache-repository'
-import { ProductsRepository, CampaignsRepository } from '@/infra/database/db'
-import { validateTextLength } from '@/utils/text-length'
+import { CampaignsRepository } from '@/infra/database/db'
+import { Slug } from '@/utils/slug'
 
 type PrevState = ActionResponse | null
+
+const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
 
 export async function actionSaveCampaign(prevState: PrevState, data: FormData): Promise<ActionResponse> {
   // Validation
   const saveCampaignSchema = z.object({
-    companyId: z.string().uuid({ message: 'Company ID inválido.' }),
-    productName: z
+    companyId: z.string().uuid({ message: 'ID inválido.' }),
+    affiliateUrl: z.string().url({ message: 'Por favor, insira uma URL válida.' }),
+    title: z
       .string()
-      .min(1, { message: 'Por favor, insira o nome do produto.' })
+      .min(1, { message: 'Por favor, insira o título/produto da campanha.' })
       .transform((value) => value.toLowerCase()),
-    campaignName: z
+    subtitle: z
+      .string()
+      .min(1, { message: 'Por favor, insira o subtítulo da campanha.' })
+      .transform((value) => value.toLowerCase()),
+    name: z
       .string()
       .min(1, { message: 'Por favor, insira o nome da campanha.' })
       .transform((value) => value.toLowerCase()),
-    productSlug: z
+    slug: z
       .string()
-      .min(1, { message: 'Por favor, insira o slug do produto.' })
-      .transform((value) =>
-        value
-          .normalize('NFKD')
-          .toLowerCase()
-          .trim()
-          .replace(/\s+/g, '-')
-          .replace(/[^\w-]+/g, '')
-          .replace(/_/g, '-')
-          .replace(/--+/g, '-')
-          .replace(/-$/g, ''),
-      ),
-    productCatchPhrase: z
-      .string()
-      .min(1, { message: 'Por favor, insira uma frase de efeito do produto.' })
-      .refine((value) => validateTextLength(value, 10), {
-        message: 'A frase de efeito do produto deve ter no máximo 10 palavras.',
+      .min(1, { message: 'Por favor, insira o slug da campanha.' })
+      .transform((value) => Slug.fromText(value)),
+    carouselImages: z
+      .any()
+      .refine((file) => !!file, 'Por favor, insira uma imagem para o carrossel.')
+      .refine((file) => file.size <= MAX_FILE_SIZE, `O tamanho do arquivo deve ser menor que 2MB.`)
+      .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file.type), '.jpg, .jpeg, .png and .webp images são permitidas.')
+      .transform((file) => {
+        return {
+          file: file.name,
+          type: file.type,
+          url: URL.createObjectURL(file),
+        }
       }),
-    productDescription: z
-      .string()
-      .min(1, { message: 'Por favor, insira breve uma descrição do produto.' })
-      .refine((value) => validateTextLength(value, 15), {
-        message: 'A descrição do produto deve ser breve e ter no máximo 15 palavras.',
-      }),
-    productAbout: z
-      .string()
-      .min(1, { message: 'Por favor, insira um sobre do produto.' })
-      .refine((value) => validateTextLength(value, undefined, 600), {
-        message: 'Informação sobre o produto deve ter no máximo 600 caracteres.',
-      }),
-    productPrice: z
-      .string()
-      .min(1, { message: 'Por favor, insira o preço do produto.' })
-      .refine((value) => validateTextLength(value, undefined, 25), {
-        message: 'O preço do produto deve ter no máximo 25 caracteres.',
-      }),
-    affiliateUrl: z.string().url({ message: 'Por favor, insira uma URL válida.' }),
+    type: z.enum(['PRESELL', 'QUIZ']),
     status: z.enum(['NOT_PUBLISHED', 'ACTIVE', 'PAUSED', 'REMOVED', 'ENDED']).default('NOT_PUBLISHED'),
     startedAt: z.date().default(new Date()),
   })
+
   //=
   const result = saveCampaignSchema.safeParse({
-    companyId: data.get('campaign-company-id'),
-    productName: data.get('campaign-product-name'),
-    campaignName: data.get('campaign-name'),
-    productSlug: data.get('campaign-product-slug'),
-    productCatchPhrase: data.get('campaign-catch-phrase'),
-    productDescription: data.get('campaign-product-description'),
-    productAbout: data.get('campaign-product-about'),
-    productPrice: data.get('campaign-product-price'),
+    companyId: data.get('company-id'),
+    title: data.get('campaign-title'),
+    subtitle: data.get('campaign-subtitle'),
+    name: data.get('campaign-name'),
+    slug: data.get('campaign-slug'),
     affiliateUrl: data.get('campaign-affiliate-url'),
+    carouselImages: data.get('campaign-carousel-image'),
+    type: data.get('campaign-type'),
   })
+
   //= Validation
   if (result.success === false) {
+    const zodError = fromZodError(result.error)
+    console.log(zodError)
+
     return {
       success: false,
       title: 'Algo deu errado!',
-      message: fromZodError(result.error).toString(),
+      message: zodError.toString(),
     }
   }
 
-  const productData = result.data
+  const campaignData = {
+    ...result.data,
+    description: null as string | null,
+    quiz: null as CampaignQuiz | null,
+  }
 
-  const productWithSameSlug = await ProductsRepository.findBySlugAndCompanyId({
-    companyId: productData.companyId,
-    slug: productData.productSlug,
+  const campaignWithSameSlug = await CampaignsRepository.findBySlugAndCompanyId({
+    companyId: campaignData.companyId,
+    slug: campaignData.slug,
   })
 
-  if (productWithSameSlug) {
+  if (campaignWithSameSlug) {
     return {
       success: false,
       title: 'Algo deu errado!',
       message: 'Ja existe um produto com esse slug.',
     }
   }
-  // Create product
-  const product: ProductCreateInput = {
+
+  const carouselImages = {
+    file: campaignData.carouselImages.file,
+    url: '',
+  }
+
+  const description = data.get('campaign-description')?.toString()
+
+  const question = data.get('campaign-quiz-question')?.toString()
+  const answers = data.get('campaign-quiz-answers')?.toString()
+
+  let answersArray = [] as Array<string>
+
+  if (question && answers) {
+    const parsedAnswers = JSON.parse(answers) as Array<{ id: string; answer: string }>
+    answersArray = parsedAnswers.map((answer) => answer.answer)
+
+    if (answersArray.length < 2) {
+      return {
+        success: false,
+        title: 'Algo deu errado!',
+        message: 'O quiz deve ter pelo menos 2 respostas.',
+      }
+    }
+  }
+
+  const quiz =
+    campaignData.type === 'QUIZ'
+      ? {
+          question: question ?? '',
+          answers: answers ? answersArray : [],
+        }
+      : null
+
+  const campaign = {
     id: randomUUID(),
-    name: productData.productName,
-    slug: productData.productSlug,
-    description: productData.productDescription,
-    catchPhrase: productData.productCatchPhrase,
-    about: productData.productAbout,
-    price: productData.productPrice,
-    benefits: [],
+    ...campaignData,
+    description,
+    quiz,
   }
 
-  // Create campaign
-  const campaign: Omit<Campaign, 'createdAt'> = {
-    id: randomUUID(),
-    productId: product.id,
-    companyId: productData.companyId,
-    name: productData.campaignName,
-    affiliateUrl: productData.affiliateUrl,
-    status: productData.status,
-    startedAt: productData.startedAt,
-  }
-  // Save product and campaign
-  await ProductsRepository.create(product)
-  await CampaignsRepository.create(campaign)
-
-  const campaignWithProduct: CampaignWithProduct = {
-    ...campaign,
-    createdAt: new Date(),
-    product: {
-      ...product,
-      cardImageUrl: '',
-      carouselImages: [],
-    },
+  const notPublishedCampaign = {
+    id: campaign.id,
+    title: campaign.title,
+    subtitle: campaign.subtitle,
+    slug: campaign.slug,
+    affiliateUrl: campaign.affiliateUrl,
+    type: campaign.type,
+    carouselImages: campaign.carouselImages,
+    description: campaign.description,
+    quiz: campaign.quiz,
   }
 
-  await RedisCacheRepository.set(`not-published-campaign:${campaign.id}:details`, JSON.stringify(campaignWithProduct))
+  await CampaignsRepository.create({
+    id: campaign.id,
+    companyId: campaign.companyId,
+    title: campaign.title,
+    subtitle: campaign.subtitle,
+    name: campaign.name,
+    slug: campaign.slug,
+    affiliateUrl: campaign.affiliateUrl,
+    type: campaign.type,
+    status: campaign.status,
+    startedAt: campaign.startedAt,
+    description: campaign.description,
+    quiz: campaign.quiz,
+  })
+
+  await RedisCacheRepository.set(`not-published-campaign:${campaign.id}:details`, JSON.stringify(notPublishedCampaign))
 
   cookies().set('_linkdiario:edit-campaign:id', campaign.id)
 

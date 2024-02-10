@@ -4,43 +4,33 @@ import { useRouter } from 'next/navigation'
 import { useFormState } from 'react-dom'
 import { useRef, useEffect, useState, ChangeEvent } from 'react'
 
-import { actionSaveCampaign } from '../actions'
 import { FormItem, FormDescription } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { PendingSubmitButton } from '@/components/pending-submit-button'
-import { Textarea } from '@/components/ui/textarea'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useToast } from '@/components/ui/use-toast'
 import { Company } from '@/core/types'
-import { cn } from '@/lib/utils'
-import { validateTextLength } from '@/utils/text-length'
+import { InputPresellCampaign } from './input-presell-campaign'
+import { InputQuizCampaign } from './input-quiz-campaign'
+import { actionSaveCampaign } from '../actions'
+import { InputCarouselImages } from './input-carousel-images'
+import { Slug } from '@/utils/slug'
 
 interface FormRegisterCampaignProps {
   company: Company
 }
 
 export function FormRegisterCampaign({ company }: FormRegisterCampaignProps) {
-  const [productName, setProductName] = useState<string | null>(null)
-  const [productSlug, setProductSlug] = useState<string | null>(null)
-  const [productAboutLength, setProductAboutLength] = useState<number | null>(null)
-  const [productCatchPhrase, setProductCatchPhrase] = useState<string | null>(null)
-  const [productDescription, setProductDescription] = useState<string | null>(null)
-  const [productPrice, setProductPrice] = useState<string | null>(null)
+  const [campaignTitle, setCampaignTitle] = useState<string | null>(null)
+  const [campaignSlug, setCampaignSlug] = useState<string | null>(null)
+  const [campaignType, setCampaignType] = useState<'presell' | 'quiz' | null>(null)
 
   const [formState, formAction] = useFormState(actionSaveCampaign, null)
 
   const ref = useRef<HTMLFormElement>(null)
   const { toast } = useToast()
   const router = useRouter()
-
-  function resetStates() {
-    setProductName(null)
-    setProductSlug(null)
-    setProductAboutLength(null)
-    setProductCatchPhrase(null)
-    setProductDescription(null)
-    setProductPrice(null)
-  }
 
   useEffect(() => {
     if (formState) {
@@ -56,44 +46,56 @@ export function FormRegisterCampaign({ company }: FormRegisterCampaignProps) {
       }
 
       ref.current?.reset()
-      resetStates()
-
       router.push('/dashboard/campaigns')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formState])
 
-  function handleOnChangeProductName(e: ChangeEvent<HTMLInputElement>) {
+  function handleOnChangeCampaignTitle(e: ChangeEvent<HTMLInputElement>) {
     const newProductName = e.target.value
-    const newProductSlug = newProductName
-      .normalize('NFKD')
-      .toLowerCase()
-      .trim()
-      .replace(/\s+/g, '-')
-      .replace(/[^\w-]+/g, '')
-      .replace(/_/g, '-')
-      .replace(/--+/g, '-')
-      .replace(/-$/g, '')
+    const newProductSlug = Slug.fromText(newProductName)
 
-    setProductName(newProductName)
-    setProductSlug(newProductSlug)
+    setCampaignTitle(newProductName)
+    setCampaignSlug(newProductSlug)
   }
 
   return (
     <form ref={ref} action={formAction} className="w-full space-y-4">
-      {/* input - campaign product name */}
+      {/* input - campaign company */}
+      <Input type="text" id="company-id" name="company-id" value={company.id} readOnly className="hidden" required />
+
+      {/* input - campaign title */}
       <FormItem>
-        <Label>Produto afiliado</Label>
+        <Label>Título/Produto</Label>
         <Input
           type="text"
-          id="campaign-product-name"
-          name="campaign-product-name"
-          placeholder="Insira o nome do produto afiliado"
-          defaultValue={productName ?? ''}
-          onChange={handleOnChangeProductName}
+          id="campaign-title"
+          name="campaign-title"
+          placeholder="Insira o nome/título do produto afiliado"
+          defaultValue={campaignTitle ?? ''}
+          onChange={handleOnChangeCampaignTitle}
           required
         />
-        <FormDescription>Nome do produto afiliado que será exibido da campanha.</FormDescription>
+        <FormDescription>
+          Informe o nome do produto ou título que deseja exibir na página da presell. Pense em algo curto com no máximo
+          5 palavras.
+        </FormDescription>
+      </FormItem>
+
+      {/* input - campaign subtitle */}
+      <FormItem>
+        <Label>Subtítulo - frase de efeito</Label>
+        <Input
+          type="text"
+          id="campaign-subtitle"
+          name="campaign-subtitle"
+          placeholder="Insira o subtítulo da campanha"
+          required
+        />
+        <FormDescription>
+          Informe o subtítulo da campanha, pense em uma frase de efeito de preferência curta com no máximo de 10
+          palavras.
+        </FormDescription>
       </FormItem>
 
       {/* input - campaign name */}
@@ -104,10 +106,12 @@ export function FormRegisterCampaign({ company }: FormRegisterCampaignProps) {
           id="campaign-name"
           name="campaign-name"
           placeholder="Insira um nome personalizado para a campanha."
-          defaultValue={productName ? `Campanha - ${productName}` : ''}
+          defaultValue={campaignTitle ? `Campanha - ${campaignTitle}` : ''}
           required
         />
-        <FormDescription>Nome personalizado para a campanha, não será exibido para o consumidor.</FormDescription>
+        <FormDescription>
+          Nome personalizado para a campanha, não será exibido para o consumidor apenas para o anunciante no painel.
+        </FormDescription>
       </FormItem>
 
       {/* input - campaign slug */}
@@ -117,8 +121,8 @@ export function FormRegisterCampaign({ company }: FormRegisterCampaignProps) {
         <div className="w-full flex items-center gap-2">
           <Input
             type="text"
-            id="campaign-product-slug"
-            name="campaign-product-slug"
+            id="company-slug"
+            name="company-slug"
             defaultValue={`https://linkdiario.com.br/${company.slug}/`}
             className="w-1/3 text-black"
             disabled
@@ -126,10 +130,10 @@ export function FormRegisterCampaign({ company }: FormRegisterCampaignProps) {
 
           <Input
             type="text"
-            id="campaign-product-slug"
-            name="campaign-product-slug"
-            defaultValue={productSlug ?? ''}
-            placeholder="campaign-product-slug"
+            id="campaign-slug"
+            name="campaign-slug"
+            defaultValue={campaignSlug ?? ''}
+            placeholder="campaign-slug"
             className="flex-1"
             required
           />
@@ -140,74 +144,6 @@ export function FormRegisterCampaign({ company }: FormRegisterCampaignProps) {
         </FormDescription>
       </FormItem>
 
-      {/* input - campaign catch phrase */}
-      <FormItem>
-        <Label>Frase de efeito (catch phrase)</Label>
-        <Input
-          type="text"
-          id="campaign-catch-phrase"
-          name="campaign-catch-phrase"
-          value={productCatchPhrase ?? ''}
-          onChange={(e) => setProductCatchPhrase(e.target.value)}
-          className={cn(productCatchPhrase && !validateTextLength(productCatchPhrase, 10) && 'border-red-500')}
-          placeholder="Insira uma frase de efeito (até 10 palavras)."
-          required
-        />
-        <FormDescription>
-          Pense em uma frase de efeito que seja irresistível ao consumidor com no máximo 10 palavras.
-        </FormDescription>
-      </FormItem>
-
-      {/* input - campaign product description */}
-      <FormItem>
-        <Label>Descrição do Produto</Label>
-        <Input
-          type="text"
-          id="campaign-product-description"
-          name="campaign-product-description"
-          value={productDescription ?? ''}
-          placeholder="Insira a descrição do produto (até 15 palavras)."
-          onChange={(e) => setProductDescription(e.target.value)}
-          className={cn(productDescription && !validateTextLength(productDescription, 15) && 'border-red-500')}
-          required
-        />
-        <FormDescription>Breve descrição do produto com no máximo 15 palavras.</FormDescription>
-      </FormItem>
-
-      {/* input - campaign product about */}
-      <FormItem>
-        <Label>Sobre o produto</Label>
-        <Textarea
-          id="campaign-product-about"
-          name="campaign-product-about"
-          placeholder="Descreva o produto em até 600 caracteres."
-          onChange={(e) => setProductAboutLength(e.target.value.length)}
-          maxLength={600}
-          className={cn(productAboutLength && productAboutLength >= 600 && 'border-red-500')}
-          required
-        />
-        <FormDescription>
-          Descreva o produto afiliado, este campo será exibido na campanha.{' '}
-          <span>Caracteres: {productAboutLength ?? 0}</span>
-        </FormDescription>
-      </FormItem>
-
-      {/* input - campaign product price */}
-      <FormItem>
-        <Label>Preço do Produto</Label>
-        <Input
-          type="text"
-          id="campaign-product-price"
-          name="campaign-product-price"
-          value={productPrice ?? ''}
-          onChange={(e) => setProductPrice(e.target.value)}
-          placeholder="Insira o preço do produto em texto (Ex: R$ 100,00 ou 10x de R$ 10,00)."
-          className={cn(productPrice && !validateTextLength(productPrice, undefined, 25) && 'border-red-500')}
-          required
-        />
-        <FormDescription>Preço do produto que será exibido na campanha. Max. 25 caracteres.</FormDescription>
-      </FormItem>
-
       {/* input - campaign affiliate URL */}
       <FormItem>
         <Label>Link de afiliado</Label>
@@ -215,7 +151,7 @@ export function FormRegisterCampaign({ company }: FormRegisterCampaignProps) {
           type="text"
           id="campaign-affiliate-url"
           name="campaign-affiliate-url"
-          placeholder="Insira o seu link de afiliado."
+          placeholder="Insira o link de afiliado do produto."
           required
         />
         <FormDescription>
@@ -223,13 +159,41 @@ export function FormRegisterCampaign({ company }: FormRegisterCampaignProps) {
         </FormDescription>
       </FormItem>
 
-      {/* input - company id */}
-      <FormItem className="hidden">
-        <Input type="text" id="campaign-company-id" name="campaign-company-id" defaultValue={company.id} required />
+      {/* input - campaign images */}
+      <InputCarouselImages />
+
+      {/* input - campaign type */}
+      <FormItem>
+        <Label>Tipo de campanha</Label>
+
+        <ToggleGroup type="single" className="w-fit p-2 gap-2 justify-start border border-input rounded-md">
+          <ToggleGroupItem value="presell" onClick={() => setCampaignType('presell')}>
+            Presell
+          </ToggleGroupItem>
+
+          <ToggleGroupItem value="quiz" onClick={() => setCampaignType('quiz')}>
+            Quiz
+          </ToggleGroupItem>
+        </ToggleGroup>
+
+        <FormDescription>Selecione o tipo de campanha que deseja criar.</FormDescription>
+
+        <Input
+          type="text"
+          id="campaign-type"
+          name="campaign-type"
+          value={(campaignType && campaignType.toUpperCase()) ?? ''}
+          readOnly
+          className="hidden"
+          required
+        />
       </FormItem>
 
+      {campaignType && campaignType === 'presell' && <InputPresellCampaign />}
+      {campaignType && campaignType === 'quiz' && <InputQuizCampaign />}
+
       <PendingSubmitButton type="submit" className="min-w-32">
-        Salvar
+        Salvar campanha
       </PendingSubmitButton>
     </form>
   )

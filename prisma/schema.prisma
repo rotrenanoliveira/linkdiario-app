@@ -21,17 +21,17 @@ enum USER_STATUS {
   EXPIRED
 }
 
-enum PRODUCT_ATTACHMENT_TYPE {
-  CARD
-  CAROUSEL
-}
-
 enum CAMPAIGN_STATUS {
   NOT_PUBLISHED
   ACTIVE
   PAUSED
   REMOVED
   ENDED
+}
+
+enum CAMPAIGN_TYPE {
+  PRESELL
+  QUIZ
 }
 
 model User {
@@ -78,46 +78,36 @@ model Company {
   @@map("companies")
 }
 
-model Product {
-  id          String @id @default(uuid())
-  name        String
-  slug        String
-  description String
-  catchPhrase String @map("catch_phrase")
-  about       String
-  price       String
-  benefits    String
-
-  attachments ProductAttachments[]
-  campaign    Campaign?
-
-  @@map("products")
-}
-
-model ProductAttachments {
-  id        String                  @id @default(uuid())
-  file      String
-  url       String
-  type      PRODUCT_ATTACHMENT_TYPE
-  productId String                  @map("product_id")
-
-  product Product @relation(fields: [productId], references: [id])
-}
-
 model Campaign {
   id           String          @id @default(uuid())
-  productId    String          @unique @map("product_id")
   companyId    String          @map("company_id")
-  name         String
-  affiliateUrl String          @map("affiliate_url")
   status       CAMPAIGN_STATUS
+  type         CAMPAIGN_TYPE
+  affiliateUrl String          @map("affiliate_url")
+  title        String
+  subtitle     String
+  slug         String
+  name         String
+  description  String?
+  quiz         String?
   createdAt    DateTime        @default(now()) @map("created_at")
   startedAt    DateTime        @map("started_at")
   endedAt      DateTime?       @map("ended_at")
   updatedAt    DateTime?       @updatedAt() @map("updated_at")
 
-  product Product @relation(fields: [productId], references: [id])
-  company Company @relation(fields: [companyId], references: [id])
+  company     Company               @relation(fields: [companyId], references: [id])
+  attachments CampaignAttachments[]
 
   @@map("campaigns")
+}
+
+model CampaignAttachments {
+  id         String @id @default(uuid())
+  campaignId String @map("campaign_id")
+  file       String
+  url        String
+
+  campaign Campaign @relation(fields: [campaignId], references: [id])
+
+  @@map("campaign_attachments")
 }
