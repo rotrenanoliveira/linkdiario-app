@@ -22,13 +22,18 @@ export async function encrypt(payload: any) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'RS256' })
     .setIssuedAt()
-    .setExpirationTime('2h')
+    .setExpirationTime('7d')
     .sign(privateKey)
 }
 
 export async function decrypt(token: string) {
   const publicKey = await getPublicKey()
 
-  const { payload } = await jwtVerify(token, publicKey, { algorithms: ['RS256'] })
-  return payload
+  try {
+    const { payload } = await jwtVerify(token, publicKey, { algorithms: ['RS256'] })
+
+    return payload
+  } catch (error) {
+    return null
+  }
 }
