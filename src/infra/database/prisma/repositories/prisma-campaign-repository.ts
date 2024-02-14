@@ -15,6 +15,11 @@ export const PrismaCampaignsRepository = {
             url: true,
           },
         },
+        company: {
+          select: {
+            slug: true,
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc',
@@ -34,6 +39,11 @@ export const PrismaCampaignsRepository = {
           select: {
             file: true,
             url: true,
+          },
+        },
+        company: {
+          select: {
+            slug: true,
           },
         },
       },

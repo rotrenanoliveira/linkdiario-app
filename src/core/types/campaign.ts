@@ -43,6 +43,7 @@ export type Campaign = {
 export type CampaignToDashboard = {
   id: string
   companyId: string
+  campaignUrl: string
   name: string
   status: CampaignStatus
   type: CampaignType

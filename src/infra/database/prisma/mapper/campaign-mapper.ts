@@ -1,9 +1,13 @@
 import { Campaign, PresellCampaign, QuizCampaign } from '@/core/types'
 import { CampaignQuiz, CampaignToDashboard } from '@/core/types/campaign'
+import { env } from '@/env'
 import { Campaign as PrismaCampaign, CampaignAttachments } from '@prisma/client'
 
 type PrismaCampaignWithAttachments = PrismaCampaign & {
   attachments: Pick<CampaignAttachments, 'file' | 'url'>[]
+  company: {
+    slug: string
+  }
 }
 
 export class PrismaCampaignMapper {
@@ -46,6 +50,8 @@ export class PrismaCampaignMapper {
   }
 
   static toDashboard(raw: PrismaCampaignWithAttachments): CampaignToDashboard {
+    const campaignUrl = String(`${env.HOST}`).concat('/', raw.company.slug).concat('/', raw.slug)
+
     return {
       id: raw.id,
       companyId: raw.companyId,
@@ -53,6 +59,7 @@ export class PrismaCampaignMapper {
       status: raw.status,
       type: raw.type,
       startedAt: raw.startedAt,
+      campaignUrl,
     }
   }
 }
