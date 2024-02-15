@@ -9,6 +9,7 @@ import { z } from 'zod'
 import { ActionResponse, CampaignQuiz } from '@/core/types'
 import { RedisCacheRepository } from '@/infra/cache/redis-cache-repository'
 import { CampaignsRepository } from '@/infra/database/db'
+import { uploadCampaignImage } from '@/infra/storage/upload-campaign-image'
 import { Slug } from '@/utils/slug'
 
 type PrevState = ActionResponse | null
@@ -96,12 +97,6 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
     }
   }
 
-  // TODO: save image on cloudflare R2
-  const carouselImages = {
-    file: campaignData.carouselImages.file,
-    url: '',
-  }
-
   const description = data.get('campaign-description')?.toString()
 
   const question = data.get('campaign-quiz-question')?.toString()
@@ -137,18 +132,6 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
     quiz,
   }
 
-  const notPublishedCampaign = {
-    id: campaign.id,
-    title: campaign.title,
-    subtitle: campaign.subtitle,
-    slug: campaign.slug,
-    affiliateUrl: campaign.affiliateUrl,
-    type: campaign.type,
-    carouselImages: campaign.carouselImages,
-    description: campaign.description,
-    quiz: campaign.quiz,
-  }
-
   await CampaignsRepository.create({
     id: campaign.id,
     companyId: campaign.companyId,
@@ -163,6 +146,30 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
     description: campaign.description,
     quiz: campaign.quiz,
   })
+
+  // TODO: save image on cloudflare R2
+  const file = data.get('campaign-carousel-image')
+  const attachment = await uploadCampaignImage(campaign.id, file as File)
+
+  if (!attachment) {
+    return {
+      success: false,
+      title: 'Algo deu errado!',
+      message: 'Falha ao salvar imagem.',
+    }
+  }
+
+  const notPublishedCampaign = {
+    id: campaign.id,
+    title: campaign.title,
+    subtitle: campaign.subtitle,
+    slug: campaign.slug,
+    affiliateUrl: campaign.affiliateUrl,
+    type: campaign.type,
+    carouselImages: attachment,
+    description: campaign.description,
+    quiz: campaign.quiz,
+  }
 
   await RedisCacheRepository.set(`not-published-campaign:${campaign.id}:details`, JSON.stringify(notPublishedCampaign))
 

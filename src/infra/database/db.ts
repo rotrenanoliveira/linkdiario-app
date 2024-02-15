@@ -3,6 +3,7 @@ import {
   Account,
   CampaignCreateInput,
   CampaignFindBySlugAndCompanyIdArgs,
+  CarouselImageCreateInput,
   Company,
   Optional,
   UserRole,
@@ -12,6 +13,7 @@ import { PrismaAccessCodeRepository } from './prisma/repositories/prisma-access-
 import { PrismaAccountsRepository } from './prisma/repositories/prisma-accounts-repository'
 import { PrismaCampaignsRepository } from './prisma/repositories/prisma-campaign-repository'
 import { PrismaCompaniesRepository } from './prisma/repositories/prisma-companies-repository'
+import { PrismaCampaignAttachmentsRepository } from './prisma/repositories/prisma-campaign-attachments-repository'
 
 //= Access Code Repository ==//
 export const AccessCodeRepository = {
@@ -80,5 +82,12 @@ export const CampaignsRepository = {
   },
   create(data: CampaignCreateInput) {
     return PrismaCampaignsRepository.create(data)
+  },
+}
+
+//= = Campaign Attachments Repository ==
+export const CampaignAttachmentsRepository = {
+  create(data: CarouselImageCreateInput) {
+    return PrismaCampaignAttachmentsRepository.create(data)
   },
 }

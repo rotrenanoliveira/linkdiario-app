@@ -102,10 +102,11 @@ model Campaign {
 }
 
 model CampaignAttachments {
-  id         String @id @default(uuid())
-  campaignId String @map("campaign_id")
-  file       String
-  url        String
+  id         String   @id @default(uuid())
+  campaignId String   @map("campaign_id")
+  name       String
+  key        String
+  createdAt  DateTime @default(now()) @map("created_at")
 
   campaign Campaign @relation(fields: [campaignId], references: [id])
 

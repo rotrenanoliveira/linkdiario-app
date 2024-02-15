@@ -4,7 +4,7 @@ import { env } from '@/env'
 import { Campaign as PrismaCampaign, CampaignAttachments } from '@prisma/client'
 
 type PrismaCampaignWithAttachments = PrismaCampaign & {
-  attachments: Pick<CampaignAttachments, 'file' | 'url'>[]
+  attachments: Pick<CampaignAttachments, 'name' | 'key'>[]
   company: {
     slug: string
   }
@@ -12,6 +12,13 @@ type PrismaCampaignWithAttachments = PrismaCampaign & {
 
 export class PrismaCampaignMapper {
   static toDomain(raw: PrismaCampaignWithAttachments): PresellCampaign | QuizCampaign {
+    const carouselImages = raw.attachments.map((attachment) => {
+      return {
+        file: attachment.name,
+        url: `${env.ASSETS_URL}/${attachment.key}`,
+      }
+    })
+
     const campaign: Campaign = {
       id: raw.id,
       companyId: raw.companyId,
@@ -21,11 +28,11 @@ export class PrismaCampaignMapper {
       subtitle: raw.subtitle,
       slug: raw.slug,
       name: raw.name,
-      carouselImages: raw.attachments,
       createdAt: raw.createdAt,
       startedAt: raw.startedAt,
       endedAt: raw.endedAt,
       updatedAt: raw.updatedAt,
+      carouselImages,
     }
 
     if (raw.type === 'PRESELL' && raw.description) {

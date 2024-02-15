@@ -18,6 +18,12 @@ export type CampaignQuiz = { question: string; answers: Array<string> }
  */
 export type CarouselImage = { file: string; url: string }
 
+export type CarouselImageCreateInput = {
+  name: string
+  key: string
+  campaignId: string
+}
+
 /**
  * Campaign represents the structure of a marketing campaign with its associated properties.
  */

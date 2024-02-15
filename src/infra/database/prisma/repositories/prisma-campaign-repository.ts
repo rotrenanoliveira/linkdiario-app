@@ -11,8 +11,8 @@ export const PrismaCampaignsRepository = {
       include: {
         attachments: {
           select: {
-            file: true,
-            url: true,
+            name: true,
+            key: true,
           },
         },
         company: {
@@ -37,8 +37,8 @@ export const PrismaCampaignsRepository = {
       include: {
         attachments: {
           select: {
-            file: true,
-            url: true,
+            name: true,
+            key: true,
           },
         },
         company: {

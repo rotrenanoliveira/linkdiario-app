@@ -6,6 +6,7 @@ export {
   CampaignQuiz,
   CampaignCreateInput,
   CampaignFindBySlugAndCompanyIdArgs,
+  CarouselImageCreateInput,
   PresellCampaign,
   QuizCampaign,
 } from './campaign'
