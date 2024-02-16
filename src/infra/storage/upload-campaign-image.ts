@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import axios from 'axios'
+import sharp from 'sharp'
 
 import { CarouselImage } from '@/core/types/campaign'
 import { env } from '@/env'
@@ -32,8 +33,14 @@ export async function uploadCampaignImage(campaignId: string, image: File) {
   })
 
   const buffer = Buffer.from(await image.arrayBuffer())
+  const imageBuffer = await sharp(buffer)
+    .webp({ quality: 80 })
+    .resize(352, 448, {
+      fit: 'cover',
+    })
+    .toBuffer()
 
-  await axios.put(signedUrl, buffer, {
+  await axios.put(signedUrl, imageBuffer, {
     headers: {
       'Content-Type': fileType,
     },

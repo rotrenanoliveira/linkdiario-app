@@ -16,4 +16,4 @@
 ### v_alpha_riverwood - 01/02/2024
 
 ### TODO 
- - add sharp to optimize campaign images
+ - Tratar quando houver um erro ao salvar a imagem
