@@ -66,6 +66,7 @@ export type CampaignToDashboard = {
  */
 export type CampaignToCustomer = {
   id: string
+  name: string
   status: CampaignStatus
   title: string
   subtitle: string

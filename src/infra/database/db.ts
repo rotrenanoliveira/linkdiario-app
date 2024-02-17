@@ -100,7 +100,13 @@ export const CampaignsRepository = {
 
 //= = Campaign Attachments Repository ==
 export const CampaignAttachmentsRepository = {
+  findByCampaignId(campaignId: string) {
+    return PrismaCampaignAttachmentsRepository.findManyByCampaignId(campaignId)
+  },
   create(data: CarouselImageCreateInput) {
     return PrismaCampaignAttachmentsRepository.create(data)
+  },
+  deleteMany(campaignId: string) {
+    return PrismaCampaignAttachmentsRepository.deleteMany(campaignId)
   },
 }

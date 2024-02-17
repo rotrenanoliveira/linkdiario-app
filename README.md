@@ -17,3 +17,5 @@
 
 ### TODO 
  - Tratar quando houver um erro ao salvar a imagem
+ - Permitir atualizar o status da campanha
+ - Permitir deletar a campanha

@@ -21,7 +21,7 @@ export function PresellCampaign({ description, affiliateUrl }: PresellCampaignPr
   }
 
   return (
-    <div className="max-w-[384px]">
+    <div className="w-full max-w-[384px]">
       <div className="space-y-3 mb-8">
         {descriptionParsed.map((text, index) => {
           const sanitizedHTML = sanitize(text)

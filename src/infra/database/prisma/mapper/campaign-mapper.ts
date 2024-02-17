@@ -85,6 +85,7 @@ export class PrismaCampaignMapper {
 
     const campaign = {
       id: raw.id,
+      name: raw.name,
       status: raw.status,
       title: raw.title,
       subtitle: raw.subtitle,
