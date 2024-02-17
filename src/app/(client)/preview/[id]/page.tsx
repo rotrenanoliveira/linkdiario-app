@@ -8,11 +8,10 @@ import { QuizCampaign } from '../../_components/quiz-campaign'
 import { PresellCampaign } from '../../_components/presell-campaign'
 import { PublishAlertDialog } from './_components/publish-alert-dialog'
 
-import { satochi } from '@/app/fonts'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Services } from '@/infra/services'
-import { cn } from '@/lib/utils'
+import { CampaignTitle } from './_components/campaign-title'
 
 interface PreviewCampaignPageProps {
   params: { id: string }
@@ -52,9 +51,9 @@ export default async function PreviewCampaignPage({ params }: PreviewCampaignPag
   const campaignQuiz = campaign.quiz
 
   return (
-    <section className="container max-w-screen-xl box-border p-4">
+    <section className="container max-w-screen-xl box-border p-4 overflow-hidden">
       {/* HEADER - CAMPAIGN */}
-      <header className="w-full pl-6 pr-3 py-3 gap-2 flex flex-col md:flex-row items-center justify-between bg-white rounded-full">
+      <header className="w-full p-3 gap-2 flex flex-col md:flex-row items-center justify-between bg-white rounded-md md:rounded-full">
         <div className="inline-flex items-center gap-2">
           <Link
             href="/dashboard/campaigns"
@@ -65,7 +64,7 @@ export default async function PreviewCampaignPage({ params }: PreviewCampaignPag
 
           <div className="w-1 h-1 bg-foreground/50 rounded-full" />
 
-          <p className={cn(satochi.className, 'capitalize text-xl')}>Campanha: {campaign.title}</p>
+          <CampaignTitle title={campaign.title} />
         </div>
 
         <div className="inline-flex items-center gap-2">
@@ -80,26 +79,27 @@ export default async function PreviewCampaignPage({ params }: PreviewCampaignPag
       </header>
 
       {/*  CAMPAIGN TITLE  */}
-      <div className="container max-w-screen-lg mt-16 space-y-4 text-center capitalize">
-        <p className="font-normal text-5xl">{campaign.title}</p>
-        <p className="font-light text-2xl">{campaign.subtitle}</p>
+      <div className="max-w-screen-lg mt-16 space-y-4 text-center capitalize">
+        <p className="font-normal text-xl md:text-3xl lg:text-5xl">{campaign.title}</p>
+        <p className="font-light text-lg md:text-xl lg:text-2xl">{campaign.subtitle}</p>
         <div className="w-32 h-1 mx-auto bg-yellow-400 rounded-full" />
       </div>
 
       {/* CAMPAIGN CONTENT */}
-      <div className="container max-w-screen-lg flex items-center justify-between mt-16">
-        <div className="w-[352px] h-[448px] bg-foreground/5 rounded-2xl relative">
-          <div className="w-[352px] h-[448px] rounded-2xl absolute bg-foreground/15 rotate-12" />
+      <div className="mx-auto max-w-screen-lg flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 xl:gap-32 mt-16 lg:mt-32">
+        <div className="w-80 h-96 md:w-[352px] md:h-[448px] bg-foreground/5 rounded-2xl relative">
+          <div className="w-80 h-96 md:w-[352px] md:h-[448px] rounded-2xl absolute bg-foreground/15 rotate-12" />
 
-          <div className="w-[352px] h-[448px] rounded-2xl absolute bg-foreground/25 rotate-6" />
+          <div className="w-80 h-96 md:w-[352px] md:h-[448px] rounded-2xl absolute bg-foreground/25 rotate-6" />
 
-          <div className="w-[352px] h-[448px] rounded-2xl absolute">
+          <div className="w-80 h-96 md:w-[352px] md:h-[448px] rounded-2xl absolute">
             <Image
               src={campaignImage.url}
               alt={campaignImage.file}
               width={352}
               height={448}
-              className="w-[352px] h-[448px] rounded-2xl absolute"
+              // className="w-[352px] h-[448px] rounded-2xl absolute"
+              className="w-80 h-96 md:w-[352px] md:h-[448px] rounded-2xl absolute"
             />
           </div>
         </div>

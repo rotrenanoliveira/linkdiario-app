@@ -53,26 +53,27 @@ export default async function PreviewCampaignPage({ params }: PreviewCampaignPag
   return (
     <section className="container max-w-screen-xl box-border p-4">
       {/*  CAMPAIGN TITLE  */}
-      <div className="container max-w-screen-lg mt-32 space-y-4 text-center capitalize">
-        <p className="font-normal text-5xl">{campaign.title}</p>
-        <p className="font-light text-2xl">{campaign.subtitle}</p>
+      <div className="max-w-screen-lg mt-16 space-y-4 text-center capitalize">
+        <p className="font-normal text-xl md:text-3xl lg:text-5xl">{campaign.title}</p>
+        <p className="font-light text-lg md:text-xl lg:text-2xl">{campaign.subtitle}</p>
         <div className="w-32 h-1 mx-auto bg-yellow-400 rounded-full" />
       </div>
 
       {/* CAMPAIGN CONTENT */}
-      <div className="container max-w-screen-lg flex items-center justify-between mt-32">
-        <div className="w-[352px] h-[448px] bg-foreground/5 rounded-2xl relative">
-          <div className="w-[352px] h-[448px] rounded-2xl absolute bg-foreground/15 rotate-12" />
+      <div className="mx-auto max-w-screen-lg flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 xl:gap-32 mt-16 lg:mt-32">
+        <div className="w-80 h-96 md:w-[352px] md:h-[448px] bg-foreground/5 rounded-2xl relative">
+          <div className="w-80 h-96 md:w-[352px] md:h-[448px] rounded-2xl absolute bg-foreground/15 rotate-12" />
 
-          <div className="w-[352px] h-[448px] rounded-2xl absolute bg-foreground/25 rotate-6" />
+          <div className="w-80 h-96 md:w-[352px] md:h-[448px] rounded-2xl absolute bg-foreground/25 rotate-6" />
 
-          <div className="w-[352px] h-[448px] rounded-2xl absolute">
+          <div className="w-80 h-96 md:w-[352px] md:h-[448px] rounded-2xl absolute">
             <Image
               src={campaignImage.url}
               alt={campaignImage.file}
               width={352}
               height={448}
-              className="w-[352px] h-[448px] rounded-2xl absolute"
+              // className="w-[352px] h-[448px] rounded-2xl absolute"
+              className="w-80 h-96 md:w-[352px] md:h-[448px] rounded-2xl absolute"
             />
           </div>
         </div>

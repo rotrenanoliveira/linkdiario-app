@@ -26,7 +26,13 @@ export function PresellCampaign({ description, affiliateUrl }: PresellCampaignPr
         {descriptionParsed.map((text, index) => {
           const sanitizedHTML = sanitize(text)
 
-          return <p key={index} className="font-normal text-lg" dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
+          return (
+            <p
+              key={index}
+              className="font-light md:font-normal text-md md:text-lg"
+              dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
+            />
+          )
         })}
       </div>
 

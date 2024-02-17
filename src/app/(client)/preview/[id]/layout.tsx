@@ -5,8 +5,8 @@ import Link from 'next/link'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <main className="w-screen bg-[#F6F7F8]">
-      <div className="h-[calc(100dvh-64px)]">{children}</div>
+    <main className="w-screen h-screen bg-[#F6F7F8]">
+      <div className="xl:h-[calc(100dvh-64px)]">{children}</div>
 
       <footer className={cn(satochi.className, 'text-center text-lg p-3 opacity-50')}>
         linkdiario by
