@@ -1,8 +1,16 @@
+import type { Metadata } from 'next'
+
 import { redirect } from 'next/navigation'
 
 import { FormRegisterCampaign } from './_components/form-register-campaign'
 import { Separator } from '@/components/ui/separator'
 import { Services } from '@/infra/services'
+
+export const metadata: Metadata = {
+  title: 'Cadastrar Campanha | linkdiario',
+  description: 'linkdiario - Cadastrar Campanha',
+  icons: '/favicon.ico',
+}
 
 export default async function RegisterCampaignPage() {
   const company = await Services.getCompany()

@@ -1,8 +1,15 @@
 import { redirect } from 'next/navigation'
+import type { Metadata } from 'next'
 
 import { FormUpdateProfile } from './_components/form-update-profile'
 import { Separator } from '@/components/ui/separator'
 import { Services } from '@/infra/services'
+
+export const metadata: Metadata = {
+  title: 'Sua conta | linkdiario',
+  description: 'linkdiario - Sua conta',
+  icons: '/favicon.ico',
+}
 
 export default async function ProfilePage() {
   const user = await Services.getAccount()

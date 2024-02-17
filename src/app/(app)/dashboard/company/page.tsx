@@ -1,6 +1,14 @@
+import type { Metadata } from 'next'
+
 import { FormRegisterCompany } from './_components/form-register-company'
 import { Separator } from '@/components/ui/separator'
 import { Services } from '@/infra/services'
+
+export const metadata: Metadata = {
+  title: 'Cadastro de empresa | linkdiario',
+  description: 'linkdiario - Cadastro de empresa',
+  icons: '/favicon.ico',
+}
 
 export default async function CompanyPage() {
   const company = await Services.getCompany()

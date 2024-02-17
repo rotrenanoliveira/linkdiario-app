@@ -1,11 +1,19 @@
-import Link from 'next/link'
+import type { Metadata } from 'next'
+
 import { Suspense } from 'react'
 import { Plus } from 'lucide-react'
+import Link from 'next/link'
 
 import { DashboardCampaignsTable } from './_components/campaigns-table'
 import { buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
+
+export const metadata: Metadata = {
+  title: 'Campanhas | linkdiario',
+  description: 'linkdiario - Campanhas',
+  icons: '/favicon.ico',
+}
 
 export default function CampaignsPage() {
   return (
