@@ -1,7 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['assets.linkdiario.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'assets.linkdiario.com',
+        port: '',
+      },
+    ],
   },
 }
 
