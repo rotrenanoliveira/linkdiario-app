@@ -1,7 +1,6 @@
 'use server'
 
 import { randomUUID } from 'node:crypto'
-import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { fromZodError } from 'zod-validation-error'
@@ -172,8 +171,6 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
   }
 
   await RedisCacheRepository.set(`not-published-campaign:${campaign.id}:details`, JSON.stringify(notPublishedCampaign))
-
-  cookies().set('_linkdiario:edit-campaign:id', campaign.id)
 
   revalidatePath('/dashboard/campaigns')
 
