@@ -17,3 +17,7 @@
 
 ### TODO 
  - Tratar quando houver um erro ao salvar a imagem
+ - Tratar: ⚠ The "images.domains" configuration is deprecated. Please use "images.remotePatterns" configuration instead.
+ - Tratar
+
+ ![Screenshot](.github/erro-quiz-not-found.png)
