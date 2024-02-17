@@ -62,7 +62,7 @@ export class PrismaCampaignMapper {
   }
 
   static toDashboard(raw: PrismaCampaignWithAttachments): CampaignToDashboard {
-    const campaignUrl = String(`${env.HOST}`).concat('/', raw.company.slug).concat('/', raw.slug)
+    const campaignUrl = String(`${env.APP_URL}`).concat('/', raw.company.slug).concat('/', raw.slug)
 
     return {
       id: raw.id,
