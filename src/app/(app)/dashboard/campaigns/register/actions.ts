@@ -2,6 +2,7 @@
 
 import { randomUUID } from 'node:crypto'
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { fromZodError } from 'zod-validation-error'
 import { z } from 'zod'
@@ -147,7 +148,6 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
     quiz: campaign.quiz,
   })
 
-  // TODO: save image on cloudflare R2
   const file = data.get('campaign-carousel-image')
   const attachment = await uploadCampaignImage(campaign.id, file as File)
 
@@ -166,7 +166,7 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
     slug: campaign.slug,
     affiliateUrl: campaign.affiliateUrl,
     type: campaign.type,
-    carouselImages: attachment,
+    carouselImages: [attachment],
     description: campaign.description,
     quiz: campaign.quiz,
   }
@@ -177,9 +177,5 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
 
   revalidatePath('/dashboard/campaigns')
 
-  return {
-    success: true,
-    title: 'Parabéns!',
-    message: 'Seu campanha foi criada com sucesso.',
-  }
+  redirect(`/preview/${campaign.id}`)
 }
