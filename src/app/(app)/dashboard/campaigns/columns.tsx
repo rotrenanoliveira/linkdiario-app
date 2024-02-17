@@ -101,7 +101,7 @@ export const dashboardCampaignsColumns: ColumnDef<CampaignToDashboard>[] = [
 
             <DropdownMenuItem>
               <Link
-                href={`/dashboard/campaigns/preview/${campaign.id}`}
+                href={`/preview/${campaign.id}`}
                 target="_blank"
                 className="w-full flex items-center justify-between group cursor-pointer"
               >

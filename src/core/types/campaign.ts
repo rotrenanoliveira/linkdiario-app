@@ -18,6 +18,11 @@ export type CampaignQuiz = { question: string; answers: Array<string> }
  */
 export type CarouselImage = { file: string; url: string }
 
+/**
+ * CarouselImageCreateInput represents the input data required to create a new carousel image.
+ * This includes the name of the image, a unique key for storage purposes, and the campaign ID
+ * to which this image belongs.
+ */
 export type CarouselImageCreateInput = {
   name: string
   key: string
@@ -61,6 +66,7 @@ export type CampaignToDashboard = {
  */
 export type CampaignToCustomer = {
   id: string
+  status: CampaignStatus
   title: string
   subtitle: string
   slug: string

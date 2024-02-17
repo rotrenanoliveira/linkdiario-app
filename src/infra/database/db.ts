@@ -74,14 +74,23 @@ export const CompaniesRepository = {
 
 //= Campaigns Repository ==
 export const CampaignsRepository = {
+  findById(id: string) {
+    return PrismaCampaignsRepository.findById(id)
+  },
   findManyByCompanyId(companyId: string) {
     return PrismaCampaignsRepository.findManyByCompanyId(companyId)
   },
   findBySlugAndCompanyId(args: CampaignFindBySlugAndCompanyIdArgs) {
     return PrismaCampaignsRepository.findBySlugAndCompanyId(args)
   },
+  getCompanyAndCampaignSlugById(id: string) {
+    return PrismaCampaignsRepository.getCompanyAndCampaignSlugById(id)
+  },
   create(data: CampaignCreateInput) {
     return PrismaCampaignsRepository.create(data)
+  },
+  save(id: string, data: Partial<CampaignCreateInput>) {
+    return PrismaCampaignsRepository.save(id, data)
   },
 }
 

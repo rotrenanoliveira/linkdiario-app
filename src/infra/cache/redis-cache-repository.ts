@@ -8,8 +8,8 @@ export const RedisCacheRepository = {
       ex: 60 * 1 * 1440, // 1 day
     })
   },
-  async get(key: string): Promise<string | null> {
-    return await cache.get(key)
+  async get<T = string>(key: string): Promise<T | null> {
+    return await cache.get<T>(key)
   },
   async delete(key: string): Promise<void> {
     await cache.del(key)

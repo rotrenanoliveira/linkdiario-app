@@ -1,5 +1,10 @@
 import { Campaign, PresellCampaign, QuizCampaign } from '@/core/types'
-import { CampaignQuiz, CampaignToDashboard } from '@/core/types/campaign'
+import {
+  CampaignQuiz,
+  CampaignToDashboard,
+  PresellCampaignToCustomer,
+  QuizCampaignToCustomer,
+} from '@/core/types/campaign'
 import { env } from '@/env'
 import { Campaign as PrismaCampaign, CampaignAttachments } from '@prisma/client'
 
@@ -67,6 +72,45 @@ export class PrismaCampaignMapper {
       type: raw.type,
       startedAt: raw.startedAt,
       campaignUrl,
+    }
+  }
+
+  static toCustomer(raw: PrismaCampaignWithAttachments): QuizCampaignToCustomer | PresellCampaignToCustomer {
+    const carouselImages = raw.attachments.map((attachment) => {
+      return {
+        file: attachment.name,
+        url: `${env.ASSETS_URL}/${attachment.key}`,
+      }
+    })
+
+    const campaign = {
+      id: raw.id,
+      status: raw.status,
+      title: raw.title,
+      subtitle: raw.subtitle,
+      slug: raw.slug,
+      affiliateUrl: raw.affiliateUrl,
+      carouselImages,
+    }
+
+    if (raw.type === 'PRESELL' && raw.description) {
+      return {
+        ...campaign,
+        type: 'PRESELL',
+        description: raw.description,
+      }
+    }
+
+    if (!raw.quiz) {
+      throw new Error('Quiz not found')
+    }
+
+    const quiz = JSON.parse(raw.quiz) as CampaignQuiz
+
+    return {
+      ...campaign,
+      type: 'QUIZ',
+      quiz,
     }
   }
 }
