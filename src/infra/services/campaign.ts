@@ -1,4 +1,5 @@
 import {
+  CampaignFindBySlugAndCompanySlugArgs,
   CampaignToCustomer,
   CampaignToDashboard,
   PresellCampaignToCustomer,
@@ -16,6 +17,14 @@ export async function getCampaignById(
   campaignId: string,
 ): Promise<CampaignToCustomer | PresellCampaignToCustomer | QuizCampaignToCustomer | null> {
   const campaign = await CampaignsRepository.findById(campaignId)
+
+  return campaign
+}
+
+export async function getCampaignBySlug(
+  args: CampaignFindBySlugAndCompanySlugArgs,
+): Promise<CampaignToCustomer | PresellCampaignToCustomer | QuizCampaignToCustomer | null> {
+  const campaign = await CampaignsRepository.findByCampaignAndCompanySlug(args)
 
   return campaign
 }

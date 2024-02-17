@@ -3,6 +3,7 @@ import {
   Account,
   CampaignCreateInput,
   CampaignFindBySlugAndCompanyIdArgs,
+  CampaignFindBySlugAndCompanySlugArgs,
   CarouselImageCreateInput,
   Company,
   Optional,
@@ -82,6 +83,9 @@ export const CampaignsRepository = {
   },
   findBySlugAndCompanyId(args: CampaignFindBySlugAndCompanyIdArgs) {
     return PrismaCampaignsRepository.findBySlugAndCompanyId(args)
+  },
+  findByCampaignAndCompanySlug(args: CampaignFindBySlugAndCompanySlugArgs) {
+    return PrismaCampaignsRepository.findByCampaignAndCompanySlug(args)
   },
   getCompanyAndCampaignSlugById(id: string) {
     return PrismaCampaignsRepository.getCompanyAndCampaignSlugById(id)

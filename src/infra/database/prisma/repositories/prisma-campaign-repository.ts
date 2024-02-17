@@ -1,4 +1,8 @@
-import { CampaignCreateInput, CampaignFindBySlugAndCompanyIdArgs } from '@/core/types'
+import {
+  CampaignCreateInput,
+  CampaignFindBySlugAndCompanyIdArgs,
+  CampaignFindBySlugAndCompanySlugArgs,
+} from '@/core/types'
 import prisma from '@/lib/prisma'
 import { PrismaCampaignMapper } from '../mapper/campaign-mapper'
 import { RedisCacheRepository } from '@/infra/cache/redis-cache-repository'
@@ -15,6 +19,35 @@ export const PrismaCampaignsRepository = {
     const campaign = await prisma.campaign.findUnique({
       where: {
         id,
+      },
+      include: {
+        attachments: {
+          select: {
+            name: true,
+            key: true,
+          },
+        },
+        company: {
+          select: {
+            slug: true,
+          },
+        },
+      },
+    })
+
+    if (!campaign) {
+      return null
+    }
+
+    return PrismaCampaignMapper.toCustomer(campaign)
+  },
+  async findByCampaignAndCompanySlug({ campaignSlug, companySlug }: CampaignFindBySlugAndCompanySlugArgs) {
+    const campaign = await prisma.campaign.findFirst({
+      where: {
+        slug: campaignSlug,
+        company: {
+          slug: companySlug,
+        },
       },
       include: {
         attachments: {
@@ -124,7 +157,16 @@ export const PrismaCampaignsRepository = {
     })
   },
   async save(id: string, data: Partial<CampaignCreateInput>): Promise<void> {
-    const quiz = data.quiz ? JSON.stringify(data.quiz) : null
+    const existingCampaign = await prisma.campaign.findUniqueOrThrow({
+      where: {
+        id,
+      },
+      select: {
+        quiz: true,
+      },
+    })
+
+    const quiz = data.quiz ? JSON.stringify(data.quiz) : existingCampaign.quiz
 
     await prisma.campaign.update({
       where: {

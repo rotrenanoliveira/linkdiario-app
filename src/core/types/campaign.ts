@@ -124,3 +124,12 @@ export type CampaignFindBySlugAndCompanyIdArgs = {
   slug: string // The slug of the campaign to find
   companyId: string // The identifier of the company associated with the campaign
 }
+
+/**
+ * CampaignFindBySlugAndCompanySlugArgs represents the arguments used to find a Campaign
+ * by its slug and the associated company's slug.
+ */
+export type CampaignFindBySlugAndCompanySlugArgs = {
+  campaignSlug: string // The slug of the campaign to find
+  companySlug: string // The slug of the company associated with the campaign
+}
