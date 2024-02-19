@@ -5,6 +5,7 @@ export {
   Campaign,
   CampaignQuiz,
   CampaignCreateInput,
+  CampaignUpdateInput,
   CampaignFindBySlugAndCompanyIdArgs,
   CampaignFindBySlugAndCompanySlugArgs,
   CarouselImageCreateInput,

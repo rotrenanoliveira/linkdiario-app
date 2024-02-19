@@ -4,11 +4,13 @@ import { FormDescription } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Image as ImageIcon, Upload } from 'lucide-react'
+import Image from 'next/image'
 import { ChangeEvent, useState } from 'react'
 
 export function InputCarouselImages() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [fileName, setFileName] = useState<string | null>(null)
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
 
   function handleSelectImages(event: ChangeEvent<HTMLInputElement>) {
     const fileList = event.target.files
@@ -34,6 +36,9 @@ export function InputCarouselImages() {
     }
 
     setFileName(inputFile.name)
+
+    const fileURL = URL.createObjectURL(inputFile)
+    setImageUrl(fileURL)
   }
 
   return (
@@ -70,7 +75,17 @@ export function InputCarouselImages() {
           <div className="flex-1">
             <div className="min-h-[10rem] cursor-pointer flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed">
               <div className="flex h-20 w-20 items-center justify-center rounded-md bg-zinc-100 transition-all duration-150">
-                <ImageIcon size={24} />
+                {imageUrl ? (
+                  <Image
+                    src={imageUrl}
+                    alt={fileName}
+                    width={80}
+                    height={80}
+                    className="size-20 object-cover rounded-md"
+                  />
+                ) : (
+                  <ImageIcon size={24} />
+                )}
               </div>
               <span className="text-sm font-light text-gray-900">{fileName}</span>
             </div>

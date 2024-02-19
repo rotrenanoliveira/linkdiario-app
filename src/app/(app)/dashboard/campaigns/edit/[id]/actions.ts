@@ -9,11 +9,12 @@ import { ActionResponse, CampaignQuiz } from '@/core/types'
 import { CampaignAttachmentsRepository, CampaignsRepository } from '@/infra/database/db'
 import { uploadCampaignImage } from '@/infra/storage/upload-campaign-image'
 import { Slug } from '@/utils/slug'
+import { RedisCacheRepository } from '@/infra/cache/redis-cache-repository'
 
 type PrevState = ActionResponse | null
 
-const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB
-const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+// const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB
+// const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
 
 export async function actionUpdateCampaign(prevState: PrevState, data: FormData): Promise<ActionResponse> {
   // Validation
@@ -140,7 +141,6 @@ export async function actionUpdateCampaign(prevState: PrevState, data: FormData)
   }
 
   await CampaignsRepository.save(campaignData.id, {
-    companyId: campaign.companyId,
     title: campaign.title,
     subtitle: campaign.subtitle,
     name: campaign.name,
@@ -175,4 +175,72 @@ export async function actionUpdateCampaign(prevState: PrevState, data: FormData)
   revalidatePath(`/${slugs?.companySlug}/${campaign.slug}`)
 
   redirect(`/preview/${campaign.id}`)
+}
+
+export async function actionUpdateCampaignStatus(prevState: PrevState, data: FormData): Promise<ActionResponse> {
+  const updateCampaignStatusSchema = z.object({
+    id: z.string(),
+    status: z.enum(['NOT_PUBLISHED', 'ACTIVE', 'PAUSED', 'REMOVED', 'ENDED']),
+  })
+
+  const result = updateCampaignStatusSchema.safeParse({
+    id: data.get('campaign-id'),
+    status: data.get('campaign-status'),
+  })
+
+  if (result.success === false) {
+    const zodError = fromZodError(result.error)
+
+    return {
+      success: false,
+      title: 'Algo deu errado!',
+      message: zodError.toString(),
+    }
+  }
+
+  const campaign = result.data
+  // console.log(formData)
+
+  if (campaign.status === 'REMOVED') {
+    return {
+      success: false,
+      title: 'Algo deu errado!',
+      message: 'Esta campanha não pode ser alterada.',
+    }
+  }
+
+  await Promise.all([
+    RedisCacheRepository.delete(`not-published-campaign:${campaign.id}:details`),
+    await CampaignsRepository.save(campaign.id, {
+      status: campaign.status,
+    }),
+  ])
+
+  const campaignSlugs = await CampaignsRepository.getCompanyAndCampaignSlugById(campaign.id)
+
+  revalidatePath(`/dashboard/campaigns/`)
+  revalidatePath(`/preview/${campaign.id}/`)
+  revalidatePath(`/${campaignSlugs?.companySlug}/${campaignSlugs?.campaignSlug}`)
+
+  return {
+    success: true,
+    title: 'Campanha atualizada!',
+    message: 'Campanha atualizada com sucesso.',
+  }
+}
+
+export async function actionRemoveCampaign(campaignId: string) {
+  const campaignSlugs = await CampaignsRepository.getCompanyAndCampaignSlugById(campaignId)
+
+  await Promise.all([
+    RedisCacheRepository.delete(`not-published-campaign:${campaignId}:details`),
+    await CampaignsRepository.save(campaignId, {
+      status: 'REMOVED',
+      endedAt: new Date(),
+    }),
+  ])
+
+  revalidatePath(`/dashboard/campaigns/`)
+  revalidatePath(`/preview/${campaignId}/`)
+  revalidatePath(`/${campaignSlugs?.companySlug}/${campaignSlugs?.campaignSlug}`)
 }

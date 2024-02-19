@@ -117,6 +117,21 @@ export type CampaignCreateInput = {
   quiz?: CampaignQuiz | null // Optional quiz associated with the campaign
 }
 
+export type CampaignUpdateInput = {
+  id?: string
+  title?: string
+  subtitle?: string
+  name?: string
+  slug?: string
+  affiliateUrl?: string
+  status?: CampaignStatus
+  type?: CampaignType
+  startedAt?: Date
+  description?: string | null
+  quiz?: CampaignQuiz | null
+  endedAt?: Date | null
+}
+
 /**
  * CampaignFindBySlugAndCompanyIdArgs represents the arguments used to find a Campaign
  * by its slug and the associated company's identifier.

@@ -2,6 +2,7 @@ import {
   AccessCode,
   Account,
   CampaignCreateInput,
+  CampaignUpdateInput,
   CampaignFindBySlugAndCompanyIdArgs,
   CampaignFindBySlugAndCompanySlugArgs,
   CarouselImageCreateInput,
@@ -93,7 +94,7 @@ export const CampaignsRepository = {
   create(data: CampaignCreateInput) {
     return PrismaCampaignsRepository.create(data)
   },
-  save(id: string, data: Partial<CampaignCreateInput>) {
+  save(id: string, data: CampaignUpdateInput) {
     return PrismaCampaignsRepository.save(id, data)
   },
 }

@@ -5,6 +5,8 @@ import { redirect } from 'next/navigation'
 import { FormUpdateCampaign } from './_components/form-update-campaign'
 import { Separator } from '@/components/ui/separator'
 import { Services } from '@/infra/services'
+import { AlertDialogRemoveCampaign } from './_components/alert-dialog-remove-campaign'
+import { FormUpdateCampaignStatus } from './_components/form-update-campaign-status'
 
 export const metadata: Metadata = {
   title: 'Atualizar Campanha | linkdiario',
@@ -35,6 +37,13 @@ export default async function UpdateCampaignPage({ params }: UpdateCampaignPageP
     slug: company.slug,
   }
 
+  const campaignStatus = {
+    id: campaign.id,
+    status: campaign.status ?? 'NOT_PUBLISHED',
+  }
+
+  // console.log(campaignStatus)
+
   return (
     <div className="space-y-6">
       <div>
@@ -42,8 +51,29 @@ export default async function UpdateCampaignPage({ params }: UpdateCampaignPageP
         <p className="text-sm text-muted-foreground">Informações da campanha.</p>
       </div>
       <Separator />
-
       <FormUpdateCampaign campaign={campaign} company={companyData} />
+
+      <Separator />
+
+      <div className="w-full lg:flex gap-4">
+        <div className="w-1/2">
+          <div>
+            <h3 className="text-lg font-medium">Atualizar Status da Campanha</h3>
+            <p className="text-sm text-muted-foreground">Alterar o status da campanha.</p>
+          </div>
+
+          <FormUpdateCampaignStatus campaign={campaignStatus} />
+        </div>
+
+        <div>
+          <div>
+            <h3 className="text-lg font-medium">Remover Campanha</h3>
+            <p className="text-sm text-muted-foreground">Essa operação não pode ser desfeita.</p>
+          </div>
+
+          <AlertDialogRemoveCampaign campaignId={campaign.id} />
+        </div>
+      </div>
     </div>
   )
 }

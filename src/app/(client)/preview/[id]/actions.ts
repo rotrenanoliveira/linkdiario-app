@@ -21,5 +21,6 @@ export async function publishCampaign(campaignId: string) {
   ])
 
   revalidatePath(`/dashboard/campaigns/`)
+  revalidatePath(`/preview/${campaignId}/`)
   revalidatePath(`/${campaignSlugs.companySlug}/${campaignSlugs.campaignSlug}`)
 }

@@ -6,7 +6,7 @@ import {
 import prisma from '@/lib/prisma'
 import { PrismaCampaignMapper } from '../mapper/campaign-mapper'
 import { RedisCacheRepository } from '@/infra/cache/redis-cache-repository'
-import { CampaignToCustomer } from '@/core/types/campaign'
+import { CampaignToCustomer, CampaignUpdateInput } from '@/core/types/campaign'
 
 export const PrismaCampaignsRepository = {
   async findById(id: string) {
@@ -156,7 +156,7 @@ export const PrismaCampaignsRepository = {
       },
     })
   },
-  async save(id: string, data: Partial<CampaignCreateInput>): Promise<void> {
+  async save(id: string, data: CampaignUpdateInput): Promise<void> {
     const existingCampaign = await prisma.campaign.findUniqueOrThrow({
       where: {
         id,
