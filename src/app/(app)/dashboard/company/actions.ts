@@ -1,13 +1,12 @@
 'use server'
 
-import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { fromZodError } from 'zod-validation-error'
 import { z } from 'zod'
-import jwt from 'jsonwebtoken'
 
 import { ActionResponse } from '@/core/types'
-import { AccountsRepository, CompaniesRepository } from '@/infra/database/db'
+import { CompaniesRepository } from '@/infra/database/db'
+import { Services } from '@/infra/services'
 
 type PrevState = ActionResponse | null
 
@@ -62,36 +61,18 @@ export async function actionRegisterCompany(prevState: PrevState, data: FormData
     }
   }
 
-  const token = cookies().get('_linkdiario:token')
-  if (!token) {
-    return {
-      success: false,
-      title: 'Algo deu errado!',
-      message: 'Token inválido.',
-    }
-  }
+  const account = await Services.getAccount()
 
-  const sub = jwt.decode(token.value)
-  if (!sub || !sub.sub) {
+  if (!account) {
     return {
       success: false,
       title: 'Algo deu errado!',
-      message: 'Token inválido.',
-    }
-  }
-
-  const userId = sub.sub?.toString()
-  const user = await AccountsRepository.findById(userId)
-  if (!user) {
-    return {
-      success: false,
-      title: 'Algo deu errado!',
-      message: 'Usuário inválido.',
+      message: 'Conta inválida.',
     }
   }
 
   await CompaniesRepository.create({
-    contactId: user.id,
+    contactId: account.id,
     name,
     slug,
     description,

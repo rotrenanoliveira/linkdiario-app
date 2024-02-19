@@ -14,7 +14,7 @@ export async function requestAccessCode(email: string): Promise<void> {
   }
 
   const code = genAccessCode()
-  // console.log(code)
+  console.log(code)
   const accessCode = code.concat('&').concat(user.id)
   const hashedCode = await hash(accessCode, 8)
 
