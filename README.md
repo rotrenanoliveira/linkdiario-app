@@ -17,3 +17,5 @@
 
 ### TODO 
  - Tratar quando houver um erro ao salvar a imagem
+ - Corrigir fluxo de update da campanha quando ainda não publicado (redis)
+ - Corrigir numeração em quiz/respostas cadastradas

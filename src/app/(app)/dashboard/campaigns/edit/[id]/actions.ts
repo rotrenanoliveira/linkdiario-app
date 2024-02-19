@@ -129,9 +129,9 @@ export async function actionUpdateCampaign(prevState: PrevState, data: FormData)
   const quiz =
     campaignData.type === 'QUIZ'
       ? {
-          question: question ?? '',
-          answers: answers ? answersArray : [],
-        }
+        question: question ?? '',
+        answers: answers ? answersArray : [],
+      }
       : null
 
   const campaign = {
