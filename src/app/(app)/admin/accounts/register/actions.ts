@@ -1,13 +1,12 @@
 'use server'
 
-import { PrismaAccountsRepository } from '@/lib/prisma/repositories/prisma-accounts-repository'
-import { ActionResponse } from '@/core/types/actions'
-import { prisma } from '@/lib/prisma/client'
 import { randomUUID } from 'node:crypto'
-import { z } from 'zod'
-import { fromZodError } from 'zod-validation-error'
-import { Account } from '@/core/types/accounts'
 import { revalidatePath } from 'next/cache'
+import { fromZodError } from 'zod-validation-error'
+import { z } from 'zod'
+
+import { Account, ActionResponse } from '@/core/types'
+import { AccountsRepository } from '@/infra/database/db'
 
 type PrevState = ActionResponse | null
 
@@ -44,9 +43,7 @@ export async function actionRegisterAccount(prevState: PrevState, data: FormData
     status: 'ACTIVE',
   }
 
-  const accountsRepository = new PrismaAccountsRepository(prisma)
-
-  const isEmailAlreadyInUse = !!(await accountsRepository.findByEmail(account.email))
+  const isEmailAlreadyInUse = !!(await AccountsRepository.findByEmail(account.email))
 
   if (isEmailAlreadyInUse) {
     return {
@@ -57,7 +54,7 @@ export async function actionRegisterAccount(prevState: PrevState, data: FormData
   }
 
   try {
-    await Promise.all([accountsRepository.create(account), accountsRepository.disconnect()])
+    await AccountsRepository.create(account)
 
     revalidatePath('/admin/accounts')
 

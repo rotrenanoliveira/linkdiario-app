@@ -1,19 +1,13 @@
-// export default function AccountsPage() {
-//   return <div>Accounts</div>
-// }
-
-import { Separator } from '@/components/ui/separator'
 import { columns } from './columns'
 import { DataTable } from './data-table'
+import { Separator } from '@/components/ui/separator'
 import { AccountDetails } from '@/core/types/accounts'
-import { PrismaAccountsRepository } from '@/lib/prisma/repositories/prisma-accounts-repository'
-import { prisma } from '@/lib/prisma/client'
+import { AccountsRepository } from '@/infra/database/db'
 
 async function getData(): Promise<AccountDetails[]> {
-  // Fetch data from your API here.
-  const accountsRepository = new PrismaAccountsRepository(prisma)
+  const accounts = await AccountsRepository.findMany()
 
-  return await accountsRepository.findMany()
+  return accounts
 }
 
 export default async function DemoPage() {
