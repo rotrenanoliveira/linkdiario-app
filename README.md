@@ -16,6 +16,19 @@
 ### v_alpha_riverwood - 01/02/2024
 
 ### TODO 
- - Tratar quando houver um erro ao salvar a imagem
- - Corrigir fluxo de update da campanha quando ainda não publicado (redis)
- - Corrigir numeração em quiz/respostas cadastradas
+ <!-- - Adicionar na criação/update da campanha a opção de agendar a publicação -->
+ - Corrigir numeração em quiz/respostas cadastrada
+ - Melhorar log de erros
+ - Inserir na /dashboard a quantidade de campanhas totais e ativas
+ - Página inicial
+ 
+### Features Plano Simples
+
+ - Botão de wpp na campanha
+ 
+ ### Features Plano Pro
+
+ - Captação de Leads
+ - Page view
+ - Contador de hover no btn
+ - Contador de cliques no btn
