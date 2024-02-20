@@ -13,8 +13,6 @@
 ```
 ---
 
-### v_alpha_riverwood - 01/02/2024
-
 ### TODO 
  <!-- - Adicionar na criação/update da campanha a opção de agendar a publicação -->
  - Corrigir numeração em quiz/respostas cadastrada
@@ -32,3 +30,6 @@
  - Page view
  - Contador de hover no btn
  - Contador de cliques no btn
+
+### v_alpha_riverwood - 01/02/2024
+### v_beta_whiterun   - 20/02/2024
