@@ -140,18 +140,21 @@ export async function actionUpdateCampaign(prevState: PrevState, data: FormData)
     quiz,
   }
 
-  await CampaignsRepository.save(campaignData.id, {
-    title: campaign.title,
-    subtitle: campaign.subtitle,
-    name: campaign.name,
-    slug: campaign.slug,
-    affiliateUrl: campaign.affiliateUrl,
-    type: campaign.type,
-    status: campaign.status,
-    startedAt: campaign.startedAt,
-    description: campaign.description,
-    quiz: campaign.quiz,
-  })
+  await Promise.all([
+    await CampaignsRepository.save(campaignData.id, {
+      title: campaign.title,
+      subtitle: campaign.subtitle,
+      name: campaign.name,
+      slug: campaign.slug,
+      affiliateUrl: campaign.affiliateUrl,
+      type: campaign.type,
+      status: campaign.status,
+      startedAt: campaign.startedAt,
+      description: campaign.description,
+      quiz: campaign.quiz,
+    }),
+    RedisCacheRepository.delete(`not-published-campaign:${campaign.id}:details`),
+  ])
 
   const file = data.get('campaign-carousel-image')
 
@@ -170,6 +173,10 @@ export async function actionUpdateCampaign(prevState: PrevState, data: FormData)
   }
 
   const slugs = await CampaignsRepository.getCompanyAndCampaignSlugById(campaign.id)
+
+  if (campaign.status === 'NOT_PUBLISHED') {
+    await RedisCacheRepository.set(`not-published-campaign:${campaign.id}:details`, JSON.stringify(campaign))
+  }
 
   revalidatePath('/dashboard/campaigns')
   revalidatePath(`/${slugs?.companySlug}/${campaign.slug}`)
