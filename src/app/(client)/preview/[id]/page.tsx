@@ -71,7 +71,9 @@ export default async function PreviewCampaignPage({ params }: PreviewCampaignPag
           <Badge variant="warning">{campaign.type}</Badge>
           <div className="w-1 h-1 bg-foreground/50 rounded-full" />
           <Button type="button" variant="outline" className="rounded-full">
-            <Link href={`/dashboard/campaigns/edit/${params.id}`}>Editar</Link>
+            <Link href={`/dashboard/campaigns/edit/${params.id}`} prefetch={true}>
+              Editar
+            </Link>
           </Button>
           <div className="w-1 h-1 bg-foreground/50 rounded-full" />
           <PublishAlertDialog campaignId={params.id} />
