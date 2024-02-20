@@ -39,6 +39,10 @@ export const PrismaCampaignsRepository = {
       return null
     }
 
+    const campaignToCache = PrismaCampaignMapper.toCache(campaign)
+
+    await RedisCacheRepository.set(`not-published-campaign:${id}:details`, JSON.stringify(campaignToCache))
+
     return PrismaCampaignMapper.toCustomer(campaign)
   },
   async findByCampaignAndCompanySlug({ campaignSlug, companySlug }: CampaignFindBySlugAndCompanySlugArgs) {

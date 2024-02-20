@@ -114,4 +114,22 @@ export class PrismaCampaignMapper {
       quiz,
     }
   }
+
+  static toCache(raw: PrismaCampaignWithAttachments) {
+    const campaign = this.toCustomer(raw)
+
+    const notPublishedCampaign = {
+      id: campaign.id,
+      title: campaign.title,
+      subtitle: campaign.subtitle,
+      slug: campaign.slug,
+      affiliateUrl: campaign.affiliateUrl,
+      type: campaign.type,
+      description: campaign.description,
+      quiz: campaign.quiz,
+      carouselImages: campaign.carouselImages,
+    }
+
+    return notPublishedCampaign
+  }
 }

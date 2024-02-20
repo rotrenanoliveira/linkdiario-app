@@ -174,10 +174,6 @@ export async function actionUpdateCampaign(prevState: PrevState, data: FormData)
 
   const slugs = await CampaignsRepository.getCompanyAndCampaignSlugById(campaign.id)
 
-  if (campaign.status === 'NOT_PUBLISHED') {
-    await RedisCacheRepository.set(`not-published-campaign:${campaign.id}:details`, JSON.stringify(campaign))
-  }
-
   revalidatePath('/dashboard/campaigns')
   revalidatePath(`/${slugs?.companySlug}/${campaign.slug}`)
 
