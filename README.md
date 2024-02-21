@@ -15,8 +15,10 @@
 
 ### TODO 
  <!-- - Adicionar na criação/update da campanha a opção de agendar a publicação -->
+ - Exibir tamanho ideal de imagem nos formulários de campanhas
  - Corrigir numeração em quiz/respostas cadastrada
  - Melhorar log de erros
+ - Permitir escolher a "cor predominante" da campanha, que será no botão e algum outro detalhe de design da página
  - Inserir na /dashboard a quantidade de campanhas totais e ativas
  - Página inicial
  
