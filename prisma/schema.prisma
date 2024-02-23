@@ -32,6 +32,7 @@ enum CAMPAIGN_STATUS {
 enum CAMPAIGN_TYPE {
   PRESELL
   QUIZ
+  LEADS
 }
 
 model User {
@@ -90,6 +91,7 @@ model Campaign {
   name         String
   description  String?
   quiz         String?
+  leads        String?
   createdAt    DateTime        @default(now()) @map("created_at")
   startedAt    DateTime        @map("started_at")
   endedAt      DateTime?       @map("ended_at")

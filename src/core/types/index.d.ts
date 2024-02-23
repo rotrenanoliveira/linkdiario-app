@@ -11,6 +11,8 @@ export {
   CarouselImageCreateInput,
   PresellCampaign,
   QuizCampaign,
+  LeadsCampaign,
+  CampaignLeads,
 } from './campaign'
 export { Company, CompanyDetails } from './company'
 export { Optional } from './optional'

@@ -6,7 +6,12 @@ export type CampaignStatus = 'ACTIVE' | 'PAUSED' | 'REMOVED' | 'ENDED' | 'NOT_PU
 /**
  * CampaignType represents the different types of campaigns, such as presell or quiz.
  */
-export type CampaignType = 'PRESELL' | 'QUIZ'
+export type CampaignType = 'PRESELL' | 'QUIZ' | 'LEADS'
+
+/**
+ * CampaignCreateInput represents the shape of the input data in the leads campaign.
+ */
+export type CampaignLeads = Array<{ name: string; type: string | boolean }>
 
 /**
  * CampaignQuiz represents a quiz associated with a campaign, including a question and a list of answers.
@@ -76,6 +81,7 @@ export type CampaignToCustomer = {
   carouselImages: CarouselImage[]
   description?: string | null
   quiz?: CampaignQuiz | null
+  leads?: CampaignLeads | null
 }
 
 /**
@@ -89,6 +95,11 @@ export type PresellCampaign = Campaign & { description: string; type: 'PRESELL' 
 export type QuizCampaign = Campaign & { type: 'QUIZ'; quiz: CampaignQuiz }
 
 /**
+ * Type representing a campaign that is in the leads phase.
+ */
+export type LeadsCampaign = Campaign & { type: 'LEADS'; leads: CampaignLeads }
+
+/**
  * Type representing campaign details sent to a customer, specifically for quiz campaigns.
  */
 export type QuizCampaignToCustomer = { quiz: CampaignQuiz } & CampaignToCustomer
@@ -97,6 +108,11 @@ export type QuizCampaignToCustomer = { quiz: CampaignQuiz } & CampaignToCustomer
  * Type representing campaign details sent to a customer, specifically for presell campaigns.
  */
 export type PresellCampaignToCustomer = { description: string } & CampaignToCustomer
+
+/**
+ * Type representing campaign details sent to a customer, specifically for leads campaigns.
+ */
+export type LeadsCampaignToCustomer = { leads: CampaignLeads } & CampaignToCustomer
 
 /**
  * CampaignCreateInput represents the input data required to create a new Campaign.
@@ -115,6 +131,7 @@ export type CampaignCreateInput = {
   startedAt: Date // The date and time when the campaign starts
   description?: string | null // Optional description for additional details about the campaign
   quiz?: CampaignQuiz | null // Optional quiz associated with the campaign
+  leads?: CampaignLeads | null // Optional leads associated with the campaign
 }
 
 export type CampaignUpdateInput = {
@@ -129,6 +146,7 @@ export type CampaignUpdateInput = {
   startedAt?: Date
   description?: string | null
   quiz?: CampaignQuiz | null
+  leads?: CampaignLeads | null
   endedAt?: Date | null
 }
 
