@@ -4,6 +4,7 @@ import {
   CampaignToDashboard,
   PresellCampaignToCustomer,
   QuizCampaignToCustomer,
+  LeadsCampaignToCustomer,
 } from '@/core/types/campaign'
 import { CampaignsRepository } from '../database/db'
 
@@ -15,7 +16,7 @@ export async function getCampaignsByCompany(companyId: string): Promise<Campaign
 
 export async function getCampaignById(
   campaignId: string,
-): Promise<CampaignToCustomer | PresellCampaignToCustomer | QuizCampaignToCustomer | null> {
+): Promise<CampaignToCustomer | PresellCampaignToCustomer | QuizCampaignToCustomer | LeadsCampaignToCustomer | null> {
   const campaign = await CampaignsRepository.findById(campaignId)
 
   return campaign
@@ -23,7 +24,7 @@ export async function getCampaignById(
 
 export async function getCampaignBySlug(
   args: CampaignFindBySlugAndCompanySlugArgs,
-): Promise<CampaignToCustomer | PresellCampaignToCustomer | QuizCampaignToCustomer | null> {
+): Promise<CampaignToCustomer | PresellCampaignToCustomer | QuizCampaignToCustomer | LeadsCampaignToCustomer | null> {
   const campaign = await CampaignsRepository.findByCampaignAndCompanySlug(args)
 
   return campaign

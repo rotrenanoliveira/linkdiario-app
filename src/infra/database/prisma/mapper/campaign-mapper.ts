@@ -1,7 +1,10 @@
 import { Campaign, PresellCampaign, QuizCampaign } from '@/core/types'
 import {
+  CampaignLeads,
   CampaignQuiz,
   CampaignToDashboard,
+  LeadsCampaign,
+  LeadsCampaignToCustomer,
   PresellCampaignToCustomer,
   QuizCampaignToCustomer,
 } from '@/core/types/campaign'
@@ -16,7 +19,7 @@ type PrismaCampaignWithAttachments = PrismaCampaign & {
 }
 
 export class PrismaCampaignMapper {
-  static toDomain(raw: PrismaCampaignWithAttachments): PresellCampaign | QuizCampaign {
+  static toDomain(raw: PrismaCampaignWithAttachments): PresellCampaign | QuizCampaign | LeadsCampaign {
     const carouselImages = raw.attachments.map((attachment) => {
       return {
         file: attachment.name,
@@ -48,6 +51,16 @@ export class PrismaCampaignMapper {
       }
     }
 
+    if (raw.type === 'LEADS' && raw.leads) {
+      const leads = JSON.parse(raw.leads) as CampaignLeads
+
+      return {
+        ...campaign,
+        type: 'LEADS',
+        leads,
+      }
+    }
+
     if (!raw.quiz) {
       throw new Error('Quiz not found')
     }
@@ -75,7 +88,9 @@ export class PrismaCampaignMapper {
     }
   }
 
-  static toCustomer(raw: PrismaCampaignWithAttachments): QuizCampaignToCustomer | PresellCampaignToCustomer {
+  static toCustomer(
+    raw: PrismaCampaignWithAttachments,
+  ): QuizCampaignToCustomer | PresellCampaignToCustomer | LeadsCampaignToCustomer {
     const carouselImages = raw.attachments.map((attachment) => {
       return {
         file: attachment.name,
@@ -99,6 +114,16 @@ export class PrismaCampaignMapper {
         ...campaign,
         type: 'PRESELL',
         description: raw.description,
+      }
+    }
+
+    if (raw.type === 'LEADS' && raw.leads) {
+      const leads = JSON.parse(raw.leads) as CampaignLeads
+
+      return {
+        ...campaign,
+        type: 'LEADS',
+        leads,
       }
     }
 
@@ -127,6 +152,7 @@ export class PrismaCampaignMapper {
       type: campaign.type,
       description: campaign.description,
       quiz: campaign.quiz,
+      leads: campaign.leads,
       carouselImages: campaign.carouselImages,
     }
 

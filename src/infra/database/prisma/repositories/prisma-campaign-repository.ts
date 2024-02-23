@@ -152,11 +152,13 @@ export const PrismaCampaignsRepository = {
   },
   async create(data: CampaignCreateInput): Promise<void> {
     const quiz = data.quiz ? JSON.stringify(data.quiz) : null
+    const leads = data.leads ? JSON.stringify(data.leads) : null
 
     await prisma.campaign.create({
       data: {
         ...data,
         quiz,
+        leads,
       },
     })
   },
@@ -167,10 +169,12 @@ export const PrismaCampaignsRepository = {
       },
       select: {
         quiz: true,
+        leads: true,
       },
     })
 
     const quiz = data.quiz ? JSON.stringify(data.quiz) : existingCampaign.quiz
+    const leads = data.leads ? JSON.stringify(data.leads) : existingCampaign.leads
 
     await prisma.campaign.update({
       where: {
@@ -179,6 +183,7 @@ export const PrismaCampaignsRepository = {
       data: {
         ...data,
         quiz,
+        leads,
       },
     })
   },
