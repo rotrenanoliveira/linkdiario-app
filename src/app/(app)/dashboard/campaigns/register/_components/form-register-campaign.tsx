@@ -16,6 +16,7 @@ import { InputQuizCampaign } from './input-quiz-campaign'
 import { actionSaveCampaign } from '../actions'
 import { InputCarouselImages } from './input-carousel-images'
 import { Slug } from '@/utils/slug'
+import { InputLeadsCampaign } from './input-leads-campaign'
 
 interface FormRegisterCampaignProps {
   company: Company
@@ -24,7 +25,7 @@ interface FormRegisterCampaignProps {
 export function FormRegisterCampaign({ company }: FormRegisterCampaignProps) {
   const [campaignTitle, setCampaignTitle] = useState<string | null>(null)
   const [campaignSlug, setCampaignSlug] = useState<string | null>(null)
-  const [campaignType, setCampaignType] = useState<'presell' | 'quiz' | null>(null)
+  const [campaignType, setCampaignType] = useState<'presell' | 'quiz' | 'leads' | null>(null)
 
   const [formState, formAction] = useFormState(actionSaveCampaign, null)
 
@@ -174,6 +175,10 @@ export function FormRegisterCampaign({ company }: FormRegisterCampaignProps) {
           <ToggleGroupItem value="quiz" onClick={() => setCampaignType('quiz')}>
             Quiz
           </ToggleGroupItem>
+
+          <ToggleGroupItem value="leads" onClick={() => setCampaignType('leads')}>
+            Leads
+          </ToggleGroupItem>
         </ToggleGroup>
 
         <FormDescription>Selecione o tipo de campanha que deseja criar.</FormDescription>
@@ -191,6 +196,7 @@ export function FormRegisterCampaign({ company }: FormRegisterCampaignProps) {
 
       {campaignType && campaignType === 'presell' && <InputPresellCampaign />}
       {campaignType && campaignType === 'quiz' && <InputQuizCampaign />}
+      {campaignType && campaignType === 'leads' && <InputLeadsCampaign />}
 
       <PendingSubmitButton type="submit" className="min-w-32">
         Salvar campanha

@@ -114,6 +114,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                 <SelectLabel>Tipo de campanha</SelectLabel>
                 <SelectItem value="presell">Presell</SelectItem>
                 <SelectItem value="quiz">Quiz</SelectItem>
+                <SelectItem value="leads">Leads</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

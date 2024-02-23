@@ -29,7 +29,7 @@ interface FormRegisterCampaignProps {
 export function FormUpdateCampaign({ campaign, company }: FormRegisterCampaignProps) {
   const [campaignTitle, setCampaignTitle] = useState<string | null>(campaign.title)
   const [campaignSlug, setCampaignSlug] = useState<string | null>(campaign.slug)
-  const [campaignType, setCampaignType] = useState<'PRESELL' | 'QUIZ' | null>(campaign.type)
+  const [campaignType, setCampaignType] = useState<'PRESELL' | 'QUIZ' | 'LEADS' | null>(campaign.type)
 
   const [formState, formAction] = useFormState(actionUpdateCampaign, null)
 
