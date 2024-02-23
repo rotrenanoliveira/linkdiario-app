@@ -5,6 +5,7 @@ import axios from 'axios'
 import { AccessCodeRepository, AccountsRepository } from '../database/db'
 import { InvalidCredentialsError } from '@/core/errors/invalid-credentials-error'
 import { genAccessCode } from '@/lib/access-code'
+import { env } from '@/env'
 
 export async function requestAccessCode(email: string): Promise<void> {
   const user = await AccountsRepository.findByEmail(email)
@@ -30,6 +31,11 @@ export async function requestAccessCode(email: string): Promise<void> {
     code: hashedCode,
     expiresAt,
   })
+
+  // Returns if not in production, so it does not send emails
+  if (env.NODE_ENV !== 'production') {
+    return
+  }
 
   const response = await axios.post('https://hermodr.vercel.app/api/send-mail', {
     mailto: email,
