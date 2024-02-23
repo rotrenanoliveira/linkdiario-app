@@ -15,23 +15,24 @@
 
 ### TODO 
  <!-- - Adicionar na criação/update da campanha a opção de agendar a publicação -->
- - Exibir tamanho ideal de imagem nos formulários de campanhas
- - Corrigir numeração em quiz/respostas cadastrada
- - Melhorar log de erros
- - Permitir escolher a "cor predominante" da campanha, que será no botão e algum outro detalhe de design da página
- - Inserir na /dashboard a quantidade de campanhas totais e ativas
- - Página inicial
+ - [] Página inicial
+ - [Renan] Exibir tamanho ideal de imagem nos formulários de campanhas
+ - [Renan] Correções viewport (1366/768)
+ - [Renan] Inserir na /dashboard a quantidade de campanhas totais e ativas
+ - [Renan] Contador Page views
+ - [Renan] Contador de hover no btn
+ - [Renan] Contador de cliques no btn
+ - [Renan] Permitir escolher a "cor predominante" da campanha, que será no botão e algum outro detalhe de design da página
+ - [Pedro] Inserir a logo da empresa
+ - [Pedro] Captação de Leads
+ - [Pedro] Exportar Leads para Excel
  
-### Features Plano Simples
-
- - Botão de wpp na campanha
- 
+ ### Features Plano Simples
+ - 50 campanhas ativas
  ### Features Plano Pro
-
+ - 200 campanhas ativas 
  - Captação de Leads
- - Page view
- - Contador de hover no btn
- - Contador de cliques no btn
+ - Analytics
 
 ### v_alpha_riverwood - 01/02/2024
 ### v_beta_whiterun   - 20/02/2024
