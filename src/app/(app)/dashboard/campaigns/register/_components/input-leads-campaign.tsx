@@ -1,5 +1,5 @@
+import * as React from 'react'
 import { FormDescription, FormItem } from '@/components/ui/form'
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -11,79 +11,75 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { BadgeInfo } from 'lucide-react'
+import { LeadInput } from './lead-input'
+import { Button } from '@/components/ui/button'
+import { z } from 'zod'
+
+const registeredInputs = [
+  { name: 'name', isActive: true },
+  { name: 'email', isActive: true },
+  { name: 'phone', isActive: true },
+]
 
 export function InputLeadsCampaign() {
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+  const [inputs, setInputs] = React.useState(registeredInputs)
+
+  const inputName = React.useRef<HTMLInputElement>(null)
+  function handleAddInput() {
+    const newInputSchema = z.object({
+      name: z.string(),
+      isActive: z.boolean(),
+    })
+
+    const newInput = newInputSchema.parse({
+      name: inputName.current?.value,
+      isActive: true,
+    })
+
+    console.log(newInput)
+    if (inputs.length >= 5) {
+      setErrorMessage('O quiz pode ter no máximo 5 respostas.')
+      return
+    }
+    setInputs((prevInputs) => [...prevInputs, newInput])
+    setErrorMessage(null)
+  }
+
   return (
     <>
-      <div className="md:flex gap-8">
-        <div className="md:w-1/2 flex flex-col space-y-2">
+      <div className="flex gap-4">
+        <div className="w-1/3 space-y-2 flex flex-col">
           {/* input - campaign leads input name */}
           <FormItem>
-            <Label className="w-full inline-flex justify-between">
-              Nome do campo
-              <HoverCard>
-                <HoverCardTrigger>
-                  <BadgeInfo className="stroke-yellow-600" />
-                </HoverCardTrigger>
-
-                <HoverCardContent className="font-light">
-                  Este campo aparecerá para o usuário preencher, então preencha com um campo que seja relevante para a
-                  sua captação.
-                </HoverCardContent>
-              </HoverCard>
-            </Label>
+            <Label className="w-full inline-flex justify-between">Nome do campo</Label>
 
             <Input
               type="text"
               id="campaign-lead-name"
               name="campaign-lead-name"
               placeholder="Insira o nome do campo."
-              required
+              ref={inputName}
             />
             <FormDescription>Insira o nome do campo a ser cadastrado.</FormDescription>
           </FormItem>
+          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
 
-          {/* input - campaign leads input type */}
-          <FormItem>
-            <Label className="w-full inline-flex justify-between">
-              Tipo de campo
-              <HoverCard>
-                <HoverCardTrigger>
-                  <BadgeInfo className="stroke-yellow-600" />
-                </HoverCardTrigger>
-
-                <HoverCardContent className="font-light">
-                  O tipo de campo será o que o usuário irá preencher. Por exemplo, o campo de nome do usuário será do
-                  tipo &quot;texto&quot;, o campo de receber comunicados será do tipo &quot;escolha&quot;.
-                </HoverCardContent>
-              </HoverCard>
-            </Label>
-
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione o tipo" />
-              </SelectTrigger>
-
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Status</SelectLabel>
-                  <SelectItem value="string">Texto</SelectItem>
-                  <SelectItem value="boolean">Escolha</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </FormItem>
+          <Button type="button" variant={'outline'} onClick={handleAddInput} className="w-fit self-end">
+            Adicionar Input
+          </Button>
         </div>
-        <div className="flex flex-col justify-between">
-          <p>Nome</p>
 
-          <p>email</p>
+        <div className="flex-1">
+          <Label>Ativar Leads</Label>
 
-          <p>telefone</p>
+          <div className="flex flex-col space-y-2 mt-2">
+            {inputs.map((input, index) => (
+              <LeadInput key={index} name={input.name} />
+            ))}
+          </div>
         </div>
       </div>
-      <div className="bg-red-100">novas respostas digitadas pelo usuario</div>
     </>
   )
 }
