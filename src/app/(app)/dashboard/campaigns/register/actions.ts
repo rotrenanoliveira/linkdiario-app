@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { fromZodError } from 'zod-validation-error'
 import { z } from 'zod'
 
-import { ActionResponse, CampaignQuiz } from '@/core/types'
+import { ActionResponse, CampaignLeads, CampaignQuiz } from '@/core/types'
 import { RedisCacheRepository } from '@/infra/cache/redis-cache-repository'
 import { CampaignsRepository } from '@/infra/database/db'
 import { uploadCampaignImage } from '@/infra/storage/upload-campaign-image'
@@ -50,7 +50,7 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
           url: URL.createObjectURL(file),
         }
       }),
-    type: z.enum(['PRESELL', 'QUIZ']),
+    type: z.enum(['PRESELL', 'QUIZ', 'LEADS']),
     status: z.enum(['NOT_PUBLISHED', 'ACTIVE', 'PAUSED', 'REMOVED', 'ENDED']).default('NOT_PUBLISHED'),
     startedAt: z.date().default(new Date()),
   })
@@ -82,6 +82,7 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
     ...result.data,
     description: null as string | null,
     quiz: null as CampaignQuiz | null,
+    leads: null as CampaignLeads | null,
   }
 
   const campaignWithSameSlug = await CampaignsRepository.findBySlugAndCompanyId({
@@ -101,6 +102,8 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
 
   const question = data.get('campaign-quiz-question')?.toString()
   const answers = data.get('campaign-quiz-answers')?.toString()
+
+  const leadsInputs = data.getAll('campaign-leads-inputs')?.toString()
 
   let answersArray = [] as Array<string>
 
@@ -125,11 +128,28 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
         }
       : null
 
+  let leadsArray = [] as Array<{ name: string; isActive: boolean }>
+  if (leadsInputs) {
+    const parsedLeadsInputs = JSON.parse(leadsInputs) as CampaignLeads
+    leadsArray = parsedLeadsInputs.inputs
+
+    if (parsedLeadsInputs.inputs.length < 1 || parsedLeadsInputs.inputs.length > 5) {
+      return {
+        success: false,
+        title: 'Algo deu errado!',
+        message: 'O campo de leads deve ter entre 1 e 5 campos.',
+      }
+    }
+  }
+
+  const leads = campaignData.type === 'LEADS' ? { inputs: leadsArray ?? [] } : null
+
   const campaign = {
     id: randomUUID(),
     ...campaignData,
     description,
     quiz,
+    leads,
   }
 
   await CampaignsRepository.create({
@@ -145,6 +165,7 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
     startedAt: campaign.startedAt,
     description: campaign.description,
     quiz: campaign.quiz,
+    leads: campaign.leads,
   })
 
   const file = data.get('campaign-carousel-image')

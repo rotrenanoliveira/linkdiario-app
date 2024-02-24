@@ -2,15 +2,6 @@ import * as React from 'react'
 import { FormDescription, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { LeadInput } from './lead-input'
 import { Button } from '@/components/ui/button'
 import { z } from 'zod'
@@ -25,7 +16,18 @@ export function InputLeadsCampaign() {
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const [inputs, setInputs] = React.useState(registeredInputs)
 
+  function handleInputActiveChange(index: number) {
+    setInputs((prevInput) => {
+      const newInputs = [...prevInput]
+      const isActive = newInputs[index].isActive
+      newInputs[index] = { ...newInputs[index], isActive: !isActive }
+      return newInputs
+    })
+  }
   const inputName = React.useRef<HTMLInputElement>(null)
+
+  const inputString = JSON.stringify(inputs) ?? []
+
   function handleAddInput() {
     const newInputSchema = z.object({
       name: z.string(),
@@ -39,7 +41,7 @@ export function InputLeadsCampaign() {
 
     console.log(newInput)
     if (inputs.length >= 5) {
-      setErrorMessage('O quiz pode ter no máximo 5 respostas.')
+      setErrorMessage('O número máximo de campos permitidos é 5.')
       return
     }
     setInputs((prevInputs) => [...prevInputs, newInput])
@@ -75,10 +77,18 @@ export function InputLeadsCampaign() {
 
           <div className="flex flex-col space-y-2 mt-2">
             {inputs.map((input, index) => (
-              <LeadInput key={index} name={input.name} />
+              <LeadInput
+                key={index}
+                name={input.name}
+                isInputActive={input.isActive}
+                setIsInputActive={handleInputActiveChange}
+                index={index}
+              />
             ))}
           </div>
         </div>
+
+        <Input type="text" name="campaign-leads-inputs" readOnly value={inputString} className="hidden" />
       </div>
     </>
   )

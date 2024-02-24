@@ -11,7 +11,7 @@ export type CampaignType = 'PRESELL' | 'QUIZ' | 'LEADS'
 /**
  * CampaignCreateInput represents the shape of the input data in the leads campaign.
  */
-export type CampaignLeads = Array<{ name: string; type: string | boolean }>
+export type CampaignLeads = { inputs: Array<{ name: string; isActive: boolean }> }
 
 /**
  * CampaignQuiz represents a quiz associated with a campaign, including a question and a list of answers.
