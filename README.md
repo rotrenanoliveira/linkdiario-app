@@ -16,7 +16,7 @@
 ### TODO 
  <!-- - Adicionar na criação/update da campanha a opção de agendar a publicação -->
  - [] Página inicial
- - [Renan] Correções viewport (1366/768)
+
  - [Renan] Inserir na /dashboard a quantidade de campanhas totais e ativas
  - [Renan] Contador Page views
  - [Renan] Contador de hover no btn
@@ -28,6 +28,7 @@
  
  ### Features Plano Simples
  - 50 campanhas ativas
+ 
  ### Features Plano Pro
  - 200 campanhas ativas 
  - Captação de Leads
