@@ -48,7 +48,7 @@ export function InputCarouselImages({ images }: InputCarouselImagesProps) {
   return (
     <div className="space-y-2">
       <Label>Imagens</Label>
-      <FormDescription>Carregue a imagem que deseja exibir na campanha.</FormDescription>
+      <FormDescription>Carregue a imagem que deseja exibir na campanha. O tamanho ideal é de 640x768.</FormDescription>
 
       <div className="flex gap-4">
         <div className="w-80 h-fit flex flex-col items-center justify-center gap-2 p-2 border-2 border-dashed bg-zinc-50 rounded-md">

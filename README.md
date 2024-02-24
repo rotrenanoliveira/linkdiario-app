@@ -16,7 +16,6 @@
 ### TODO 
  <!-- - Adicionar na criação/update da campanha a opção de agendar a publicação -->
  - [] Página inicial
- - [Renan] Exibir tamanho ideal de imagem nos formulários de campanhas
  - [Renan] Correções viewport (1366/768)
  - [Renan] Inserir na /dashboard a quantidade de campanhas totais e ativas
  - [Renan] Contador Page views
