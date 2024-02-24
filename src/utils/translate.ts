@@ -15,8 +15,27 @@ function campaignStatus(status: CampaignStatus) {
   }
 }
 
+function leadName(name: string) {
+  switch (name) {
+    case 'name':
+      return 'nome'
+    case 'email':
+      return 'e-mail'
+    case 'phone':
+      return 'celular'
+    case 'other':
+      return 'outro'
+    default:
+      return name
+  }
+}
+
 export class Translate {
   static campaignStatus(status: CampaignStatus) {
     return campaignStatus(status)
+  }
+
+  static leadName(name: string) {
+    return leadName(name)
   }
 }
