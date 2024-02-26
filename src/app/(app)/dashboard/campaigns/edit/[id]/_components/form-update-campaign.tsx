@@ -12,6 +12,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useToast } from '@/components/ui/use-toast'
 import { InputPresellCampaign } from './input-presell-campaign'
 import { InputQuizCampaign } from './input-quiz-campaign'
+import { InputLeadsCampaign } from './input-leads-campaign'
 // import { actionSaveCampaign } from '../actions'
 import { InputCarouselImages } from './input-carousel-images'
 import { Slug } from '@/utils/slug'
@@ -203,6 +204,7 @@ export function FormUpdateCampaign({ campaign, company }: FormRegisterCampaignPr
 
       {campaignType && campaignType === 'PRESELL' && <InputPresellCampaign description={campaign.description} />}
       {campaignType && campaignType === 'QUIZ' && <InputQuizCampaign quiz={campaign.quiz} />}
+      {campaignType && campaignType === 'LEADS' && <InputLeadsCampaign leadsInput={campaign.leads} />}
 
       <PendingSubmitButton type="submit" className="min-w-32">
         Salvar campanha
