@@ -26,7 +26,7 @@ export function InputLeadsCampaign() {
   }
   const inputName = React.useRef<HTMLInputElement>(null)
 
-  const inputString = JSON.stringify(inputs) ?? []
+  const inputString = JSON.stringify({ inputs }) ?? []
 
   function handleAddInput() {
     const newInputSchema = z.object({
@@ -39,7 +39,6 @@ export function InputLeadsCampaign() {
       isActive: true,
     })
 
-    console.log(newInput)
     if (inputs.length >= 5) {
       setErrorMessage('O número máximo de campos permitidos é 5.')
       return

@@ -129,11 +129,12 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
       : null
 
   let leadsArray = [] as Array<{ name: string; isActive: boolean }>
+
   if (leadsInputs) {
     const parsedLeadsInputs = JSON.parse(leadsInputs) as CampaignLeads
     leadsArray = parsedLeadsInputs.inputs
 
-    if (parsedLeadsInputs.inputs.length < 1 || parsedLeadsInputs.inputs.length > 5) {
+    if (leadsArray.length < 1 || leadsArray.length > 5) {
       return {
         success: false,
         title: 'Algo deu errado!',
