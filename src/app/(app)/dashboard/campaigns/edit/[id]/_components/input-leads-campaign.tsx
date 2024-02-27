@@ -33,7 +33,7 @@ export function InputLeadsCampaign(props: InputLeadsCampaignProps) {
   }
   const inputName = React.useRef<HTMLInputElement>(null)
 
-  const inputString = JSON.stringify(inputs) ?? []
+  const inputString = JSON.stringify({ inputs }) ?? []
 
   function handleAddInput() {
     const newInputSchema = z.object({
