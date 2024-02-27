@@ -190,6 +190,7 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
     carouselImages: [attachment],
     description: campaign.description,
     quiz: campaign.quiz,
+    leads: campaign.leads,
   }
 
   await RedisCacheRepository.set(`not-published-campaign:${campaign.id}:details`, JSON.stringify(notPublishedCampaign))
