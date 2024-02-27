@@ -187,6 +187,10 @@ export function FormUpdateCampaign({ campaign, company }: FormRegisterCampaignPr
           <ToggleGroupItem value="QUIZ" onClick={() => setCampaignType('QUIZ')}>
             Quiz
           </ToggleGroupItem>
+
+          <ToggleGroupItem value="LEADS" onClick={() => setCampaignType('LEADS')}>
+            Leads
+          </ToggleGroupItem>
         </ToggleGroup>
 
         <FormDescription>Selecione o tipo de campanha que deseja criar.</FormDescription>
