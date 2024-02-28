@@ -144,10 +144,14 @@ export const PrismaCampaignsRepository = {
     })
 
     const activeCampaigns = campaigns.filter((campaign) => campaign.status === 'ACTIVE').length
+    const removedCampaigns = campaigns.filter((campaign) => campaign.status === 'REMOVED').length
+    const pausedCampaigns = campaigns.filter((campaign) => campaign.status === 'PAUSED').length
     const totalCampaigns = campaigns.length
 
-    const counters = {
+    const counters: CampaignCounter = {
       active: activeCampaigns,
+      removed: removedCampaigns,
+      paused: pausedCampaigns,
       total: totalCampaigns,
     }
 

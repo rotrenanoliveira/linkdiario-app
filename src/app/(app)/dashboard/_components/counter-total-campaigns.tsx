@@ -30,7 +30,7 @@ export async function CounterTotalCampaigns() {
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">{counter.total}</div>
-        <p className="text-xs text-muted-foreground">{100 - counter.total} campanhas disponíveis</p>
+        <p className="text-xs text-muted-foreground">{100 - (counter.total - counter.removed)} campanhas disponíveis</p>
       </CardContent>
     </Card>
   )

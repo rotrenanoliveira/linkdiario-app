@@ -153,4 +153,9 @@ export type CampaignFindBySlugAndCompanySlugArgs = {
 /**
  * CampaignCounter represents a count of active and total campaigns.
  */
-export type CampaignCounter = { active: number; total: number }
+export type CampaignCounter = {
+  active: number
+  removed: number
+  paused: number
+  total: number
+}
