@@ -17,6 +17,7 @@
  <!-- - Adicionar na criação/update da campanha a opção de agendar a publicação -->
  - [] Página inicial
 
+ - [Renan] Permitir o usuário informe a descrição do botão
  - [Renan] Inserir na /dashboard a quantidade de campanhas totais e ativas
  - [Renan] Contador Page views
  - [Renan] Contador de hover no btn
