@@ -203,8 +203,16 @@ export async function actionUpdateCampaignStatus(prevState: PrevState, data: For
 
   const campaign = result.data
   // console.log(formData)
+  const currentCampaign = await CampaignsRepository.findById(campaign.id)
+  if (!currentCampaign) {
+    return {
+      success: false,
+      title: 'Algo deu errado!',
+      message: 'Campanha inválida.',
+    }
+  }
 
-  if (campaign.status === 'REMOVED') {
+  if (currentCampaign.status === 'REMOVED') {
     return {
       success: false,
       title: 'Algo deu errado!',
@@ -214,7 +222,7 @@ export async function actionUpdateCampaignStatus(prevState: PrevState, data: For
 
   await Promise.all([
     RedisCacheRepository.delete(`not-published-campaign:${campaign.id}:details`),
-    await CampaignsRepository.save(campaign.id, {
+    CampaignsRepository.save(campaign.id, {
       status: campaign.status,
     }),
   ])

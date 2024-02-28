@@ -122,6 +122,7 @@ export class PrismaCampaignMapper {
       id: campaign.id,
       title: campaign.title,
       subtitle: campaign.subtitle,
+      status: raw.status,
       slug: campaign.slug,
       affiliateUrl: campaign.affiliateUrl,
       type: campaign.type,
