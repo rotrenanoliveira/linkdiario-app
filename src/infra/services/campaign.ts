@@ -28,3 +28,7 @@ export async function getCampaignBySlug(
 
   return campaign
 }
+
+export function getCampaignCounters(companyId: string) {
+  return CampaignsRepository.counter(companyId)
+}

@@ -149,3 +149,8 @@ export type CampaignFindBySlugAndCompanySlugArgs = {
   campaignSlug: string // The slug of the campaign to find
   companySlug: string // The slug of the company associated with the campaign
 }
+
+/**
+ * CampaignCounter represents a count of active and total campaigns.
+ */
+export type CampaignCounter = { active: number; total: number }

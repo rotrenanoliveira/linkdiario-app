@@ -16,13 +16,13 @@
 ### TODO 
  <!-- - Adicionar na criação/update da campanha a opção de agendar a publicação -->
  - [] Página inicial
-
+ 
  - [Renan] Permitir o usuário informe a descrição do botão
- - [Renan] Inserir na /dashboard a quantidade de campanhas totais e ativas
  - [Renan] Contador Page views
- - [Renan] Contador de hover no btn
  - [Renan] Contador de cliques no btn
+
  - [Renan] Permitir escolher a "cor predominante" da campanha, que será no botão e algum outro detalhe de design da página
+ 
  - [Pedro] Inserir a logo da empresa
  - [Pedro] Captação de Leads
  - [Pedro] Exportar Leads para Excel
