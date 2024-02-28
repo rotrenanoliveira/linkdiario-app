@@ -6,7 +6,7 @@ import {
 import prisma from '@/lib/prisma'
 import { PrismaCampaignMapper } from '../mapper/campaign-mapper'
 import { RedisCacheRepository } from '@/infra/cache/redis-cache-repository'
-import { CampaignToCustomer, CampaignUpdateInput } from '@/core/types/campaign'
+import { CampaignCounter, CampaignToCustomer, CampaignUpdateInput } from '@/core/types/campaign'
 
 export const PrismaCampaignsRepository = {
   async findById(id: string) {
@@ -126,6 +126,36 @@ export const PrismaCampaignsRepository = {
 
     return PrismaCampaignMapper.toDashboard(campaign)
   },
+
+  async counter(companyId: string) {
+    const cachedCounters = await RedisCacheRepository.get<CampaignCounter>(`campaigns-counter:${companyId}`)
+
+    if (cachedCounters) {
+      return cachedCounters
+    }
+
+    const campaigns = await prisma.campaign.findMany({
+      where: {
+        companyId,
+      },
+      select: {
+        status: true,
+      },
+    })
+
+    const activeCampaigns = campaigns.filter((campaign) => campaign.status === 'ACTIVE').length
+    const totalCampaigns = campaigns.length
+
+    const counters = {
+      active: activeCampaigns,
+      total: totalCampaigns,
+    }
+
+    await RedisCacheRepository.set(`campaigns-counter:${companyId}`, JSON.stringify(counters))
+
+    return counters
+  },
+
   async getCompanyAndCampaignSlugById(id: string) {
     const campaign = await prisma.campaign.findUnique({
       where: {
@@ -153,6 +183,8 @@ export const PrismaCampaignsRepository = {
   async create(data: CampaignCreateInput): Promise<void> {
     const quiz = data.quiz ? JSON.stringify(data.quiz) : null
 
+    await RedisCacheRepository.delete(`campaigns-counter:${data.companyId}`)
+
     await prisma.campaign.create({
       data: {
         ...data,
@@ -167,10 +199,13 @@ export const PrismaCampaignsRepository = {
       },
       select: {
         quiz: true,
+        companyId: true,
       },
     })
 
     const quiz = data.quiz ? JSON.stringify(data.quiz) : existingCampaign.quiz
+
+    await RedisCacheRepository.delete(`campaigns-counter:${existingCampaign.companyId}`)
 
     await prisma.campaign.update({
       where: {

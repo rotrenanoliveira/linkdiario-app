@@ -97,6 +97,7 @@ export const CampaignsRepository = {
   save(id: string, data: CampaignUpdateInput) {
     return PrismaCampaignsRepository.save(id, data)
   },
+  counter: PrismaCampaignsRepository.counter,
 }
 
 //= = Campaign Attachments Repository ==
