@@ -31,6 +31,14 @@ export function InputLeadsCampaign(props: InputLeadsCampaignProps) {
       return newInputs
     })
   }
+
+  function updateInputName(index: number, name: string) {
+    setInputs((prevInput) => {
+      const newInputs = [...prevInput]
+      newInputs[index] = { ...newInputs[index], name }
+      return newInputs
+    })
+  }
   const inputName = React.useRef<HTMLInputElement>(null)
 
   const inputString = JSON.stringify({ inputs }) ?? []
@@ -89,6 +97,7 @@ export function InputLeadsCampaign(props: InputLeadsCampaignProps) {
                 name={input.name}
                 isInputActive={input.isActive}
                 setIsInputActive={handleInputActiveChange}
+                updateInputName={updateInputName}
                 index={index}
               />
             ))}
