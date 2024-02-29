@@ -1,20 +1,51 @@
+import { satochi } from '@/app/fonts'
+import { Button } from '@/components/ui/button'
+import { FormItem } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { CampaignLeads } from '@/core/types'
+import { cn } from '@/lib/utils'
+import { Translate } from '@/utils/translate'
+import { MoveUpRight } from 'lucide-react'
+import Link from 'next/link'
 
 interface LeadsCampaignProps {
-  leadsInputs?: CampaignLeads | null
+  leadsInputs: CampaignLeads
   affiliateUrl: string
 }
 
 export function LeadsCampaign({ leadsInputs, affiliateUrl }: LeadsCampaignProps) {
+  const activeInputs = leadsInputs.inputs.filter((input) => input.isActive)
   return (
     <div className="w-full max-w-[384px] space-y-4">
-      <p className="font-normal text-2xl text-center mb-8">Leads</p>
-      {leadsInputs?.inputs.map((input) => (
-        <>
-          <p key={input.name}>{input.name}</p>
-          <p>{input.isActive}</p>
-        </>
-      ))}
+      <h1>Para receber atualizações sobre o produto, preencha os campos abaixo</h1>
+      {activeInputs.map((input) => {
+        return (
+          <FormItem key={input.name}>
+            <Label className="w-full">{Translate.leadName(input.name)}</Label>
+
+            <Input
+              type="text"
+              id="campaign-lead-name"
+              name="campaign-lead-name"
+              placeholder="Preencha o campo com seus dados."
+              required
+            />
+          </FormItem>
+        )
+      })}
+
+      <Button className="w-full h-16 rounded-full p-1 bg-[#EAEBEC] hover:bg-[#DDDEDF]">
+        <Link
+          href={affiliateUrl}
+          className={cn(satochi.className, 'w-full flex items-center justify-evenly text-3xl text-foreground')}
+        >
+          <span className="flex-grow text-center font-normal">Saiba mais</span>
+          <div className="size-14 rounded-full bg-yellow-400 flex items-center justify-center">
+            <MoveUpRight size={32} className="text-foreground/85" />
+          </div>
+        </Link>
+      </Button>
     </div>
   )
 }

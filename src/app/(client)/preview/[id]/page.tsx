@@ -120,7 +120,7 @@ export default async function PreviewCampaignPage({ params }: PreviewCampaignPag
           />
         )}
 
-        {campaign.type === 'LEADS' && (
+        {campaign.type === 'LEADS' && campaignLeads && (
           <LeadsCampaign leadsInputs={campaignLeads} affiliateUrl={campaign.affiliateUrl} />
         )}
       </div>
