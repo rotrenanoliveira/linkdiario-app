@@ -6,6 +6,7 @@ import { QuizCampaign } from '../../_components/quiz-campaign'
 import { PresellCampaign } from '../../_components/presell-campaign'
 
 import { Services } from '@/infra/services'
+import { LeadsCampaign } from '../../_components/leads-campaign'
 
 interface PreviewCampaignPageProps {
   params: {
@@ -49,6 +50,7 @@ export default async function PreviewCampaignPage({ params }: PreviewCampaignPag
   const campaignImage = campaign.carouselImages[0]
   const campaignDescription = campaign.description
   const campaignQuiz = campaign.quiz
+  const campaignLeads = campaign.leads
 
   return (
     <section className="container max-w-screen-xl box-border p-4">
@@ -88,6 +90,9 @@ export default async function PreviewCampaignPage({ params }: PreviewCampaignPag
             answers={campaignQuiz.answers}
             affiliateUrl={campaign.affiliateUrl}
           />
+        )}
+        {campaign.type === 'LEADS' && campaignLeads && (
+          <LeadsCampaign leadsInputs={campaignLeads} affiliateUrl={campaign.affiliateUrl} />
         )}
       </div>
     </section>
