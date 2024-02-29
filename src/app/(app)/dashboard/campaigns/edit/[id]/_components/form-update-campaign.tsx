@@ -10,12 +10,12 @@ import { Label } from '@/components/ui/label'
 import { PendingSubmitButton } from '@/components/pending-submit-button'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useToast } from '@/components/ui/use-toast'
+import { CampaignToCustomer } from '@/core/types/campaign'
+import { Slug } from '@/utils/slug'
+import { InputCarouselImages } from './input-carousel-images'
+import { InputCampaignAccentColor } from './input-campaign-accent-color'
 import { InputPresellCampaign } from './input-presell-campaign'
 import { InputQuizCampaign } from './input-quiz-campaign'
-// import { actionSaveCampaign } from '../actions'
-import { InputCarouselImages } from './input-carousel-images'
-import { Slug } from '@/utils/slug'
-import { CampaignToCustomer } from '@/core/types/campaign'
 import { actionUpdateCampaign } from '../actions'
 
 interface FormRegisterCampaignProps {
@@ -30,12 +30,25 @@ export function FormUpdateCampaign({ campaign, company }: FormRegisterCampaignPr
   const [campaignTitle, setCampaignTitle] = useState<string | null>(campaign.title)
   const [campaignSlug, setCampaignSlug] = useState<string | null>(campaign.slug)
   const [campaignType, setCampaignType] = useState<'PRESELL' | 'QUIZ' | null>(campaign.type)
+  const [campaignCallToActionText, setCampaignCallToActionText] = useState<string>(campaign.ctaText)
 
   const [formState, formAction] = useFormState(actionUpdateCampaign, null)
 
   const ref = useRef<HTMLFormElement>(null)
   const { toast } = useToast()
   const router = useRouter()
+
+  function handleOnChangeCampaignTitle(e: ChangeEvent<HTMLInputElement>) {
+    const newProductName = e.target.value
+    const newProductSlug = Slug.fromText(newProductName)
+
+    setCampaignTitle(newProductName)
+    setCampaignSlug(newProductSlug)
+  }
+
+  function handleChangeOnCallToAction(e: ChangeEvent<HTMLInputElement>) {
+    setCampaignCallToActionText(e.target.value)
+  }
 
   useEffect(() => {
     if (formState) {
@@ -55,14 +68,6 @@ export function FormUpdateCampaign({ campaign, company }: FormRegisterCampaignPr
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formState])
-
-  function handleOnChangeCampaignTitle(e: ChangeEvent<HTMLInputElement>) {
-    const newProductName = e.target.value
-    const newProductSlug = Slug.fromText(newProductName)
-
-    setCampaignTitle(newProductName)
-    setCampaignSlug(newProductSlug)
-  }
 
   return (
     <form ref={ref} action={formAction} className="w-full space-y-4">
@@ -165,6 +170,29 @@ export function FormUpdateCampaign({ campaign, company }: FormRegisterCampaignPr
         <FormDescription>
           Link de afiliado que será exibido na campanha e levará a compra o site do produtor.
         </FormDescription>
+      </FormItem>
+
+      {/* input - campaign call to action */}
+      <FormItem>
+        <Label>Call to action</Label>
+        <div className="w-full flex flex-col md:flex-row items-center gap-2">
+          <Input
+            type="text"
+            id="campaign-call-to-action-description"
+            name="campaign-call-to-action-description"
+            defaultValue={campaignCallToActionText}
+            onChange={handleChangeOnCallToAction}
+            placeholder="Insira a texto do botão."
+            required
+          />
+
+          <InputCampaignAccentColor ctaText={campaignCallToActionText} ctaColor={campaign.ctaColor} />
+        </div>
+
+        <FormDescription>
+          Call to action, texto do botão que será exibido na campanha. O tamanho é de 2 palavras.
+        </FormDescription>
+        <FormDescription>A cor selecionada será a cor predominante da campanha.</FormDescription>
       </FormItem>
 
       {/* input - campaign images */}

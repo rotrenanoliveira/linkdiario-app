@@ -16,6 +16,7 @@ import { InputQuizCampaign } from './input-quiz-campaign'
 import { actionSaveCampaign } from '../actions'
 import { InputCarouselImages } from './input-carousel-images'
 import { Slug } from '@/utils/slug'
+import { InputCampaignAccentColor } from './input-campaign-accent-color'
 
 interface FormRegisterCampaignProps {
   company: Company
@@ -25,12 +26,25 @@ export function FormRegisterCampaign({ company }: FormRegisterCampaignProps) {
   const [campaignTitle, setCampaignTitle] = useState<string | null>(null)
   const [campaignSlug, setCampaignSlug] = useState<string | null>(null)
   const [campaignType, setCampaignType] = useState<'presell' | 'quiz' | null>(null)
+  const [campaignCallToActionText, setCampaignCallToActionText] = useState<string>('Saiba mais')
 
   const [formState, formAction] = useFormState(actionSaveCampaign, null)
 
   const ref = useRef<HTMLFormElement>(null)
   const { toast } = useToast()
   const router = useRouter()
+
+  function handleOnChangeCampaignTitle(e: ChangeEvent<HTMLInputElement>) {
+    const newProductName = e.target.value
+    const newProductSlug = Slug.fromText(newProductName)
+
+    setCampaignTitle(newProductName)
+    setCampaignSlug(newProductSlug)
+  }
+
+  function handleChangeOnCallToAction(e: ChangeEvent<HTMLInputElement>) {
+    setCampaignCallToActionText(e.target.value)
+  }
 
   useEffect(() => {
     if (formState) {
@@ -50,14 +64,6 @@ export function FormRegisterCampaign({ company }: FormRegisterCampaignProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formState])
-
-  function handleOnChangeCampaignTitle(e: ChangeEvent<HTMLInputElement>) {
-    const newProductName = e.target.value
-    const newProductSlug = Slug.fromText(newProductName)
-
-    setCampaignTitle(newProductName)
-    setCampaignSlug(newProductSlug)
-  }
 
   return (
     <form ref={ref} action={formAction} className="w-full space-y-4">
@@ -142,6 +148,29 @@ export function FormRegisterCampaign({ company }: FormRegisterCampaignProps) {
         <FormDescription>
           O slug do produto não deve conter nenhum caractere especial e/ou espaço vazio.
         </FormDescription>
+      </FormItem>
+
+      {/* input - campaign call to action */}
+      <FormItem>
+        <Label>Call to action</Label>
+        <div className="w-full flex flex-col md:flex-row items-center gap-2">
+          <Input
+            type="text"
+            id="campaign-call-to-action-description"
+            name="campaign-call-to-action-description"
+            defaultValue={campaignCallToActionText}
+            onChange={handleChangeOnCallToAction}
+            placeholder="Insira a texto do botão."
+            required
+          />
+
+          <InputCampaignAccentColor btnText={campaignCallToActionText} />
+        </div>
+
+        <FormDescription>
+          Call to action, texto do botão que será exibido na campanha. O tamanho é de 2 palavras.
+        </FormDescription>
+        <FormDescription>A cor selecionada será a cor predominante da campanha.</FormDescription>
       </FormItem>
 
       {/* input - campaign affiliate URL */}

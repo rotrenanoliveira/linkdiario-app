@@ -29,6 +29,8 @@ export class PrismaCampaignMapper {
       companyId: raw.companyId,
       status: raw.status,
       affiliateUrl: raw.affiliateUrl,
+      ctaText: raw.ctaText,
+      ctaColor: raw.ctaColor,
       title: raw.title,
       subtitle: raw.subtitle,
       slug: raw.slug,
@@ -91,6 +93,8 @@ export class PrismaCampaignMapper {
       subtitle: raw.subtitle,
       slug: raw.slug,
       affiliateUrl: raw.affiliateUrl,
+      ctaText: raw.ctaText,
+      ctaColor: raw.ctaColor,
       carouselImages,
     }
 
@@ -125,6 +129,8 @@ export class PrismaCampaignMapper {
       status: raw.status,
       slug: campaign.slug,
       affiliateUrl: campaign.affiliateUrl,
+      ctaText: raw.ctaText,
+      ctaColor: raw.ctaColor,
       type: campaign.type,
       description: campaign.description,
       quiz: campaign.quiz,

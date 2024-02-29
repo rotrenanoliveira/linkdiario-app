@@ -22,6 +22,8 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
   const saveCampaignSchema = z.object({
     companyId: z.string().uuid({ message: 'ID inválido.' }),
     affiliateUrl: z.string().url({ message: 'Por favor, insira uma URL válida.' }),
+    ctaText: z.string().min(1, { message: 'Por favor, insira o texto do botão.' }),
+    ctaColor: z.string().min(1, { message: 'Por favor, insira uma cor para o botão.' }),
     title: z
       .string()
       .min(1, { message: 'Por favor, insira o título/produto da campanha.' })
@@ -63,6 +65,8 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
     name: data.get('campaign-name'),
     slug: data.get('campaign-slug'),
     affiliateUrl: data.get('campaign-affiliate-url'),
+    ctaText: data.get('campaign-call-to-action-description'),
+    ctaColor: data.get('campaign-call-to-action-color'),
     carouselImages: data.get('campaign-carousel-image'),
     type: data.get('campaign-type'),
   })
@@ -140,6 +144,8 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
     name: campaign.name,
     slug: campaign.slug,
     affiliateUrl: campaign.affiliateUrl,
+    ctaText: campaign.ctaText,
+    ctaColor: campaign.ctaColor,
     type: campaign.type,
     status: campaign.status,
     startedAt: campaign.startedAt,
@@ -164,6 +170,9 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
     subtitle: campaign.subtitle,
     slug: campaign.slug,
     affiliateUrl: campaign.affiliateUrl,
+    ctaText: campaign.ctaText,
+    ctaColor: campaign.ctaColor,
+    status: campaign.status,
     type: campaign.type,
     carouselImages: [attachment],
     description: campaign.description,

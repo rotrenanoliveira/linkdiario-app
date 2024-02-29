@@ -84,6 +84,8 @@ model Campaign {
   status       CAMPAIGN_STATUS
   type         CAMPAIGN_TYPE
   affiliateUrl String          @map("affiliate_url")
+  ctaText      String          @default("Saiba mais")
+  ctaColor     String          @default("#FACC15")
   title        String
   subtitle     String
   slug         String

@@ -17,11 +17,8 @@
  <!-- - Adicionar na criação/update da campanha a opção de agendar a publicação -->
  - [] Página inicial
  
- - [Renan] Permitir o usuário informe a descrição do botão
  - [Renan] Contador Page views
  - [Renan] Contador de cliques no btn
-
- - [Renan] Permitir escolher a "cor predominante" da campanha, que será no botão e algum outro detalhe de design da página
  
  - [Pedro] Inserir a logo da empresa
  - [Pedro] Captação de Leads
@@ -29,9 +26,11 @@
  
  ### Features Plano Simples
  - 50 campanhas ativas
+ - 100 campanhas totais
  
  ### Features Plano Pro
- - 200 campanhas ativas 
+ - 100 campanhas ativas
+ - 250 campanhas totais 
  - Captação de Leads
  - Analytics
 

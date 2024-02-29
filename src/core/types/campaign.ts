@@ -37,6 +37,8 @@ export type Campaign = {
   companyId: string
   status: CampaignStatus
   affiliateUrl: string
+  ctaText: string
+  ctaColor: string
   title: string
   subtitle: string
   slug: string
@@ -72,6 +74,8 @@ export type CampaignToCustomer = {
   subtitle: string
   slug: string
   affiliateUrl: string
+  ctaText: string
+  ctaColor: string
   type: CampaignType
   carouselImages: CarouselImage[]
   description?: string | null
@@ -110,6 +114,8 @@ export type CampaignCreateInput = {
   name: string // The internal name used for the campaign
   slug: string // A URL-friendly identifier for the campaign
   affiliateUrl: string // A URL for affiliates associated with the campaign
+  ctaText: string // The text for the call to action button
+  ctaColor: string // The color for the call to action button
   status: CampaignStatus // Current status of the campaign
   type: CampaignType // The type of campaign, which determines its behavior and features
   startedAt: Date // The date and time when the campaign starts
@@ -124,6 +130,8 @@ export type CampaignUpdateInput = {
   name?: string
   slug?: string
   affiliateUrl?: string
+  ctaText?: string
+  ctaColor?: string
   status?: CampaignStatus
   type?: CampaignType
   startedAt?: Date
