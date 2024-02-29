@@ -9,6 +9,7 @@ import { CampaignLeads } from '@/core/types'
 
 interface InputLeadsCampaignProps {
   leadsInput?: CampaignLeads | null
+  campaignId: string
 }
 
 export function InputLeadsCampaign(props: InputLeadsCampaignProps) {
@@ -99,6 +100,7 @@ export function InputLeadsCampaign(props: InputLeadsCampaignProps) {
                 setIsInputActive={handleInputActiveChange}
                 updateInputName={updateInputName}
                 index={index}
+                campaignId={props.campaignId}
               />
             ))}
           </div>

@@ -208,7 +208,9 @@ export function FormUpdateCampaign({ campaign, company }: FormRegisterCampaignPr
 
       {campaignType && campaignType === 'PRESELL' && <InputPresellCampaign description={campaign.description} />}
       {campaignType && campaignType === 'QUIZ' && <InputQuizCampaign quiz={campaign.quiz} />}
-      {campaignType && campaignType === 'LEADS' && <InputLeadsCampaign leadsInput={campaign.leads} />}
+      {campaignType && campaignType === 'LEADS' && (
+        <InputLeadsCampaign leadsInput={campaign.leads} campaignId={campaign.id} />
+      )}
 
       <PendingSubmitButton type="submit" className="min-w-32">
         Salvar campanha
