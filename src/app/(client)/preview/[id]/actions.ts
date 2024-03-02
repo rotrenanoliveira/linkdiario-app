@@ -6,7 +6,7 @@ import { fromZodError } from 'zod-validation-error'
 import { z } from 'zod'
 
 import { RedisCacheRepository } from '@/infra/cache/redis-cache-repository'
-import { CampaignsRepository } from '@/infra/database/db'
+import { CampaignsRepository, LeadsRepository } from '@/infra/database/db'
 import { ActionResponse } from '@/core/types'
 
 export async function publishCampaign(campaignId: string) {
@@ -57,13 +57,17 @@ export async function saveLeadsValues(prevState: PrevState, data: FormData): Pro
     ...result.data,
   }
 
-  return leads
-  // TODO create the Leads Repository
-  /*
-  await LeadsRepository.create({
+  const savedLeads = await LeadsRepository.create({
     id: leads.id,
     campaignId: leads.campaignId,
     leads: leads.leads,
   })
-  */
+
+  if (!savedLeads) {
+    return {
+      success: false,
+      title: 'Algo deu errado!',
+      message: 'Erro enviar os leads.',
+    }
+  }
 }

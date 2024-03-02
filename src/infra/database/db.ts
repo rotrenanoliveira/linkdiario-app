@@ -9,6 +9,7 @@ import {
   Company,
   Optional,
   UserRole,
+  Lead,
 } from '@/core/types'
 
 import { PrismaAccessCodeRepository } from './prisma/repositories/prisma-access-code-repository'
@@ -16,6 +17,7 @@ import { PrismaAccountsRepository } from './prisma/repositories/prisma-accounts-
 import { PrismaCampaignsRepository } from './prisma/repositories/prisma-campaign-repository'
 import { PrismaCompaniesRepository } from './prisma/repositories/prisma-companies-repository'
 import { PrismaCampaignAttachmentsRepository } from './prisma/repositories/prisma-campaign-attachments-repository'
+import { PrismaLeadsRepository } from './prisma/repositories/prisma-leads-repository'
 
 //= Access Code Repository ==//
 export const AccessCodeRepository = {
@@ -109,5 +111,16 @@ export const CampaignAttachmentsRepository = {
   },
   deleteMany(campaignId: string) {
     return PrismaCampaignAttachmentsRepository.deleteMany(campaignId)
+  },
+}
+
+//= = Leads Repository ==
+
+export const LeadsRepository = {
+  create(data: Lead) {
+    return PrismaLeadsRepository.create(data)
+  },
+  findManyByCampaignId(campaignId: string) {
+    return PrismaLeadsRepository.findManyByCampaignId(campaignId)
   },
 }

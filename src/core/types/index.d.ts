@@ -16,3 +16,4 @@ export {
 } from './campaign'
 export { Company, CompanyDetails } from './company'
 export { Optional } from './optional'
+export { Lead, LeadDetails } from './leads'
