@@ -16,7 +16,7 @@ import { InputLeadsCampaign } from './input-leads-campaign'
 // import { actionSaveCampaign } from '../actions'
 import { InputCarouselImages } from './input-carousel-images'
 import { Slug } from '@/utils/slug'
-import { CampaignToCustomer } from '@/core/types/campaign'
+import { CampaignLeads, CampaignToCustomer } from '@/core/types/campaign'
 import { actionUpdateCampaign } from '../actions'
 
 interface FormRegisterCampaignProps {
@@ -208,8 +208,9 @@ export function FormUpdateCampaign({ campaign, company }: FormRegisterCampaignPr
 
       {campaignType && campaignType === 'PRESELL' && <InputPresellCampaign description={campaign.description} />}
       {campaignType && campaignType === 'QUIZ' && <InputQuizCampaign quiz={campaign.quiz} />}
+
       {campaignType && campaignType === 'LEADS' && (
-        <InputLeadsCampaign leadsInput={campaign.leads} campaignId={campaign.id} />
+        <InputLeadsCampaign leadsInput={campaign.leads as CampaignLeads} campaignStatus={campaign.status} />
       )}
 
       <PendingSubmitButton type="submit" className="min-w-32">

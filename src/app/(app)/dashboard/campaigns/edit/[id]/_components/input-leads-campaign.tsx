@@ -1,28 +1,24 @@
 import * as React from 'react'
+import { z } from 'zod'
+
 import { FormDescription, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { LeadInput } from './lead-input'
 import { Button } from '@/components/ui/button'
-import { z } from 'zod'
 import { CampaignLeads } from '@/core/types'
+import { CampaignStatus } from '@/core/types/campaign'
 
 interface InputLeadsCampaignProps {
-  leadsInput?: CampaignLeads | null
-  campaignId: string
+  leadsInput: CampaignLeads
+  campaignStatus: CampaignStatus
 }
 
 export function InputLeadsCampaign(props: InputLeadsCampaignProps) {
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
-  const [inputs, setInputs] = React.useState(() => {
-    if (!props.leadsInput) {
-      return []
-    }
 
-    return props.leadsInput.inputs.map((input) => {
-      return { name: input.name, isActive: input.isActive }
-    })
-  })
+  const propsLeadsInputs = [...props.leadsInput.inputs]
+  const [inputs, setInputs] = React.useState(propsLeadsInputs)
 
   function handleInputActiveChange(index: number) {
     setInputs((prevInput) => {
@@ -55,7 +51,6 @@ export function InputLeadsCampaign(props: InputLeadsCampaignProps) {
       isActive: true,
     })
 
-    console.log(newInput)
     if (inputs.length >= 5) {
       setErrorMessage('O número máximo de campos permitidos é 5.')
       return
@@ -100,7 +95,7 @@ export function InputLeadsCampaign(props: InputLeadsCampaignProps) {
                 setIsInputActive={handleInputActiveChange}
                 updateInputName={updateInputName}
                 index={index}
-                campaignId={props.campaignId}
+                campaignStatus={props.campaignStatus}
               />
             ))}
           </div>
