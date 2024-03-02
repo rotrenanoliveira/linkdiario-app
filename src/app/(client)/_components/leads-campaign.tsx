@@ -18,9 +18,10 @@ import { useToast } from '@/components/ui/use-toast'
 interface LeadsCampaignProps {
   leadsInputs: CampaignLeads
   affiliateUrl: string
+  campaignId: string
 }
 
-export function LeadsCampaign({ leadsInputs, affiliateUrl }: LeadsCampaignProps) {
+export function LeadsCampaign({ leadsInputs, affiliateUrl, campaignId }: LeadsCampaignProps) {
   const activeInputs = leadsInputs.inputs.filter((input) => input.isActive)
 
   const ref = React.useRef<HTMLFormElement>(null)
@@ -58,7 +59,6 @@ export function LeadsCampaign({ leadsInputs, affiliateUrl }: LeadsCampaignProps)
 
   const inputValueString = JSON.stringify(inputValue)
 
-  console.log(inputValueString)
   return (
     <div className="w-full max-w-[384px] space-y-4">
       <h1>Para receber atualizações sobre o produto, preencha os campos abaixo</h1>
@@ -81,9 +81,10 @@ export function LeadsCampaign({ leadsInputs, affiliateUrl }: LeadsCampaignProps)
           )
         })}
 
+        <Input type="text" name="campaign-leads-inputs" readOnly value={campaignId} className="hidden" />
         <Input type="text" name="campaign-leads-inputs" readOnly value={inputValueString} className="hidden" />
 
-        <Button className="w-full h-16 rounded-full p-1 bg-[#EAEBEC] hover:bg-[#DDDEDF]">
+        <Button className="w-full h-16 rounded-full p-1 bg-[#EAEBEC] hover:bg-[#DDDEDF]" type="submit">
           <Link
             href={affiliateUrl}
             className={cn(satochi.className, 'w-full flex items-center justify-evenly text-3xl text-foreground')}
