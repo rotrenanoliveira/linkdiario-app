@@ -10,7 +10,6 @@ import { CampaignLeads } from '@/core/types'
 import { cn } from '@/lib/utils'
 import { Translate } from '@/utils/translate'
 import { MoveUpRight } from 'lucide-react'
-import Link from 'next/link'
 import { useFormState } from 'react-dom'
 import { saveLeadsValues } from '../preview/[id]/actions'
 import { useToast } from '@/components/ui/use-toast'
@@ -81,19 +80,17 @@ export function LeadsCampaign({ leadsInputs, affiliateUrl, campaignId }: LeadsCa
           )
         })}
 
-        <Input type="text" name="campaign-leads-inputs" readOnly value={campaignId} className="hidden" />
+        <Input type="text" name="campaign-id" readOnly value={campaignId} className="hidden" />
         <Input type="text" name="campaign-leads-inputs" readOnly value={inputValueString} className="hidden" />
+        <Input type="text" name="affiliate-url" readOnly value={affiliateUrl} className="hidden" />
 
         <Button className="w-full h-16 rounded-full p-1 bg-[#EAEBEC] hover:bg-[#DDDEDF]" type="submit">
-          <Link
-            href={affiliateUrl}
-            className={cn(satochi.className, 'w-full flex items-center justify-evenly text-3xl text-foreground')}
-          >
+          <div className={cn(satochi.className, 'w-full flex items-center justify-evenly text-3xl text-foreground')}>
             <span className="flex-grow text-center font-normal">Saiba mais</span>
             <div className="size-14 rounded-full bg-yellow-400 flex items-center justify-center">
               <MoveUpRight size={32} className="text-foreground/85" />
             </div>
-          </Link>
+          </div>
         </Button>
       </form>
     </div>

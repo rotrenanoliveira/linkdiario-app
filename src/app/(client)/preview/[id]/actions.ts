@@ -2,6 +2,7 @@
 
 import { randomUUID } from 'node:crypto'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { fromZodError } from 'zod-validation-error'
 import { z } from 'zod'
 
@@ -35,12 +36,15 @@ export async function saveLeadsValues(prevState: PrevState, data: FormData): Pro
   const saveLeadsSchema = z.object({
     campaignId: z.string().uuid({ message: 'ID inválido.' }),
     leads: z.string(),
+    affiliateUrl: z.string(),
   })
 
   const result = saveLeadsSchema.safeParse({
     campaignId: data.get('campaign-id'),
     leads: data.get('campaign-leads-inputs'),
+    affiliateUrl: data.get('affiliate-url'),
   })
+  console.log({ result })
 
   if (result.success === false) {
     const zodError = fromZodError(result.error)
@@ -57,12 +61,14 @@ export async function saveLeadsValues(prevState: PrevState, data: FormData): Pro
     ...result.data,
   }
 
+  console.log({ leads })
   const savedLeads = await LeadsRepository.create({
     id: leads.id,
     campaignId: leads.campaignId,
     leads: leads.leads,
   })
 
+  console.log({ savedLeads })
   if (!savedLeads) {
     return {
       success: false,
@@ -70,4 +76,6 @@ export async function saveLeadsValues(prevState: PrevState, data: FormData): Pro
       message: 'Erro enviar os leads.',
     }
   }
+
+  redirect(result.data.affiliateUrl)
 }
