@@ -17,12 +17,12 @@
  <!-- - Adicionar na criação/update da campanha a opção de agendar a publicação -->
  - [] Página inicial
  
- - [Renan] Contador Page views
- - [Renan] Contador de cliques no btn
- 
  - [Pedro] Inserir a logo da empresa
  - [Pedro] Captação de Leads
  - [Pedro] Exportar Leads para Excel
+
+ - Salvar lista de usuários em cache
+ - Salvar lista de campanhas em cache
  
  ### Features Plano Simples
  - 50 campanhas ativas
@@ -31,8 +31,8 @@
  ### Features Plano Pro
  - 100 campanhas ativas
  - 250 campanhas totais 
- - Captação de Leads
  - Analytics
+ - Captação de Leads
 
 ### v_alpha_riverwood - 01/02/2024
 ### v_beta_whiterun   - 20/02/2024

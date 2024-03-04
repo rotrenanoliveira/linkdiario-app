@@ -53,6 +53,10 @@ export default async function DashboardPage() {
         {/*  */}
         <div />
       </div>
+
+      <p className="text-sm font-light text-foreground/65">
+        As informações são atualizadas automaticamente a cada 1 hora.
+      </p>
     </div>
   )
 }
