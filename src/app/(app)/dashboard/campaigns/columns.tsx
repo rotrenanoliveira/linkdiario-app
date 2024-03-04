@@ -71,6 +71,16 @@ export const dashboardCampaignsColumns: ColumnDef<CampaignToDashboard>[] = [
     ),
   },
   {
+    accessorKey: 'analytics.impressions',
+    header: 'Visitas',
+    cell: ({ getValue }) => <div>{getValue<number>()}</div>,
+  },
+  {
+    accessorKey: 'analytics.clicks',
+    header: 'Cliques',
+    cell: ({ getValue }) => <div>{getValue<number>()}</div>,
+  },
+  {
     id: 'actions',
     cell: ({ row }) => {
       const campaign = row.original

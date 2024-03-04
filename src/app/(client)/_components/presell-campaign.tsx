@@ -3,13 +3,14 @@ import DOMPurify from 'isomorphic-dompurify'
 import { ButtonCta } from './button-cta'
 
 interface PresellCampaignProps {
+  campaignId: string
   description: string
   affiliateUrl: string
   ctaText: string
   ctaColor: string
 }
 
-export function PresellCampaign({ description, affiliateUrl, ctaText, ctaColor }: PresellCampaignProps) {
+export function PresellCampaign({ campaignId, description, affiliateUrl, ctaText, ctaColor }: PresellCampaignProps) {
   const descriptionParsed = description.split('\n')
 
   function sanitize(text: string) {
@@ -34,7 +35,7 @@ export function PresellCampaign({ description, affiliateUrl, ctaText, ctaColor }
         })}
       </div>
 
-      <ButtonCta ctaText={ctaText} ctaColor={ctaColor} affiliateUrl={affiliateUrl} />
+      <ButtonCta ctaText={ctaText} ctaColor={ctaColor} affiliateUrl={affiliateUrl} campaignId={campaignId} />
     </div>
   )
 }

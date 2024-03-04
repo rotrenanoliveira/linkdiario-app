@@ -7,6 +7,8 @@ import { Services } from '@/infra/services'
 import { CounterActiveCampaigns } from './_components/counter-active-campaigns'
 import { LoaderCounter } from './_components/loader-counter'
 import { CounterTotalCampaigns } from './_components/counter-total-campaigns'
+import { AnalyticsRecentCampaign } from './_components/analytics-recent-campaign'
+import { AnalyticsTotalCampaigns } from './_components/analytics-all-campaign'
 
 export async function generateMetadata(): Promise<Metadata> {
   const company = await Services.getCompany()
@@ -26,7 +28,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="w-full">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
         <div className="flex flex-col gap-4">
           {/* counter total campaigns */}
           <Suspense fallback={<LoaderCounter />}>
@@ -38,7 +40,16 @@ export default async function DashboardPage() {
           </Suspense>
         </div>
         {/*  */}
-        <div />
+        <div className="flex flex-col gap-4">
+          {/* counter total campaigns */}
+          <Suspense fallback={<LoaderCounter />}>
+            <AnalyticsRecentCampaign />
+          </Suspense>
+          {/* counter active campaigns */}
+          <Suspense fallback={<LoaderCounter />}>
+            <AnalyticsTotalCampaigns />
+          </Suspense>
+        </div>
         {/*  */}
         <div />
       </div>

@@ -16,6 +16,7 @@ import { PrismaAccountsRepository } from './prisma/repositories/prisma-accounts-
 import { PrismaCampaignsRepository } from './prisma/repositories/prisma-campaign-repository'
 import { PrismaCompaniesRepository } from './prisma/repositories/prisma-companies-repository'
 import { PrismaCampaignAttachmentsRepository } from './prisma/repositories/prisma-campaign-attachments-repository'
+import { PrismaCampaignAnalyticsRepository } from './prisma/repositories/prisma-campaign-analytics-repository'
 
 //= Access Code Repository ==//
 export const AccessCodeRepository = {
@@ -98,6 +99,13 @@ export const CampaignsRepository = {
     return PrismaCampaignsRepository.save(id, data)
   },
   counter: PrismaCampaignsRepository.counter,
+}
+
+//= Analytics Repository ==
+export const AnalyticsRepository = {
+  findRecentByCompanyId: PrismaCampaignAnalyticsRepository.findRecentByCompanyId,
+  findManyByCompanyId: PrismaCampaignAnalyticsRepository.findManyByCompanyId,
+  save: PrismaCampaignAnalyticsRepository.save,
 }
 
 //= = Campaign Attachments Repository ==

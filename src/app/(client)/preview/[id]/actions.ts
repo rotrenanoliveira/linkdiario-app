@@ -4,16 +4,22 @@ import { revalidatePath } from 'next/cache'
 
 import { RedisCacheRepository } from '@/infra/cache/redis-cache-repository'
 import { CampaignsRepository } from '@/infra/database/db'
+import { Services } from '@/infra/services'
 
 export async function publishCampaign(campaignId: string) {
   const campaignSlugs = await CampaignsRepository.getCompanyAndCampaignSlugById(campaignId)
+  const company = await Services.getCompany()
 
-  if (!campaignSlugs) {
+  if (!campaignSlugs || !company) {
     throw new Error('Campaign not found')
   }
 
-  await Promise.all([
-    RedisCacheRepository.delete(`not-published-campaign:${campaignId}:details`),
+  await Promise.allSettled([
+    RedisCacheRepository.delete([
+      `not-published-campaign:${campaignId}:details`,
+      `analytics-recent:${company.id}:counters`,
+    ]),
+
     CampaignsRepository.save(campaignId, {
       status: 'ACTIVE',
       startedAt: new Date(),

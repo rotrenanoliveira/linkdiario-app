@@ -1,24 +1,32 @@
 'use client'
 
+import { useState } from 'react'
 import { MoveUpRight } from 'lucide-react'
 import Link from 'next/link'
 
 import { satochi } from '@/app/fonts'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { useState } from 'react'
+import { updateCtaCount } from '../[companySlug]/[campaignSlug]/actions'
 
 interface ButtonCtaProps {
   ctaText: string
   ctaColor: string
   affiliateUrl: string
+  campaignId?: string | null
 }
 
-export function ButtonCta({ ctaText, ctaColor, affiliateUrl }: ButtonCtaProps) {
+export function ButtonCta({ ctaText, ctaColor, affiliateUrl, campaignId = null }: ButtonCtaProps) {
   const [isHovered, setIsHovered] = useState(false)
 
   const btnBackgroundColor = {
     backgroundColor: isHovered ? `${ctaColor}BF` : ctaColor,
+  }
+
+  async function handleClickOnCta() {
+    if (campaignId) {
+      await updateCtaCount(campaignId)
+    }
   }
 
   return (
@@ -27,6 +35,7 @@ export function ButtonCta({ ctaText, ctaColor, affiliateUrl }: ButtonCtaProps) {
       style={btnBackgroundColor}
       onMouseOver={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleClickOnCta}
     >
       <Link
         href={affiliateUrl}

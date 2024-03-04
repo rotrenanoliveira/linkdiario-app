@@ -3,10 +3,10 @@ import {
   CampaignFindBySlugAndCompanyIdArgs,
   CampaignFindBySlugAndCompanySlugArgs,
 } from '@/core/types'
-import prisma from '@/lib/prisma'
-import { PrismaCampaignMapper } from '../mapper/campaign-mapper'
-import { RedisCacheRepository } from '@/infra/cache/redis-cache-repository'
 import { CampaignCounter, CampaignToCustomer, CampaignUpdateInput } from '@/core/types/campaign'
+import prisma from '@/lib/prisma'
+import { RedisCacheRepository } from '@/infra/cache/redis-cache-repository'
+import { PrismaCampaignMapper } from '../mapper/campaign-mapper'
 
 export const PrismaCampaignsRepository = {
   async findById(id: string) {
@@ -39,9 +39,13 @@ export const PrismaCampaignsRepository = {
       return null
     }
 
-    const campaignToCache = PrismaCampaignMapper.toCache(campaign)
-
-    await RedisCacheRepository.set(`not-published-campaign:${id}:details`, JSON.stringify(campaignToCache))
+    if (campaign.status === 'NOT_PUBLISHED') {
+      await RedisCacheRepository.set(
+        `not-published-campaign:${id}:details`,
+        JSON.stringify(PrismaCampaignMapper.toCache(campaign)),
+        60 * 60, // 1 hour
+      )
+    }
 
     return PrismaCampaignMapper.toCustomer(campaign)
   },
@@ -91,6 +95,12 @@ export const PrismaCampaignsRepository = {
             slug: true,
           },
         },
+        analyticsInicial: {
+          select: {
+            pageView: true,
+            clickCta: true,
+          },
+        },
       },
       orderBy: {
         updatedAt: 'desc',
@@ -115,6 +125,12 @@ export const PrismaCampaignsRepository = {
         company: {
           select: {
             slug: true,
+          },
+        },
+        analyticsInicial: {
+          select: {
+            pageView: true,
+            clickCta: true,
           },
         },
       },
@@ -187,14 +203,17 @@ export const PrismaCampaignsRepository = {
   async create(data: CampaignCreateInput): Promise<void> {
     const quiz = data.quiz ? JSON.stringify(data.quiz) : null
 
-    await RedisCacheRepository.delete(`campaigns-counter:${data.companyId}`)
+    await Promise.allSettled([
+      RedisCacheRepository.delete(`campaigns-counter:${data.companyId}`),
+      prisma.campaign.create({
+        data: {
+          ...data,
+          quiz,
+        },
+      }),
+    ])
 
-    await prisma.campaign.create({
-      data: {
-        ...data,
-        quiz,
-      },
-    })
+    // await
   },
   async save(id: string, data: CampaignUpdateInput): Promise<void> {
     const existingCampaign = await prisma.campaign.findUniqueOrThrow({

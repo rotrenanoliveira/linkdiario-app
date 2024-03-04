@@ -6,6 +6,7 @@ import { QuizCampaign } from '../../_components/quiz-campaign'
 import { PresellCampaign } from '../../_components/presell-campaign'
 
 import { Services } from '@/infra/services'
+import { updatePageViewCount } from './actions'
 
 interface PreviewCampaignPageProps {
   params: {
@@ -50,6 +51,8 @@ export default async function PreviewCampaignPage({ params }: PreviewCampaignPag
   const campaignDescription = campaign.description
   const campaignQuiz = campaign.quiz
 
+  await updatePageViewCount(campaign.id)
+
   return (
     <section className="container max-w-screen-xl box-border p-4">
       {/*  CAMPAIGN TITLE  */}
@@ -89,6 +92,7 @@ export default async function PreviewCampaignPage({ params }: PreviewCampaignPag
 
         {campaign.type === 'PRESELL' && campaignDescription && (
           <PresellCampaign
+            campaignId={campaign.id}
             description={campaignDescription}
             affiliateUrl={campaign.affiliateUrl}
             ctaText={campaign.ctaText}

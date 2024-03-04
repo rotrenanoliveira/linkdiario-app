@@ -15,6 +15,13 @@ type PrismaCampaignWithAttachments = PrismaCampaign & {
   }
 }
 
+type PrismaCampaignWithAnalytics = PrismaCampaignWithAttachments & {
+  analyticsInicial: Array<{
+    pageView: number
+    clickCta: number
+  }>
+}
+
 export class PrismaCampaignMapper {
   static toDomain(raw: PrismaCampaignWithAttachments): PresellCampaign | QuizCampaign {
     const carouselImages = raw.attachments.map((attachment) => {
@@ -63,8 +70,11 @@ export class PrismaCampaignMapper {
     }
   }
 
-  static toDashboard(raw: PrismaCampaignWithAttachments): CampaignToDashboard {
+  static toDashboard(raw: PrismaCampaignWithAnalytics): CampaignToDashboard {
     const campaignUrl = String(`${env.APP_URL}`).concat('/', raw.company.slug).concat('/', raw.slug)
+
+    const pageView = raw.analyticsInicial.reduce((total, current) => total + current.pageView, 0)
+    const clickCta = raw.analyticsInicial.reduce((total, current) => total + current.clickCta, 0)
 
     return {
       id: raw.id,
@@ -73,6 +83,10 @@ export class PrismaCampaignMapper {
       status: raw.status,
       type: raw.type,
       startedAt: raw.startedAt,
+      analytics: {
+        impressions: pageView,
+        clicks: clickCta,
+      },
       campaignUrl,
     }
   }

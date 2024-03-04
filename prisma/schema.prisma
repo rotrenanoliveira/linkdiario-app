@@ -97,8 +97,9 @@ model Campaign {
   endedAt      DateTime?       @map("ended_at")
   updatedAt    DateTime?       @updatedAt() @map("updated_at")
 
-  company     Company               @relation(fields: [companyId], references: [id])
-  attachments CampaignAttachments[]
+  company          Company                    @relation(fields: [companyId], references: [id])
+  attachments      CampaignAttachments[]
+  analyticsInicial CampaignAnalyticsInitial[]
 
   @@map("campaigns")
 }
@@ -113,4 +114,16 @@ model CampaignAttachments {
   campaign Campaign @relation(fields: [campaignId], references: [id])
 
   @@map("campaign_attachments")
+}
+
+model CampaignAnalyticsInitial {
+  id         String   @id @default(uuid())
+  campaignId String   @unique @map("campaign_id")
+  pageView   Int      @map("page_view")
+  clickCta   Int      @map("click_cta")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  campaign Campaign @relation(fields: [campaignId], references: [id])
+
+  @@map("campaign-analytics-initial")
 }

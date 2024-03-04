@@ -117,6 +117,7 @@ export default async function PreviewCampaignPage({ params }: PreviewCampaignPag
 
         {campaign.type === 'PRESELL' && campaignDescription && (
           <PresellCampaign
+            campaignId={campaign.id}
             description={campaignDescription}
             affiliateUrl={campaign.affiliateUrl}
             ctaText={campaign.ctaText}

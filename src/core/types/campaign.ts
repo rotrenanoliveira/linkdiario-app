@@ -61,6 +61,10 @@ export type CampaignToDashboard = {
   status: CampaignStatus
   type: CampaignType
   startedAt: Date
+  analytics: {
+    clicks: number
+    impressions: number
+  }
 }
 
 /**
