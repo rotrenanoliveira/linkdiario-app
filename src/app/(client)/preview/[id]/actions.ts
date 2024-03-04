@@ -44,7 +44,6 @@ export async function saveLeadsValues(prevState: PrevState, data: FormData): Pro
     leads: data.get('campaign-leads-inputs'),
     affiliateUrl: data.get('affiliate-url'),
   })
-  console.log({ result })
 
   if (result.success === false) {
     const zodError = fromZodError(result.error)
@@ -61,14 +60,12 @@ export async function saveLeadsValues(prevState: PrevState, data: FormData): Pro
     ...result.data,
   }
 
-  console.log({ leads })
   const savedLeads = await LeadsRepository.create({
     id: leads.id,
     campaignId: leads.campaignId,
     leads: leads.leads,
   })
 
-  console.log({ savedLeads })
   if (!savedLeads) {
     return {
       success: false,
