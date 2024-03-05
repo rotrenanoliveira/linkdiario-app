@@ -9,6 +9,15 @@ import { useToast } from '@/components/ui/use-toast'
 import { Label } from '@radix-ui/react-label'
 import { useRef, useEffect } from 'react'
 import { PendingSubmitButton } from '@/components/pending-submit-button'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export function FormRegisterAccount() {
   const [formState, formAction] = useFormState(actionRegisterAccount, null)
@@ -51,9 +60,60 @@ export function FormRegisterAccount() {
         <FormDescription>Nome completo cadastrado no sistema.</FormDescription>
       </FormItem>
 
+      {/* input - account license */}
+      <FormItem>
+        <Label>Licença</Label>
+        <Select name="account-license">
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Selecione a licença" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Licença</SelectLabel>
+              <SelectItem value="STANDARD">Standard</SelectItem>
+              <SelectItem value="PRO">Pro</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        <FormDescription>Nome completo cadastrado no sistema.</FormDescription>
+      </FormItem>
+
       <PendingSubmitButton type="submit" className="min-w-32">
         Cadastrar
       </PendingSubmitButton>
     </form>
   )
 }
+
+// import * as React from "react"
+
+// import {
+//   Select,
+//   SelectContent,
+//   SelectGroup,
+//   SelectItem,
+//   SelectLabel,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select"
+
+// export function SelectDemo() {
+//   return (
+//     <Select>
+//       <SelectTrigger className="w-[180px]">
+//         <SelectValue placeholder="Select a fruit" />
+//       </SelectTrigger>
+//       <SelectContent>
+//         <SelectGroup>
+//           <SelectLabel>Fruits</SelectLabel>
+//           <SelectItem value="apple">Apple</SelectItem>
+//           <SelectItem value="banana">Banana</SelectItem>
+//           <SelectItem value="blueberry">Blueberry</SelectItem>
+//           <SelectItem value="grapes">Grapes</SelectItem>
+//           <SelectItem value="pineapple">Pineapple</SelectItem>
+//         </SelectGroup>
+//       </SelectContent>
+//     </Select>
+//   )
+// }

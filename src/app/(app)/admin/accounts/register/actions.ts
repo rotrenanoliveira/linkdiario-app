@@ -16,6 +16,7 @@ const registerAccountSchema = z.object({
     .string()
     .min(10, { message: 'Nome completo deve ter pelo menos 10 caracteres.' })
     .transform((value) => value.toLowerCase()),
+  license: z.enum(['STANDARD', 'PRO']),
 })
 
 export async function actionRegisterAccount(prevState: PrevState, data: FormData) {
@@ -23,6 +24,7 @@ export async function actionRegisterAccount(prevState: PrevState, data: FormData
   const result = registerAccountSchema.safeParse({
     email: data.get('account-email'),
     fullName: data.get('account-full-name'),
+    license: data.get('account-license'),
   })
 
   if (result.success === false) {
@@ -35,11 +37,12 @@ export async function actionRegisterAccount(prevState: PrevState, data: FormData
     }
   }
 
-  const { email, fullName } = result.data
+  const { email, fullName, license } = result.data
   const account: Account = {
     id: randomUUID(),
     email,
     fullName,
+    license,
     status: 'ACTIVE',
   }
 

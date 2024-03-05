@@ -11,6 +11,7 @@ import { RedisCacheRepository } from '@/infra/cache/redis-cache-repository'
 import { CampaignsRepository } from '@/infra/database/db'
 import { uploadCampaignImage } from '@/infra/storage/upload-campaign-image'
 import { Slug } from '@/utils/slug'
+import { Services } from '@/infra/services'
 
 type PrevState = ActionResponse | null
 
@@ -134,6 +135,21 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData): 
     ...campaignData,
     description,
     quiz,
+  }
+
+  const [counter, account] = await Promise.all([
+    CampaignsRepository.counter(campaign.companyId, true),
+    Services.getAccount(),
+  ])
+
+  const MAX_CAMPAIGNS_PER_COMPANY = account?.license === 'PRO' ? 250 : 100
+
+  if (counter.total >= MAX_CAMPAIGNS_PER_COMPANY) {
+    return {
+      success: false,
+      title: 'Algo deu errado!',
+      message: 'Limite de campanhas atingido.',
+    }
   }
 
   await CampaignsRepository.create({

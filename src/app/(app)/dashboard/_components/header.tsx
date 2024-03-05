@@ -11,7 +11,7 @@ export async function DashboardHeader() {
   return (
     <div className="flex items-center justify-between gap-4">
       <div className="flex items-center gap-4">
-        <Blocks size={48} className="text-yellow-400" />
+        <Blocks size={48} className="text-blue-400" />
 
         <h2 className={cn(jetBrainsMono.className, 'text-lg font-medium tracking-tight')}>
           {(company && company.name) || 'linkdiario'} - dashboard

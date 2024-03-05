@@ -8,10 +8,18 @@ import { Services } from '@/infra/services'
 
 export async function publishCampaign(campaignId: string) {
   const campaignSlugs = await CampaignsRepository.getCompanyAndCampaignSlugById(campaignId)
-  const company = await Services.getCompany()
+
+  const [account, company] = await Promise.all([Services.getAccount(), Services.getCompany()])
 
   if (!campaignSlugs || !company) {
     throw new Error('Campaign not found')
+  }
+
+  const MAX_ACTIVE_CAMPAIGNS = account?.license === 'PRO' ? 100 : 50
+  const counter = await CampaignsRepository.counter(company.id, true)
+
+  if (counter.active >= MAX_ACTIVE_CAMPAIGNS) {
+    throw new Error('O limite de campanhas ativas foi atingido')
   }
 
   await Promise.allSettled([

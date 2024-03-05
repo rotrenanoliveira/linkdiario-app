@@ -143,10 +143,10 @@ export const PrismaCampaignsRepository = {
     return PrismaCampaignMapper.toDashboard(campaign)
   },
 
-  async counter(companyId: string) {
+  async counter(companyId: string, toControl: boolean | undefined = false) {
     const cachedCounters = await RedisCacheRepository.get<CampaignCounter>(`campaigns-counter:${companyId}`)
 
-    if (cachedCounters) {
+    if (cachedCounters && !toControl) {
       return cachedCounters
     }
 
