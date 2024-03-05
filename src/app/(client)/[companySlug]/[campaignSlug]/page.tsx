@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: PreviewCampaignPageProps): Pr
   }
 }
 
-export default async function PreviewCampaignPage({ params }: PreviewCampaignPageProps) {
+export default async function CampaignPage({ params }: PreviewCampaignPageProps) {
   if (!params.campaignSlug || !params.companySlug) {
     return notFound()
   }

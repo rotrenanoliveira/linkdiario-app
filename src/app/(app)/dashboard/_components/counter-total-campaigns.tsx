@@ -1,15 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Services } from '@/infra/services'
-import { redirect } from 'next/navigation'
 
 export async function CounterTotalCampaigns() {
-  const company = await Services.getCompany()
-
-  if (!company) {
-    return redirect('/auth/sign-in')
-  }
-
-  const counter = await Services.getCampaignCounters(company.id)
+  const counter = await Services.getCampaignCounters()
 
   return (
     <Card>
