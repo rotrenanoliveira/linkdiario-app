@@ -8,14 +8,14 @@ import React from 'react'
 import { Icons } from './icons'
 import { toast } from 'sonner'
 
+export type ToastProps = {
+  id: string
+  loadingMessage: string
+}
+
 type PendingButtonProps = ButtonProps & {
   children?: React.ReactNode
-  toastProps:
-    | {
-        id: string
-        loadingMessage: string
-      }
-    | undefined
+  toastProps?: ToastProps
 }
 
 const PendingSubmitButton = React.forwardRef<HTMLButtonElement, PendingButtonProps>(

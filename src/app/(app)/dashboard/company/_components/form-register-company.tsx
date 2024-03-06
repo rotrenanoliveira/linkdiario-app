@@ -1,16 +1,19 @@
 'use client'
 
 import { useFormState } from 'react-dom'
-import { useRef, useEffect, useState, ChangeEvent } from 'react'
+import { useRef, useMemo, useEffect, useState, ChangeEvent } from 'react'
+import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 
 import { FormItem, FormDescription } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useToast } from '@/components/ui/use-toast'
-import { PendingSubmitButton } from '@/components/pending-submit-button'
+
+import { PendingSubmitButton, ToastProps } from '@/components/pending-submit-button'
 import { Company } from '@/core/types/company'
 import { actionRegisterCompany, actionUpdateCompany } from '../actions'
+import { InputCompanyLogo } from './input-company-logo'
+import Image from 'next/image'
 
 interface FormRegisterCompanyProps {
   company: Company | null
@@ -21,23 +24,28 @@ export function FormRegisterCompany({ company }: FormRegisterCompanyProps) {
   const action = formStatus === 'create' ? actionRegisterCompany : actionUpdateCompany
 
   const ref = useRef<HTMLFormElement>(null)
+
   const [formState, formAction] = useFormState(action, null)
 
-  const { toast } = useToast()
   const router = useRouter()
+
+  const toastProps = useMemo<ToastProps>(() => {
+    return { id: 'form-company', loadingMessage: 'Salvando empresa...' }
+  }, [])
 
   useEffect(() => {
     if (formState) {
-      toast({
-        variant: formState.success ? 'default' : 'destructive',
-        title: formState.title,
-        description: formState.message,
-        duration: 3000,
-      })
+      if (formState.success === false) {
+        toast.error(formState.message, {
+          id: toastProps.id,
+        })
 
-      if (formState.success !== true) {
         return
       }
+
+      toast.success(formState.message, {
+        id: toastProps.id,
+      })
 
       ref.current?.reset()
       router.refresh()
@@ -124,6 +132,21 @@ export function FormRegisterCompany({ company }: FormRegisterCompanyProps) {
         <FormDescription>Breve descrição da empresa.</FormDescription>
       </FormItem>
 
+      <div className="flex space-x-4">
+        {company && company.logoUrl && (
+          <div className="w-fit h-fit flex flex-col items-center justify-center gap-2 p-2 border-2 border-dashed bg-zinc-50 rounded-md">
+            <Image
+              src={company.logoUrl}
+              alt={company.name}
+              width={256}
+              height={256}
+              className="w-full h-full object-cover rounded-full"
+            />
+          </div>
+        )}
+        <InputCompanyLogo />
+      </div>
+
       {/* input - company id */}
       {company && (
         <FormItem className="hidden">
@@ -131,7 +154,7 @@ export function FormRegisterCompany({ company }: FormRegisterCompanyProps) {
         </FormItem>
       )}
 
-      <PendingSubmitButton type="submit" className="min-w-32">
+      <PendingSubmitButton type="submit" className="min-w-32" toastProps={toastProps}>
         {formStatus === 'create' ? 'Cadastrar' : 'Salvar'}
       </PendingSubmitButton>
     </form>
