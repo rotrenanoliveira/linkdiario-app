@@ -4,7 +4,7 @@ const cache = upstashRedis
 
 const CACHE_EXPIRE = 60 * 1 * 1440 // 1 day
 
-export const RedisCacheRepository = {
+export const CacheRepository = {
   /**
    * Set a key-value pair in the cache with an optional expiration time.
    *

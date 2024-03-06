@@ -2,18 +2,18 @@
 
 import { useRouter } from 'next/navigation'
 import { useFormState } from 'react-dom'
-import { useRef, useEffect, useState, ChangeEvent } from 'react'
+import { useRef, useEffect, useState, ChangeEvent, useMemo } from 'react'
+import { toast } from 'sonner'
 
 import { FormItem, FormDescription } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { PendingSubmitButton } from '@/components/pending-submit-button'
+import { PendingSubmitButton, ToastProps } from '@/components/pending-submit-button'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { useToast } from '@/components/ui/use-toast'
 import { CampaignToCustomer } from '@/core/types/campaign'
 import { Slug } from '@/utils/slug'
 import { InputCarouselImages } from './input-carousel-images'
-import { InputCampaignAccentColor } from './input-campaign-accent-color'
+import { InputAccentColor } from './input-accent-color'
 import { InputPresellCampaign } from './input-presell-campaign'
 import { InputQuizCampaign } from './input-quiz-campaign'
 import { actionUpdateCampaign } from '../actions'
@@ -35,8 +35,11 @@ export function FormUpdateCampaign({ campaign, company }: FormRegisterCampaignPr
   const [formState, formAction] = useFormState(actionUpdateCampaign, null)
 
   const ref = useRef<HTMLFormElement>(null)
-  const { toast } = useToast()
   const router = useRouter()
+
+  const toastProps = useMemo<ToastProps>(() => {
+    return { id: 'form-campaign', loadingMessage: 'Atualizando campanha...' }
+  }, [])
 
   function handleOnChangeCampaignTitle(e: ChangeEvent<HTMLInputElement>) {
     const newProductName = e.target.value
@@ -52,19 +55,20 @@ export function FormUpdateCampaign({ campaign, company }: FormRegisterCampaignPr
 
   useEffect(() => {
     if (formState) {
-      toast({
-        variant: formState.success ? 'default' : 'destructive',
-        title: formState.title,
-        description: formState.message,
-        duration: 3000,
-      })
-
       if (formState.success === false) {
+        toast.error(formState.message, {
+          id: toastProps.id,
+        })
+
         return
       }
 
+      toast.success(formState.message, {
+        id: toastProps.id,
+      })
+
       ref.current?.reset()
-      router.push('/dashboard/campaigns')
+      router.push(`/preview/${campaign.id}`)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formState])
@@ -186,7 +190,7 @@ export function FormUpdateCampaign({ campaign, company }: FormRegisterCampaignPr
             required
           />
 
-          <InputCampaignAccentColor ctaText={campaignCallToActionText} ctaColor={campaign.ctaColor} />
+          <InputAccentColor ctaText={campaignCallToActionText} ctaColor={campaign.ctaColor} />
         </div>
 
         <FormDescription>
@@ -232,7 +236,7 @@ export function FormUpdateCampaign({ campaign, company }: FormRegisterCampaignPr
       {campaignType && campaignType === 'PRESELL' && <InputPresellCampaign description={campaign.description} />}
       {campaignType && campaignType === 'QUIZ' && <InputQuizCampaign quiz={campaign.quiz} />}
 
-      <PendingSubmitButton type="submit" className="min-w-32">
+      <PendingSubmitButton type="submit" className="min-w-32" toastProps={toastProps}>
         Salvar campanha
       </PendingSubmitButton>
     </form>

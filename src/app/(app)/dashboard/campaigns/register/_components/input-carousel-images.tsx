@@ -1,14 +1,14 @@
-// CustomInput.tsx
+import Image from 'next/image'
+import { Image as ImageIcon, Upload } from 'lucide-react'
+import { ChangeEvent, useState } from 'react'
+import { toast } from 'sonner'
 
 import { FormDescription } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Image as ImageIcon, Upload } from 'lucide-react'
-import Image from 'next/image'
-import { ChangeEvent, useState } from 'react'
 
 export function InputCarouselImages() {
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  // const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [fileName, setFileName] = useState<string | null>(null)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
 
@@ -20,7 +20,7 @@ export function InputCarouselImages() {
     }
 
     if (fileList.length > 1) {
-      setErrorMessage('O carousel pode ter no máximo 3 imagens.')
+      toast.error('O carousel pode ter no mínimo 3 imagens.')
 
       return
     }
@@ -30,7 +30,7 @@ export function InputCarouselImages() {
     const isFileAnImage = inputFile.type.startsWith('image/')
 
     if (!isFileAnImage) {
-      setErrorMessage('O arquivo selecionado não é uma imagem.')
+      toast.error('O arquivo selecionado não é uma imagem.')
 
       return
     }
@@ -57,8 +57,6 @@ export function InputCarouselImages() {
             </div>
             <span className="text-sm font-light text-gray-400">Carregue a imagem.</span>
           </Label>
-
-          {errorMessage && <FormDescription className="text-red-500">{errorMessage}</FormDescription>}
 
           <Input
             onChange={handleSelectImages}

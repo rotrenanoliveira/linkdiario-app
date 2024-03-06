@@ -7,7 +7,7 @@ import { env } from '@/env'
 import { getUploadUrl } from './get-upload-url'
 import { CampaignAttachmentsRepository } from '../database/db'
 
-export async function uploadCampaignImage(campaignId: string, image: File) {
+export async function uploadCampaignAttachment(campaignId: string, image: File) {
   const bannedMimeTypes = [
     '.exe', // (executáveis)
     '.dll', // (bibliotecas dinâmicas)
@@ -20,7 +20,7 @@ export async function uploadCampaignImage(campaignId: string, image: File) {
   ]
 
   if (bannedMimeTypes.includes(image.type)) {
-    return null
+    throw new Error('Tipo de arquivo inválido')
   }
 
   const fileKey = randomUUID().concat('-').concat(image.name)

@@ -1,10 +1,11 @@
 'use client'
 
 import { useFormState } from 'react-dom'
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useMemo } from 'react'
+import { toast } from 'sonner'
 
 import { Input } from '@/components/ui/input'
-import { PendingSubmitButton } from '@/components/pending-submit-button'
+import { PendingSubmitButton, ToastProps } from '@/components/pending-submit-button'
 import {
   Select,
   SelectContent,
@@ -14,9 +15,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useToast } from '@/components/ui/use-toast'
+
 import { CampaignStatus } from '@/core/types/campaign'
 import { actionUpdateCampaignStatus } from '../actions'
+import { useRouter } from 'next/navigation'
 
 interface FormRegisterCampaignProps {
   campaign: {
@@ -30,36 +32,36 @@ export function FormUpdateCampaignStatus({ campaign }: FormRegisterCampaignProps
 
   const [formState, formAction] = useFormState(actionUpdateCampaignStatus, null)
 
+  const toastProps = useMemo<ToastProps>(() => {
+    return { id: 'form-status-campaign', loadingMessage: 'Atualizando status da campanha...' }
+  }, [])
+
   const ref = useRef<HTMLFormElement>(null)
-  const { toast } = useToast()
+  const router = useRouter()
 
   useEffect(() => {
     if (formState) {
-      toast({
-        variant: formState.success ? 'default' : 'destructive',
-        title: formState.title,
-        description: formState.message,
-        duration: 5000,
-      })
-
       if (formState.success === false) {
+        toast.error(formState.message, {
+          id: toastProps.id,
+        })
+
         return
       }
 
+      toast.success(formState.message, {
+        id: toastProps.id,
+      })
+
       ref.current?.reset()
-      // router.push('/dashboard/campaigns')
+      router.push(`/dashboard/campaigns/`)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formState])
 
   function handleSelectStatus(value: CampaignStatus) {
     if (status === 'REMOVED') {
-      toast({
-        variant: 'destructive',
-        title: 'Campanha removida',
-        description: 'Esta campanha não pode ser alterada. OBS.: Uma campanha removida não pode ser reativada.',
-        duration: 3000,
-      })
+      toast.error('Esta campanha não pode ser alterada.')
 
       return
     }
@@ -90,7 +92,7 @@ export function FormUpdateCampaignStatus({ campaign }: FormRegisterCampaignProps
         </SelectContent>
       </Select>
 
-      <PendingSubmitButton type="submit" className="min-w-32">
+      <PendingSubmitButton type="submit" className="min-w-32" toastProps={toastProps}>
         Salvar status da campanha
       </PendingSubmitButton>
     </form>
