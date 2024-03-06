@@ -1,13 +1,12 @@
 'use client'
 
+import { toast } from 'sonner'
+import { useRef, useEffect } from 'react'
 import { useFormState } from 'react-dom'
-import { actionRegisterAccount } from '../actions'
 
 import { FormItem, FormDescription } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useToast } from '@/components/ui/use-toast'
-import { Label } from '@radix-ui/react-label'
-import { useRef, useEffect } from 'react'
+import { Label } from '@/components/ui/label'
 import { PendingSubmitButton } from '@/components/pending-submit-button'
 import {
   Select,
@@ -18,24 +17,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { actionRegisterAccount } from '../actions'
+
+const TOAST_PROPS = {
+  id: 'account-register',
+  loadingMessage: 'Cadastrando conta...',
+}
 
 export function FormRegisterAccount() {
   const [formState, formAction] = useFormState(actionRegisterAccount, null)
   const ref = useRef<HTMLFormElement>(null)
-  const { toast } = useToast()
 
   useEffect(() => {
     if (formState) {
-      toast({
-        variant: formState.success ? 'default' : 'destructive',
-        title: formState.success === false ? formState.title : undefined,
-        description: formState.message,
-        duration: 3000,
+      if (formState.success === false) {
+        toast.error(formState.message, {
+          id: TOAST_PROPS.id,
+        })
+
+        return
+      }
+
+      toast.success(formState.message, {
+        id: TOAST_PROPS.id,
       })
 
-      formState.success === true && ref.current?.reset()
+      ref.current?.reset()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formState])
 
   return (
@@ -63,7 +71,7 @@ export function FormRegisterAccount() {
       {/* input - account license */}
       <FormItem>
         <Label>Licença</Label>
-        <Select name="account-license">
+        <Select name="account-license" defaultValue="STANDARD">
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Selecione a licença" />
           </SelectTrigger>
@@ -79,41 +87,9 @@ export function FormRegisterAccount() {
         <FormDescription>Nome completo cadastrado no sistema.</FormDescription>
       </FormItem>
 
-      <PendingSubmitButton type="submit" className="min-w-32">
+      <PendingSubmitButton type="submit" className="min-w-32" toastProps={TOAST_PROPS}>
         Cadastrar
       </PendingSubmitButton>
     </form>
   )
 }
-
-// import * as React from "react"
-
-// import {
-//   Select,
-//   SelectContent,
-//   SelectGroup,
-//   SelectItem,
-//   SelectLabel,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select"
-
-// export function SelectDemo() {
-//   return (
-//     <Select>
-//       <SelectTrigger className="w-[180px]">
-//         <SelectValue placeholder="Select a fruit" />
-//       </SelectTrigger>
-//       <SelectContent>
-//         <SelectGroup>
-//           <SelectLabel>Fruits</SelectLabel>
-//           <SelectItem value="apple">Apple</SelectItem>
-//           <SelectItem value="banana">Banana</SelectItem>
-//           <SelectItem value="blueberry">Blueberry</SelectItem>
-//           <SelectItem value="grapes">Grapes</SelectItem>
-//           <SelectItem value="pineapple">Pineapple</SelectItem>
-//         </SelectGroup>
-//       </SelectContent>
-//     </Select>
-//   )
-// }

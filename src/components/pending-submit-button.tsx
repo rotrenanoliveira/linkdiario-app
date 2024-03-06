@@ -6,14 +6,29 @@ import { useFormStatus } from 'react-dom'
 import { ButtonProps, buttonVariants } from './ui/button'
 import React from 'react'
 import { Icons } from './icons'
+import { toast } from 'sonner'
 
 type PendingButtonProps = ButtonProps & {
   children?: React.ReactNode
+  toastProps:
+    | {
+        id: string
+        loadingMessage: string
+      }
+    | undefined
 }
 
 const PendingSubmitButton = React.forwardRef<HTMLButtonElement, PendingButtonProps>(
-  ({ className, variant, size, asChild = false, children, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, children, toastProps = undefined, ...props }, ref) => {
     const { pending } = useFormStatus()
+
+    const toastLoadingMessage = toastProps ? toastProps.loadingMessage : 'Carregando...'
+
+    if (pending && toastProps) {
+      toast.loading(toastLoadingMessage, {
+        id: toastProps?.id,
+      })
+    }
 
     const Comp = asChild ? Slot : 'button'
 
