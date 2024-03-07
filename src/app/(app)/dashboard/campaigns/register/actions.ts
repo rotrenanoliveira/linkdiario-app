@@ -79,7 +79,7 @@ export async function actionSaveCampaign(prevState: PrevState, data: FormData) {
     // limit
     const MAX_CAMPAIGNS_PER_COMPANY = account?.license === 'PRO' ? 250 : 100
     // Validate limit
-    if (counter.total >= MAX_CAMPAIGNS_PER_COMPANY) {
+    if (counter.total - counter.removed >= MAX_CAMPAIGNS_PER_COMPANY) {
       throw new Error('Limite de campanhas atingido.')
     }
 

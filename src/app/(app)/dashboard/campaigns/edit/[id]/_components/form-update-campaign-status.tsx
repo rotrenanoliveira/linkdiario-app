@@ -70,7 +70,7 @@ export function FormUpdateCampaignStatus({ campaign }: FormRegisterCampaignProps
   }
 
   return (
-    <form ref={ref} action={formAction} className="w-full space-y-4">
+    <form ref={ref} action={formAction} className="w-full space-y-4 flex justify-between gap-4 md:justify-start">
       {/* input - campaign company */}
       <Input type="text" id="campaign-id" name="campaign-id" value={campaign.id} readOnly className="hidden" required />
 
@@ -93,7 +93,7 @@ export function FormUpdateCampaignStatus({ campaign }: FormRegisterCampaignProps
       </Select>
 
       <PendingSubmitButton type="submit" className="min-w-32" toastProps={toastProps}>
-        Salvar status da campanha
+        Atualizar status
       </PendingSubmitButton>
     </form>
   )

@@ -13,7 +13,6 @@ import { PendingSubmitButton, ToastProps } from '@/components/pending-submit-but
 import { Company } from '@/core/types/company'
 import { actionRegisterCompany, actionUpdateCompany } from '../actions'
 import { InputCompanyLogo } from './input-company-logo'
-import Image from 'next/image'
 
 interface FormRegisterCompanyProps {
   company: Company | null
@@ -93,13 +92,13 @@ export function FormRegisterCompany({ company }: FormRegisterCompanyProps) {
       <FormItem>
         <Label>Slug - URL personalizada</Label>
 
-        <div className="w-full flex items-center gap-2">
+        <div className="w-full flex flex-col md:flex-row items-center gap-2">
           <Input
             type="text"
             id="company-url"
             name="company-url"
             defaultValue={'https://linkdiario.com.br/'}
-            className="w-1/4 text-black"
+            className="md:w-1/4 text-black"
             disabled
           />
 
@@ -132,19 +131,15 @@ export function FormRegisterCompany({ company }: FormRegisterCompanyProps) {
         <FormDescription>Breve descrição da empresa.</FormDescription>
       </FormItem>
 
-      <div className="flex space-x-4">
-        {company && company.logoUrl && (
-          <div className="w-fit h-fit flex flex-col items-center justify-center gap-2 p-2 border-2 border-dashed bg-zinc-50 rounded-md">
-            <Image
-              src={company.logoUrl}
-              alt={company.name}
-              width={256}
-              height={256}
-              className="w-full h-full object-cover rounded-full"
-            />
-          </div>
-        )}
-        <InputCompanyLogo />
+      <div className="space-x-4">
+        <FormItem>
+          <Label>Logo</Label>
+          <FormDescription>
+            Carregue a Logo da sua empresa (caso haja uma), tamanho ideal para a imagem: 256x256.
+          </FormDescription>
+
+          <InputCompanyLogo />
+        </FormItem>
       </div>
 
       {/* input - company id */}

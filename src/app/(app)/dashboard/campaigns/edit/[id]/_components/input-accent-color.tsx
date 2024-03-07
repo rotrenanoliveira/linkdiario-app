@@ -47,7 +47,7 @@ export function InputAccentColor({ ctaText, ctaColor }: InputCampaignAccentColor
   }
 
   return (
-    <div className="inline-flex gap-4 items-center">
+    <div className="w-full inline-flex items-center justify-between gap-2 md:w-auto md:justify-normal">
       <Popover>
         <PopoverTrigger asChild>
           <Button variant="outline">Selecionar cor</Button>
@@ -67,18 +67,26 @@ export function InputAccentColor({ ctaText, ctaColor }: InputCampaignAccentColor
       </Popover>
 
       <div
-        className="w-72 h-16 rounded-full p-1 cursor-pointer"
+        className="w-48 h-10 md:w-72 md:h-16 rounded-full p-1 cursor-pointer"
         style={btnBackgroundColor}
         onMouseOver={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <span className={cn(satochi.className, 'w-full flex items-center justify-evenly text-2xl text-foreground')}>
+        <span
+          className={cn(
+            satochi.className,
+            'w-full flex items-center justify-evenly text-base lg:text-2xl text-foreground',
+          )}
+        >
           <span className="flex-grow text-center ml-7 font-normal" style={invertStyle}>
             {ctaText}
           </span>
 
-          <div className="size-14 rounded-full flex items-center justify-center" style={{ backgroundColor: hex }}>
-            <MoveUpRight size={32} className="text-foreground/85" style={invertStyle} />
+          <div
+            className="size-8 md:size-14 rounded-full flex items-center justify-center"
+            style={{ backgroundColor: hex }}
+          >
+            <MoveUpRight className="text-foreground/85" style={invertStyle} />
           </div>
         </span>
       </div>

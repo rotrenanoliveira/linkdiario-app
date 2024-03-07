@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -10,6 +11,7 @@ interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
   items: {
     href: string
     title: string
+    icon: React.JSX.Element
   }[]
 }
 
@@ -25,10 +27,11 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
           className={cn(
             buttonVariants({ variant: 'ghost' }),
             pathname === item.href ?? 'bg-muted hover:bg-muted',
-            'justify-start',
+            'justify-start bg-accent lg:bg-transparent',
           )}
         >
-          {item.title}
+          <div className="md:hidden">{item.icon}</div>
+          <span className="hidden md:inline">{item.title}</span>
         </Link>
       ))}
     </nav>

@@ -78,7 +78,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 
   return (
     <div>
-      <div className="flex items-center justify-between py-4">
+      <div className="py-4 flex flex-col items-center gap-4 md:flex-row md:justify-between md:gap-0">
         <Input
           placeholder="Buscar pelo nome da campanha..."
           value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
@@ -86,7 +86,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           className="max-w-sm"
         />
 
-        <div className="inline-flex gap-2">
+        <div className="w-full md:w-auto inline-flex gap-2">
           <Select onValueChange={handleSelectStatus} value={statusFilter ?? ''}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Selecione o status" />
