@@ -5,12 +5,12 @@ import {
 } from '@/core/types'
 import { CampaignCounter, CampaignToCustomer, CampaignUpdateInput } from '@/core/types/campaign'
 import prisma from '@/lib/prisma'
-import { RedisCacheRepository } from '@/infra/cache/redis-cache-repository'
+import { CacheRepository } from '@/infra/cache/redis-cache-repository'
 import { PrismaCampaignMapper } from '../mapper/campaign-mapper'
 
 export const PrismaCampaignsRepository = {
   async findById(id: string) {
-    const campaignOnRedis = await RedisCacheRepository.get<CampaignToCustomer>(`not-published-campaign:${id}:details`)
+    const campaignOnRedis = await CacheRepository.get<CampaignToCustomer>(`not-published-campaign:${id}:details`)
 
     if (campaignOnRedis) {
       return campaignOnRedis
@@ -40,7 +40,7 @@ export const PrismaCampaignsRepository = {
     }
 
     if (campaign.status === 'NOT_PUBLISHED') {
-      await RedisCacheRepository.set(
+      await CacheRepository.set(
         `not-published-campaign:${id}:details`,
         JSON.stringify(PrismaCampaignMapper.toCache(campaign)),
         60 * 60, // 1 hour
@@ -143,10 +143,10 @@ export const PrismaCampaignsRepository = {
     return PrismaCampaignMapper.toDashboard(campaign)
   },
 
-  async counter(companyId: string) {
-    const cachedCounters = await RedisCacheRepository.get<CampaignCounter>(`campaigns-counter:${companyId}`)
+  async counter(companyId: string, toControl: boolean | undefined = false) {
+    const cachedCounters = await CacheRepository.get<CampaignCounter>(`campaigns-counter:${companyId}`)
 
-    if (cachedCounters) {
+    if (cachedCounters && !toControl) {
       return cachedCounters
     }
 
@@ -171,7 +171,7 @@ export const PrismaCampaignsRepository = {
       total: totalCampaigns,
     }
 
-    await RedisCacheRepository.set(`campaigns-counter:${companyId}`, JSON.stringify(counters))
+    await CacheRepository.set(`campaigns-counter:${companyId}`, JSON.stringify(counters))
 
     return counters
   },
@@ -204,7 +204,7 @@ export const PrismaCampaignsRepository = {
     const quiz = data.quiz ? JSON.stringify(data.quiz) : null
 
     await Promise.allSettled([
-      RedisCacheRepository.delete(`campaigns-counter:${data.companyId}`),
+      CacheRepository.delete(`campaigns-counter:${data.companyId}`),
       prisma.campaign.create({
         data: {
           ...data,
@@ -228,16 +228,20 @@ export const PrismaCampaignsRepository = {
 
     const quiz = data.quiz ? JSON.stringify(data.quiz) : existingCampaign.quiz
 
-    await RedisCacheRepository.delete(`campaigns-counter:${existingCampaign.companyId}`)
+    const counterCacheKey = `campaigns-counter:${existingCampaign.companyId}`
+    const notPublishedKey = `not-published-campaign:${id}:details`
 
-    await prisma.campaign.update({
-      where: {
-        id,
-      },
-      data: {
-        ...data,
-        quiz,
-      },
-    })
+    await Promise.all([
+      CacheRepository.delete([notPublishedKey, counterCacheKey]),
+      prisma.campaign.update({
+        where: {
+          id,
+        },
+        data: {
+          ...data,
+          quiz,
+        },
+      }),
+    ])
   },
 }

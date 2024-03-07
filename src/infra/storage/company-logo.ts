@@ -2,12 +2,11 @@ import { randomUUID } from 'node:crypto'
 import axios from 'axios'
 import sharp from 'sharp'
 
-import { CarouselImage } from '@/core/types/campaign'
+import { CompanyLogo } from '@/core/types/company'
 import { env } from '@/env'
 import { getUploadUrl } from './get-upload-url'
-import { CampaignAttachmentsRepository } from '../database/db'
 
-export async function uploadCampaignImage(campaignId: string, image: File) {
+export async function uploadCompanyLogo(image: File) {
   const bannedMimeTypes = [
     '.exe', // (executáveis)
     '.dll', // (bibliotecas dinâmicas)
@@ -20,10 +19,10 @@ export async function uploadCampaignImage(campaignId: string, image: File) {
   ]
 
   if (bannedMimeTypes.includes(image.type)) {
-    return null
+    throw new Error('Invalid file type')
   }
 
-  const fileKey = randomUUID().concat('-').concat(image.name)
+  const fileKey = randomUUID().concat('-').concat(image.name.trim().replace(/\s+/g, ''))
   const fileType = image.type
   // const fileName = image.name
 
@@ -34,9 +33,11 @@ export async function uploadCampaignImage(campaignId: string, image: File) {
 
   const buffer = Buffer.from(await image.arrayBuffer())
   const imageBuffer = await sharp(buffer)
-    .webp({ quality: 80 })
-    .resize(352, 448, {
+    .webp({ quality: 65 })
+    .resize(256, 256, {
       fit: 'cover',
+      position: 'center',
+      background: { r: 255, g: 255, b: 255, alpha: 0.5 },
     })
     .toBuffer()
 
@@ -46,16 +47,10 @@ export async function uploadCampaignImage(campaignId: string, image: File) {
     },
   })
 
-  await CampaignAttachmentsRepository.create({
-    name: image.name,
-    key: fileKey,
-    campaignId,
-  })
-
-  const attachment: CarouselImage = {
+  const uploadedLogo: CompanyLogo = {
     file: fileKey,
     url: String(env.ASSETS_URL).concat('/').concat(fileKey),
   }
 
-  return attachment
+  return uploadedLogo
 }

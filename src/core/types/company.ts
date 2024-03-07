@@ -11,3 +11,8 @@ export type CompanyDetails = {
   createdAt: Date
   updatedAt?: Date | null
 } & Company
+
+export type CompanyLogo = {
+  file: string
+  url: string
+}

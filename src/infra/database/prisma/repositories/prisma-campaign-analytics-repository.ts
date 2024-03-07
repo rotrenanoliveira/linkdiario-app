@@ -1,14 +1,14 @@
 import prisma from '@/lib/prisma'
 
 import { SaveAnalyticsInput } from '@/core/types/analytics'
-import { RedisCacheRepository } from '@/infra/cache/redis-cache-repository'
+import { CacheRepository } from '@/infra/cache/redis-cache-repository'
 
 export const PrismaCampaignAnalyticsRepository = {
   save: async ({ campaignId, operation }: SaveAnalyticsInput) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [cacheRecent, cacheAnalytics, existingAnalytics] = await Promise.all([
-      RedisCacheRepository.delete(`analytics-recent:${campaignId}:counters`),
-      RedisCacheRepository.delete(`analytics:${campaignId}:counters`),
+      CacheRepository.delete(`analytics-recent:${campaignId}:counters`),
+      CacheRepository.delete(`analytics:${campaignId}:counters`),
       prisma.campaignAnalyticsInitial.findUnique({
         where: {
           campaignId,
@@ -50,7 +50,7 @@ export const PrismaCampaignAnalyticsRepository = {
   },
 
   findRecentByCompanyId: async (companyId: string) => {
-    const analyticsOnCache = await RedisCacheRepository.get<{ pageView: number; clickCta: number; campaign: string }>(
+    const analyticsOnCache = await CacheRepository.get<{ pageView: number; clickCta: number; campaign: string }>(
       `analytics-recent:${companyId}:counters`,
     )
 
@@ -89,7 +89,7 @@ export const PrismaCampaignAnalyticsRepository = {
       clickCta,
     }
 
-    await RedisCacheRepository.set(
+    await CacheRepository.set(
       `analytics-recent:${companyId}:counters`,
       JSON.stringify(analyticsRecentCampaign),
       60 * 60, // 1 hour
@@ -99,7 +99,7 @@ export const PrismaCampaignAnalyticsRepository = {
   },
 
   findManyByCompanyId: async (companyId: string) => {
-    const analyticsOnCache = await RedisCacheRepository.get<{ pageView: number; clickCta: number }>(
+    const analyticsOnCache = await CacheRepository.get<{ pageView: number; clickCta: number }>(
       `analytics:${companyId}:counters`,
     )
 
@@ -123,7 +123,7 @@ export const PrismaCampaignAnalyticsRepository = {
       clickCta,
     }
 
-    await RedisCacheRepository.set(
+    await CacheRepository.set(
       `analytics:${companyId}:counters`,
       JSON.stringify(analyticsCounters),
       60 * 60, // 1 hour

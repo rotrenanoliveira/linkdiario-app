@@ -11,11 +11,12 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { cn } from '@/lib/utils'
 
 interface InputCampaignAccentColorProps {
-  btnText: string
+  ctaText: string
+  ctaColor: string
 }
 
-export function InputCampaignAccentColor({ btnText }: InputCampaignAccentColorProps) {
-  const [hex, setHex] = useState('#FACC15')
+export function InputAccentColor({ ctaText, ctaColor }: InputCampaignAccentColorProps) {
+  const [hex, setHex] = useState(ctaColor)
   const [invertColor, setInvertColor] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
 
@@ -73,7 +74,7 @@ export function InputCampaignAccentColor({ btnText }: InputCampaignAccentColorPr
       >
         <span className={cn(satochi.className, 'w-full flex items-center justify-evenly text-2xl text-foreground')}>
           <span className="flex-grow text-center ml-7 font-normal" style={invertStyle}>
-            {btnText}
+            {ctaText}
           </span>
 
           <div className="size-14 rounded-full flex items-center justify-center" style={{ backgroundColor: hex }}>

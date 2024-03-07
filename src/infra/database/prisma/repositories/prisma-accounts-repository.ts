@@ -14,6 +14,13 @@ export const PrismaAccountsRepository = {
       where: {
         email,
       },
+      include: {
+        license: {
+          select: {
+            license: true,
+          },
+        },
+      },
     })
 
     if (!account) {
@@ -33,6 +40,13 @@ export const PrismaAccountsRepository = {
       where: {
         id,
       },
+      include: {
+        license: {
+          select: {
+            license: true,
+          },
+        },
+      },
     })
 
     if (!account) {
@@ -47,7 +61,15 @@ export const PrismaAccountsRepository = {
    * @return {Promise<AccountDetails[]>} mapped domain objects
    */
   async findMany(): Promise<AccountDetails[]> {
-    const accounts = await prisma.user.findMany()
+    const accounts = await prisma.user.findMany({
+      include: {
+        license: {
+          select: {
+            license: true,
+          },
+        },
+      },
+    })
 
     return accounts.map(PrismaAccountsMapper.toDomain)
   },
@@ -62,6 +84,13 @@ export const PrismaAccountsRepository = {
       where: {
         role,
       },
+      include: {
+        license: {
+          select: {
+            license: true,
+          },
+        },
+      },
     })
 
     return accounts.map(PrismaAccountsMapper.toDomain)
@@ -73,9 +102,19 @@ export const PrismaAccountsRepository = {
    * @return {Promise<void>} a promise that resolves when the account is created
    */
   async create(data: Account): Promise<void> {
-    await prisma.user.create({
-      data,
-    })
+    const { license, ...accountData } = data
+
+    await Promise.allSettled([
+      prisma.user.create({
+        data: accountData,
+      }),
+      prisma.license.create({
+        data: {
+          userId: data.id,
+          license,
+        },
+      }),
+    ])
   },
   /**
    * Save account data for the given id.
@@ -86,10 +125,12 @@ export const PrismaAccountsRepository = {
    */
   async save(id: string, data: Partial<Account>): Promise<void> {
     await prisma.user.update({
-      where: {
-        id,
+      where: { id },
+      data: {
+        email: data.email,
+        fullName: data.fullName,
+        status: data.status,
       },
-      data,
     })
   },
 }

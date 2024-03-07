@@ -16,6 +16,10 @@ export const columns: ColumnDef<AccountDetails>[] = [
     header: 'Email',
   },
   {
+    accessorKey: 'license',
+    header: 'Licença',
+  },
+  {
     accessorKey: 'status',
     header: ({ column }) => {
       return (

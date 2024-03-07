@@ -25,11 +25,14 @@ export default async function UpdateCampaignPage({ params }: UpdateCampaignPageP
     return redirect('/dashboard/campaigns')
   }
 
-  const campaign = await Services.getCampaignById(params.id)
-  const company = await Services.getCompany()
+  const [company, campaign] = await Promise.all([Services.getCompany(), Services.getCampaignById(params.id)])
 
-  if (!campaign || !company) {
+  if (!company) {
     redirect('/dashboard/company')
+  }
+
+  if (!campaign) {
+    redirect('/dashboard/campaigns')
   }
 
   const companyData = {
@@ -41,8 +44,6 @@ export default async function UpdateCampaignPage({ params }: UpdateCampaignPageP
     id: campaign.id,
     status: campaign.status ?? 'NOT_PUBLISHED',
   }
-
-  // console.log(campaignStatus)
 
   return (
     <div className="space-y-6">
@@ -69,6 +70,7 @@ export default async function UpdateCampaignPage({ params }: UpdateCampaignPageP
           <div>
             <h3 className="text-lg font-medium">Remover Campanha</h3>
             <p className="text-sm text-muted-foreground">Essa operação não pode ser desfeita.</p>
+            <p className="text-sm text-muted-foreground">OBS.: Uma campanha removida não pode ser reativada.</p>
           </div>
 
           <AlertDialogRemoveCampaign campaignId={campaign.id} />

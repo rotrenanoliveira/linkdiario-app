@@ -1,5 +1,8 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,7 +16,6 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { publishCampaign } from '../actions'
-import { useRouter } from 'next/navigation'
 
 interface PublishAlertDialogProps {
   campaignId: string
@@ -23,15 +25,15 @@ export function PublishAlertDialog({ campaignId }: PublishAlertDialogProps) {
   const router = useRouter()
 
   async function handlePublishCampaign() {
-    try {
-      await publishCampaign(campaignId)
+    toast.promise(publishCampaign(campaignId), {
+      loading: 'Publicando campanha...',
+      success: () => {
+        router.push(`/dashboard/campaigns/`)
 
-      router.push(`/dashboard/campaigns/`)
-    } catch (error) {
-      console.error(error)
-
-      return alert('Ocorreu um erro ao publicar a campanha. Por favor, tente novamente.')
-    }
+        return 'Campanha publicada com sucesso!'
+      },
+      error: (error) => error?.message,
+    })
   }
 
   return (

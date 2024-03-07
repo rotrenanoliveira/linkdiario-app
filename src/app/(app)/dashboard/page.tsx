@@ -20,14 +20,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function DashboardPage() {
-  const company = await Services.getCompany()
+  const [company, account] = await Promise.all([Services.getCompany(), Services.getAccount()])
 
   if (company === null) {
     redirect('/dashboard/company')
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full space-y-4">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
         <div className="flex flex-col gap-4">
           {/* counter total campaigns */}
@@ -40,16 +40,19 @@ export default async function DashboardPage() {
           </Suspense>
         </div>
         {/*  */}
-        <div className="flex flex-col gap-4">
-          {/* counter total campaigns */}
-          <Suspense fallback={<LoaderCounter />}>
-            <AnalyticsRecentCampaign />
-          </Suspense>
-          {/* counter active campaigns */}
-          <Suspense fallback={<LoaderCounter />}>
-            <AnalyticsTotalCampaigns />
-          </Suspense>
-        </div>
+        {account?.license === 'PRO' && (
+          <div className="flex flex-col gap-4">
+            {/* counter total campaigns */}
+            <Suspense fallback={<LoaderCounter />}>
+              <AnalyticsRecentCampaign />
+            </Suspense>
+            {/* counter active campaigns */}
+            <Suspense fallback={<LoaderCounter />}>
+              <AnalyticsTotalCampaigns />
+            </Suspense>
+          </div>
+        )}
+
         {/*  */}
         <div />
       </div>
