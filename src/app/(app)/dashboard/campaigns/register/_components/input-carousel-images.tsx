@@ -85,7 +85,7 @@ export function InputCarouselImages() {
                   <ImageIcon size={24} />
                 )}
               </div>
-              <span className="text-sm font-light text-gray-900">{fileName}</span>
+              <span className="text-sm font-light text-gray-900">{fileName.substring(0, 20).concat('...')}</span>
             </div>
           </div>
         )}

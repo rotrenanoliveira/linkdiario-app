@@ -51,7 +51,7 @@ export function InputCarouselImages({ images }: InputCarouselImagesProps) {
       <FormDescription>Carregue a imagem que deseja exibir na campanha. O tamanho ideal é de 640x768.</FormDescription>
 
       <div className="flex gap-4">
-        <div className="w-80 h-fit flex flex-col items-center justify-center gap-2 p-2 border-2 border-dashed bg-zinc-50 rounded-md">
+        <div className="w-1/2 md:w-80 h-fit flex flex-col items-center justify-center gap-2 p-2 border-2 border-dashed bg-zinc-50 rounded-md">
           <Image
             src={images[0].url}
             alt={images[0].file}
@@ -59,7 +59,7 @@ export function InputCarouselImages({ images }: InputCarouselImagesProps) {
             height={384}
             className="w-full h-full object-cover rounded-md"
           />
-          <span className="text-sm font-light">{images[0].file.substring(0, 35).concat('...')}</span>
+          <span className="text-sm font-light">{images[0].file.substring(0, 15).concat('...')}</span>
         </div>
 
         <div className="flex flex-col flex-1">
@@ -86,16 +86,16 @@ export function InputCarouselImages({ images }: InputCarouselImagesProps) {
           </div>
 
           {fileName && (
-            <div className="flex-1  rounded-md border-2 border-dashed p-4">
+            <div className="flex-1 rounded-md border-2 border-dashed p-4">
               <div className="min-h-[10rem] max-h-full cursor-pointer flex flex-col items-center justify-center gap-2">
-                <div className="flex size-40 items-center justify-center rounded-md bg-zinc-100 transition-all duration-150">
+                <div className="flex md:size-40 items-center justify-center rounded-md bg-zinc-100 transition-all duration-150">
                   {imageUrl ? (
                     <Image
                       src={imageUrl}
                       alt={fileName}
-                      width={160}
-                      height={160}
-                      className="size-40 object-cover rounded-md"
+                      width={128}
+                      height={128}
+                      className="md:size-40 object-cover rounded-md"
                     />
                   ) : (
                     <ImageIcon size={24} />

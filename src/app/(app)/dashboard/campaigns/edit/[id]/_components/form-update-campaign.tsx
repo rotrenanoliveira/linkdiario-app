@@ -134,13 +134,13 @@ export function FormUpdateCampaign({ campaign, company }: FormRegisterCampaignPr
       <FormItem>
         <Label>Slug - URL personalizada</Label>
 
-        <div className="w-full flex items-center gap-2">
+        <div className="w-full flex flex-col md:flex-row items-center gap-2">
           <Input
             type="text"
             id="company-slug"
             name="company-slug"
             defaultValue={`https://linkdiario.com.br/${company.slug}/`}
-            className="w-1/3 text-black"
+            className="md:w-1/3 text-black"
             disabled
           />
 

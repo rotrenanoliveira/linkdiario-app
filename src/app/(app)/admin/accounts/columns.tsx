@@ -9,7 +9,7 @@ export const columns: ColumnDef<AccountDetails>[] = [
   {
     accessorKey: 'fullName',
     header: 'Nome Completo',
-    cell: ({ getValue }) => <div className="capitalize">{getValue<string>()}</div>,
+    cell: ({ getValue }) => <div className="min-w-32 capitalize">{getValue<string>()}</div>,
   },
   {
     accessorKey: 'email',
