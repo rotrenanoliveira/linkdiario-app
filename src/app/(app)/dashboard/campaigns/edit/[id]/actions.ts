@@ -65,7 +65,7 @@ export async function actionUpdateCampaign(prevState: PrevState, data: FormData)
       slug: parseResult.slug,
     })
 
-    if (campaignWithSameSlug) {
+    if (campaignWithSameSlug && campaignWithSameSlug.id !== parseResult.id) {
       throw new Error('Uma campanha com esse slug ja existe.')
     }
 
@@ -98,13 +98,8 @@ export async function actionUpdateCampaign(prevState: PrevState, data: FormData)
       quiz: quiz ?? null,
     }
 
-    const file = data.get('campaign-carousel-image')
-    if (!file || !(file instanceof File) || file.size <= 0) {
-      throw new Error('Por favor, insira pelo menos uma imagem.')
-    }
-
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [_responseUpdate, _responseDelete, _responseUploadAttachment, slugs] = await Promise.all([
+    const [_responseUpdate, slugs] = await Promise.all([
       // Update campaign
       CampaignsRepository.save(campaignData.id, {
         title: campaignData.title,
@@ -119,13 +114,20 @@ export async function actionUpdateCampaign(prevState: PrevState, data: FormData)
         description: campaignData.description,
         quiz: campaignData.quiz,
       }),
-      // Delete old attachments
-      CampaignAttachmentsRepository.deleteMany(campaignData.id),
-      // Upload new attachments
-      uploadCampaignAttachment(campaignData.id, file),
       // Get company and campaign slugs
       CampaignsRepository.getCompanyAndCampaignSlugById(campaignData.id),
     ])
+
+    // Upload new attachments and delete old if needed
+    const file = data.get('campaign-carousel-image')
+    if (file && file instanceof File && file.size > 0) {
+      await Promise.all([
+        // Delete old attachments
+        CampaignAttachmentsRepository.deleteMany(campaignData.id),
+        // Upload new attachments
+        uploadCampaignAttachment(campaignData.id, file),
+      ])
+    }
 
     revalidatePath('/dashboard/campaigns')
     revalidatePath(`/${slugs?.companySlug}/${campaignData.slug}`)

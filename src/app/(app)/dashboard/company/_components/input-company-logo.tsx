@@ -44,7 +44,7 @@ export function InputCompanyLogo() {
     <FormItem>
       <Label>Logo</Label>
       <FormDescription>
-        Carregue a Logo da sua empresa (caso haja uma), tamanho ideal para a imagem: 96x384.
+        Carregue a Logo da sua empresa (caso haja uma), tamanho ideal para a imagem: 256x256.
       </FormDescription>
 
       <div className="flex space-x-4">
