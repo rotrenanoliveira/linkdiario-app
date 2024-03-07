@@ -3,7 +3,7 @@ import {
   CampaignFindBySlugAndCompanyIdArgs,
   CampaignFindBySlugAndCompanySlugArgs,
 } from '@/core/types'
-import { CampaignCounter, CampaignToCustomer, CampaignUpdateInput } from '@/core/types/campaign'
+import { CampaignCounter, CampaignToCustomer, CampaignUpdateInput, CampaignToDashboard } from '@/core/types/campaign'
 import prisma from '@/lib/prisma'
 import { CacheRepository } from '@/infra/cache/redis-cache-repository'
 import { PrismaCampaignMapper } from '../mapper/campaign-mapper'
@@ -79,7 +79,13 @@ export const PrismaCampaignsRepository = {
     return PrismaCampaignMapper.toCustomer(campaign)
   },
   async findManyByCompanyId(companyId: string) {
-    const campaigns = await prisma.campaign.findMany({
+    const campaignsOnCache = await CacheRepository.get<CampaignToDashboard[]>(`campaigns:${companyId}:list`)
+
+    if (campaignsOnCache) {
+      return campaignsOnCache
+    }
+
+    const campaignsOnDatabase = await prisma.campaign.findMany({
       where: {
         companyId,
       },
@@ -107,7 +113,15 @@ export const PrismaCampaignsRepository = {
       },
     })
 
-    return campaigns.map(PrismaCampaignMapper.toDashboard)
+    const campaigns = campaignsOnDatabase.map(PrismaCampaignMapper.toDashboard)
+
+    await CacheRepository.set(
+      `campaigns:${companyId}:list`,
+      JSON.stringify(campaigns),
+      60 * 60, // 1 hour
+    )
+
+    return campaigns
   },
   async findBySlugAndCompanyId({ companyId, slug }: CampaignFindBySlugAndCompanyIdArgs) {
     const campaign = await prisma.campaign.findFirst({
@@ -203,8 +217,11 @@ export const PrismaCampaignsRepository = {
   async create(data: CampaignCreateInput): Promise<void> {
     const quiz = data.quiz ? JSON.stringify(data.quiz) : null
 
+    const campaignsListCacheKey = `campaigns:${data.companyId}:list`
+    const counterCacheKey = `campaigns-counter:${data.companyId}`
+
     await Promise.allSettled([
-      CacheRepository.delete(`campaigns-counter:${data.companyId}`),
+      CacheRepository.delete([campaignsListCacheKey, counterCacheKey]),
       prisma.campaign.create({
         data: {
           ...data,
@@ -228,11 +245,12 @@ export const PrismaCampaignsRepository = {
 
     const quiz = data.quiz ? JSON.stringify(data.quiz) : existingCampaign.quiz
 
+    const campaignsListCacheKey = `campaigns:${existingCampaign.companyId}:list`
     const counterCacheKey = `campaigns-counter:${existingCampaign.companyId}`
     const notPublishedKey = `not-published-campaign:${id}:details`
 
     await Promise.all([
-      CacheRepository.delete([notPublishedKey, counterCacheKey]),
+      CacheRepository.delete([campaignsListCacheKey, notPublishedKey, counterCacheKey]),
       prisma.campaign.update({
         where: {
           id,

@@ -9,14 +9,25 @@ import { CampaignsRepository } from '../database/db'
 import { redirect } from 'next/navigation'
 import { Services } from '.'
 
-export async function getCampaignsByCompany(companyId: string): Promise<CampaignToDashboard[]> {
-  const company = await Services.getCompany()
+export async function getCampaignsByCompany(): Promise<CampaignToDashboard[]> {
+  const [company, account] = await Promise.all([Services.getCompany(), Services.getAccount()])
 
-  if (!company) {
+  if (!company || !account) {
     return redirect('/auth/sign-in')
   }
 
-  const campaigns = await CampaignsRepository.findManyByCompanyId(companyId)
+  const campaigns = await CampaignsRepository.findManyByCompanyId(company.id)
+
+  if (account.license === 'STANDARD' && campaigns.length > 0) {
+    campaigns.map((campaign) => {
+      campaign.analytics = {
+        impressions: 0,
+        clicks: 0,
+      }
+
+      return campaign
+    })
+  }
 
   return campaigns
 }
