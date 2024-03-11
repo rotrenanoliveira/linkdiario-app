@@ -35,11 +35,11 @@ const qna = [
 
 export function QuestionsAndAnswers() {
   return (
-    <section className="container xl:max-w-5xl mb-4 lg:mb-8 xl:mb-12">
+    <section className="container xl:max-w-5xl my-4 lg:my-8 xl:my-12">
       <Accordion type="single" collapsible className="w-full">
         {qna.map(({ question, answer, value }, index) => (
           <AccordionItem key={index} value={value}>
-            <AccordionTrigger className="text-sm text-left">{question}</AccordionTrigger>
+            <AccordionTrigger className="text-sm lg:text-base text-left">{question}</AccordionTrigger>
             <AccordionContent>{answer}</AccordionContent>
           </AccordionItem>
         ))}
