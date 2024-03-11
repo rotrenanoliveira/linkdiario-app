@@ -96,7 +96,7 @@
 }
 
 .about-cta-button-bg {
-  @apply w-fit h-fit p-1 border rounded-2xl group-hover:-rotate-45 transition border-foreground/25 group-hover:border-foreground/5;
+  @apply w-fit h-fit p-1 border rounded-2xl group-hover:-rotate-45 transition border-x-white/50 group-hover:border-foreground/5;
 }
 
 .about-cta-icon {
