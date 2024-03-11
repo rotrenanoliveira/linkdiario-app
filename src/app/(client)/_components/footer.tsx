@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils'
 
 export function Footer() {
   return (
-    <footer className={cn(poppins.className, 'w-full p-3 rounded-2xl bg-linkdiario-yellow/50')}>
+    <footer className={cn(poppins.className, 'w-full mt-32 p-3 rounded-2xl bg-linkdiario-yellow/50')}>
       <div className="container p-3 space-y-8">
         {/* FOOTER CTA */}
         <div className="footer-cta">
