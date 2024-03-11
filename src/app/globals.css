@@ -75,6 +75,36 @@
   }
 }
 
+.about-cta-base {
+  @apply h-32 w-60 rounded-xl;
+
+  background: rgba( 255, 255, 255, 0.2 );
+  box-shadow: 0 8px 32px 0 rgba(16, 16, 16, 0.12 );
+  border: 1px solid rgba( 255, 255, 255, 0.18 );
+  backdrop-filter: blur( 5.5px );
+  -webkit-backdrop-filter: blur( 5.5px );
+}
+
+.about-cta-link {
+  @apply h-32 w-60 p-6 flex flex-col items-center justify-center rounded-xl text-2xl text-white font-medium transform -translate-x-8 -translate-y-24 group-hover:-translate-x-0 group-hover:-translate-y-32 transition duration-500;
+
+  background-image: linear-gradient(to top, #94BCA6 0%, #8AB8A1 100%);
+}
+
+.about-cta-button {
+  @apply flex items-center justify-end rounded-br-2xl rounded-bl-2xl md:rounded-bl-none md:rounded-tr-2xl;
+}
+
+.about-cta-button-bg {
+  @apply w-fit h-fit p-1 border rounded-2xl group-hover:-rotate-45 transition border-foreground/25 group-hover:border-foreground/5;
+}
+
+.about-cta-icon {
+  @apply size-8 p-0 bg-white rounded-xl transition-all duration-500 group-hover:rounded-[48px];
+
+  box-shadow: 0 8px 32px 0 rgba(16, 16, 16, 0.15);
+}
+
 .footer-cta {
   @apply w-11/12 max-w-screen-md mx-auto -mt-24 lg:-mt-28 rounded-2xl flex flex-col md:flex-row justify-between;
 
