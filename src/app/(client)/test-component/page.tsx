@@ -44,16 +44,18 @@ const qna = [
 
 export default function HomePage() {
   return (
-    <div className="w-screen min-h-svh flex flex-col items-center justify-center p-3 md:p-9 lg:p-12 xl:p-16">
+    <div className="p-3 md:p-9 lg:p-12 xl:p-16">
       {/* ABOUT */}
       <div
         className={cn(
           satochi.className,
-          'container xl:max-w-screen-lg px-1 flex flex-col xl:flex-row gap-8 md:gap-4 lg:gap-8 my-12 lg:my-16 xl:my-24',
+          'container xl:max-w-screen-lg 2xl:max-w-screen-xl px-1 flex flex-col xl:flex-row gap-8 md:gap-4 lg:gap-8 my-12 lg:my-16 xl:my-32',
         )}
       >
         <div className="w-full xl:w-1/3">
-          <h1 className="w-fit font-light xl:font-normal border-b xl:border-none uppercase">sobre a plataforma</h1>
+          <h1 className="w-fit font-light xl:font-normal 2xl:text-2xl border-b xl:border-none uppercase">
+            sobre a plataforma
+          </h1>
 
           <div className="hidden xl:block pt-8 pl-8 group">
             <div className="about-cta-base" />
@@ -67,7 +69,7 @@ export default function HomePage() {
 
                 <div className="about-cta-button">
                   <div className="about-cta-button-bg">
-                    <Button className="about-cta-icon">
+                    <Button className="about-cta-icon hover:bg-white">
                       <ArrowRight size={16} strokeWidth={1.25} className="rotate-45 invert" />
                     </Button>
                   </div>
@@ -83,7 +85,7 @@ export default function HomePage() {
             Comece a anunciar no Google hoje sem precisar de estrutura própria
           </h2>
 
-          <div className="font-light text-foreground space-y-3 lg:space-y-6 xl:space-y-9">
+          <div className="font-light text-foreground space-y-3 lg:space-y-6 xl:space-y-6">
             <div className="hidden md:inline-flex items-center gap-3">
               <div className="size-2 animate-pulse rounded-full bg-linkdiario-yellow" />
               <p className="text-md xl:text-lg font-normal text-foreground/65">
@@ -130,69 +132,79 @@ export default function HomePage() {
         </div>
       </div>
       {/* PLANS */}
-      <section className="container xl:max-w-3xl px-1 flex flex-col md:flex-row gap-8 md:gap-4 lg:gap-8 my-12 lg:my-16 xl:my-24">
-        <Card className="w-full h-fit">
-          <CardHeader>
-            <CardTitle className="text-lg">Plano Standard</CardTitle>
-            <CardDescription>Para iniciantes e pequenos negócios</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <Separator />
-            <ul className="space-y-2">
-              <li>&bull; 50 campanhas ativas</li>
-              <li>&bull; 100 campanhas criadas</li>
-              <li>&bull; Presell em menos de 10 minutos</li>
-              <li>&bull; Compatível com todas plataformas</li>
-            </ul>
+      <section className="container xl:max-w-screen-lg 2xl:max-w-screen-xl flex flex-col items-center gap-8 px-1 my-12 lg:my-16 xl:my-32">
+        <h1 className="self-start w-fit font-light 2xl:text-2xl xl:font-normal border-b xl:border-none uppercase">
+          sobre a plataforma
+        </h1>
 
-            <span className="block mt-8 font-light text-sm text-foreground/75">
-              Empreendedores iniciantes e pequenos negócios que buscam uma solução acessível e eficiente para iniciar
-              sua presença online.
-            </span>
-          </CardContent>
-          <CardFooter>
-            <Link href="#" className="w-full">
-              <Button className="w-full text-md" variant="secondary">
-                Assinar
-              </Button>
-            </Link>
-          </CardFooter>
-        </Card>
+        <div className="xl:max-w-3xl flex flex-col justify-center md:flex-row gap-8 md:gap-4 lg:gap-8">
+          <Card className="w-full h-fit">
+            <CardHeader>
+              <CardTitle className="text-lg">Plano Standard</CardTitle>
+              <CardDescription>Para iniciantes e pequenos negócios</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <Separator />
+              <ul className="space-y-2">
+                <li>&bull; 50 campanhas ativas</li>
+                <li>&bull; 100 campanhas criadas</li>
+                <li>&bull; Presell em menos de 10 minutos</li>
+                <li>&bull; Compatível com todas plataformas</li>
+              </ul>
 
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle className="text-lg">Plano Pro</CardTitle>
-            <CardDescription>Para crescimento e estratégias avançadas</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <Separator />
-            <ul className="space-y-2">
-              <li>&bull; 100 campanhas ativas</li>
-              <li>&bull; 250 campanhas criadas</li>
-              <li>&bull; Monitoramento do desempenho das campanhas</li>
-              <li>&bull; Presell em menos de 10 minutos</li>
-              <li>&bull; Compatível com todas plataformas</li>
-            </ul>
+              <span className="block mt-8 font-light text-sm text-foreground/75">
+                Empreendedores iniciantes e pequenos negócios que buscam uma solução acessível e eficiente para iniciar
+                sua presença online.
+              </span>
+            </CardContent>
+            <CardFooter>
+              <Link href="#" className="w-full">
+                <Button className="w-full text-md" variant="secondary">
+                  Assinar
+                </Button>
+              </Link>
+            </CardFooter>
+          </Card>
 
-            <span className="block mt-8 font-light text-sm text-foreground/75">
-              Empresas em crescimento que buscam uma presença online robusta e estratégias de marketing mais avançadas
-              para otimização e resultados expressivos.
-            </span>
-          </CardContent>
-          <CardFooter>
-            <Link href="#" className="w-full">
-              <Button
-                className="w-full text-md bg-linkdiario-yellow/75 hover:bg-linkdiario-yellow text-zinc-700"
-                variant="default"
-              >
-                Assinar
-              </Button>
-            </Link>
-          </CardFooter>
-        </Card>
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle className="text-lg">Plano Pro</CardTitle>
+              <CardDescription>Para crescimento e estratégias avançadas</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <Separator />
+              <ul className="space-y-2">
+                <li>&bull; 100 campanhas ativas</li>
+                <li>&bull; 250 campanhas criadas</li>
+                <li>&bull; Monitoramento do desempenho das campanhas</li>
+                <li>&bull; Presell em menos de 10 minutos</li>
+                <li>&bull; Compatível com todas plataformas</li>
+              </ul>
+
+              <span className="block mt-8 font-light text-sm text-foreground/75">
+                Empresas em crescimento que buscam uma presença online robusta e estratégias de marketing mais avançadas
+                para otimização e resultados expressivos.
+              </span>
+            </CardContent>
+            <CardFooter>
+              <Link href="#" className="w-full">
+                <Button
+                  className="w-full text-md bg-linkdiario-yellow/75 hover:bg-linkdiario-yellow text-zinc-700"
+                  variant="default"
+                >
+                  Assinar
+                </Button>
+              </Link>
+            </CardFooter>
+          </Card>
+        </div>
       </section>
       {/* QUESTIONS AND ANSWERS */}
-      <section id="qna" className="container xl:max-w-5xl my-12 lg:my-16 xl:my-24">
+      <section id="qna" className="container xl:max-w-screen-lg 2xl:max-w-screen-xl my-12 lg:my-16 xl:my-32">
+        <h1 className="w-fit font-light 2xl:text-2xl xl:font-normal border-b xl:border-none uppercase my-8">
+          Q&A - Perguntas e Respostas
+        </h1>
+
         <Accordion type="single" collapsible className="w-full">
           {qna.map(({ question, answer, value }, index) => (
             <AccordionItem key={index} value={value}>
@@ -203,7 +215,7 @@ export default function HomePage() {
         </Accordion>
       </section>
       {/* FOOTER */}
-      <footer className={cn(poppins.className, 'w-full mt-32 p-3 rounded-2xl bg-linkdiario-yellow/50')}>
+      <footer className={cn(poppins.className, 'w-full mt-48 p-3 rounded-2xl bg-linkdiario-yellow/50')}>
         <div className="container p-3 space-y-8">
           {/* FOOTER CTA */}
           <div className="footer-cta">
