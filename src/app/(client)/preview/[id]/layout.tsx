@@ -10,10 +10,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="2xl:h-[calc(100dvh-64px)]">{children}</div>
 
       <footer className={cn(satochi.className, 'text-center text-lg p-3 opacity-50')}>
-        linkdiario by
+        linkdiario desenvolvido por
         <Button type="button" variant="link" className="text-md p-1">
           <Link href="https://dstopic.com">dstopic</Link>
         </Button>
+        <span className="font-light text-sm">・ &copy; {new Date().getFullYear()} ・</span>
       </footer>
     </main>
   )

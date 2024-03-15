@@ -1,9 +1,14 @@
-import { JetBrains_Mono } from 'next/font/google'
+import { JetBrains_Mono, Poppins } from 'next/font/google'
 import localFont from 'next/font/local'
 
 export const jetBrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   weight: ['400', '500'],
+})
+
+export const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
 })
 
 export const satochi = localFont({
