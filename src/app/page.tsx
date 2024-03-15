@@ -226,6 +226,27 @@ export default function Home() {
             </div>
           </div>
         </section>
+        <section
+          className={cn(
+            satochi.className,
+            'container xl:max-w-screen-lg 2xl:max-w-screen-xl px-1 my-12 lg:my-16 xl:my-32',
+          )}
+        >
+          <h1 className="w-fit font-light border-b opacity-75 xl:font-normal mb-8 xl:mb-16 2xl:text-2xl xl:border-none">
+            Desenvolvido para as principais plataformas
+          </h1>
+
+          <div className="w-fit mx-auto flex flex-col items-center justify-around md:flex-wrap md:flex-row gap-8 md:gap-4 lg:gap-8 xl:gap-16">
+            {/* HOTMART */}
+            <Image src="/images/hotmart.svg" alt="hotmart" width={192} height={64} className="w-48 h-16" />
+            {/* MONETIZE */}
+            <Image src="/images/monetize.svg" alt="monetize" width={192} height={64} className="w-48 h-16" />
+            {/* EDUZZ */}
+            <Image src="/images/eduzz.svg" alt="monetize" width={192} height={64} className="w-48 h-16" />
+            {/* BRAIP */}
+            <Image src="/images/braip.svg" alt="monetize" width={192} height={64} className="w-48 h-16" />
+          </div>
+        </section>
         {/* PLANS */}
         <section
           id="precos"
@@ -243,6 +264,11 @@ export default function Home() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <Separator />
+
+                <p className="text-3xl font-medium">
+                  R$ 49,90 <span className="text-sm font-light">/ mês</span>
+                </p>
+
                 <ul className="space-y-2">
                   <li>&bull; 50 campanhas ativas</li>
                   <li>&bull; 100 campanhas criadas</li>
@@ -271,6 +297,11 @@ export default function Home() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <Separator />
+
+                <p className="text-3xl font-medium">
+                  R$ 74,90 <span className="text-sm font-light">/ mês</span>
+                </p>
+
                 <ul className="space-y-2">
                   <li>&bull; 100 campanhas ativas</li>
                   <li>&bull; 250 campanhas criadas</li>
