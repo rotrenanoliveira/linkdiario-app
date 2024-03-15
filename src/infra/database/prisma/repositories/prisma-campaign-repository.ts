@@ -3,14 +3,14 @@ import {
   CampaignFindBySlugAndCompanyIdArgs,
   CampaignFindBySlugAndCompanySlugArgs,
 } from '@/core/types'
+import { CampaignCounter, CampaignToCustomer, CampaignUpdateInput, CampaignToDashboard } from '@/core/types/campaign'
 import prisma from '@/lib/prisma'
+import { CacheRepository } from '@/infra/cache/redis-cache-repository'
 import { PrismaCampaignMapper } from '../mapper/campaign-mapper'
-import { RedisCacheRepository } from '@/infra/cache/redis-cache-repository'
-import { CampaignToCustomer, CampaignUpdateInput } from '@/core/types/campaign'
 
 export const PrismaCampaignsRepository = {
   async findById(id: string) {
-    const campaignOnRedis = await RedisCacheRepository.get<CampaignToCustomer>(`not-published-campaign:${id}:details`)
+    const campaignOnRedis = await CacheRepository.get<CampaignToCustomer>(`not-published-campaign:${id}:details`)
 
     if (campaignOnRedis) {
       return campaignOnRedis
@@ -39,9 +39,13 @@ export const PrismaCampaignsRepository = {
       return null
     }
 
-    const campaignToCache = PrismaCampaignMapper.toCache(campaign)
-
-    await RedisCacheRepository.set(`not-published-campaign:${id}:details`, JSON.stringify(campaignToCache))
+    if (campaign.status === 'NOT_PUBLISHED') {
+      await CacheRepository.set(
+        `not-published-campaign:${id}:details`,
+        JSON.stringify(PrismaCampaignMapper.toCache(campaign)),
+        60 * 60, // 1 hour
+      )
+    }
 
     return PrismaCampaignMapper.toCustomer(campaign)
   },
@@ -75,7 +79,13 @@ export const PrismaCampaignsRepository = {
     return PrismaCampaignMapper.toCustomer(campaign)
   },
   async findManyByCompanyId(companyId: string) {
-    const campaigns = await prisma.campaign.findMany({
+    const campaignsOnCache = await CacheRepository.get<CampaignToDashboard[]>(`campaigns:${companyId}:list`)
+
+    if (campaignsOnCache) {
+      return campaignsOnCache
+    }
+
+    const campaignsOnDatabase = await prisma.campaign.findMany({
       where: {
         companyId,
       },
@@ -91,13 +101,27 @@ export const PrismaCampaignsRepository = {
             slug: true,
           },
         },
+        analyticsInicial: {
+          select: {
+            pageView: true,
+            clickCta: true,
+          },
+        },
       },
       orderBy: {
         updatedAt: 'desc',
       },
     })
 
-    return campaigns.map(PrismaCampaignMapper.toDashboard)
+    const campaigns = campaignsOnDatabase.map(PrismaCampaignMapper.toDashboard)
+
+    await CacheRepository.set(
+      `campaigns:${companyId}:list`,
+      JSON.stringify(campaigns),
+      60 * 60, // 1 hour
+    )
+
+    return campaigns
   },
   async findBySlugAndCompanyId({ companyId, slug }: CampaignFindBySlugAndCompanyIdArgs) {
     const campaign = await prisma.campaign.findFirst({
@@ -117,6 +141,12 @@ export const PrismaCampaignsRepository = {
             slug: true,
           },
         },
+        analyticsInicial: {
+          select: {
+            pageView: true,
+            clickCta: true,
+          },
+        },
       },
     })
 
@@ -126,6 +156,40 @@ export const PrismaCampaignsRepository = {
 
     return PrismaCampaignMapper.toDashboard(campaign)
   },
+
+  async counter(companyId: string, toControl: boolean | undefined = false) {
+    const cachedCounters = await CacheRepository.get<CampaignCounter>(`campaigns-counter:${companyId}`)
+
+    if (cachedCounters && !toControl) {
+      return cachedCounters
+    }
+
+    const campaigns = await prisma.campaign.findMany({
+      where: {
+        companyId,
+      },
+      select: {
+        status: true,
+      },
+    })
+
+    const activeCampaigns = campaigns.filter((campaign) => campaign.status === 'ACTIVE').length
+    const removedCampaigns = campaigns.filter((campaign) => campaign.status === 'REMOVED').length
+    const pausedCampaigns = campaigns.filter((campaign) => campaign.status === 'PAUSED').length
+    const totalCampaigns = campaigns.length
+
+    const counters: CampaignCounter = {
+      active: activeCampaigns,
+      removed: removedCampaigns,
+      paused: pausedCampaigns,
+      total: totalCampaigns,
+    }
+
+    await CacheRepository.set(`campaigns-counter:${companyId}`, JSON.stringify(counters))
+
+    return counters
+  },
+
   async getCompanyAndCampaignSlugById(id: string) {
     const campaign = await prisma.campaign.findUnique({
       where: {
@@ -153,12 +217,20 @@ export const PrismaCampaignsRepository = {
   async create(data: CampaignCreateInput): Promise<void> {
     const quiz = data.quiz ? JSON.stringify(data.quiz) : null
 
-    await prisma.campaign.create({
-      data: {
-        ...data,
-        quiz,
-      },
-    })
+    const campaignsListCacheKey = `campaigns:${data.companyId}:list`
+    const counterCacheKey = `campaigns-counter:${data.companyId}`
+
+    await Promise.allSettled([
+      CacheRepository.delete([campaignsListCacheKey, counterCacheKey]),
+      prisma.campaign.create({
+        data: {
+          ...data,
+          quiz,
+        },
+      }),
+    ])
+
+    // await
   },
   async save(id: string, data: CampaignUpdateInput): Promise<void> {
     const existingCampaign = await prisma.campaign.findUniqueOrThrow({
@@ -167,19 +239,27 @@ export const PrismaCampaignsRepository = {
       },
       select: {
         quiz: true,
+        companyId: true,
       },
     })
 
     const quiz = data.quiz ? JSON.stringify(data.quiz) : existingCampaign.quiz
 
-    await prisma.campaign.update({
-      where: {
-        id,
-      },
-      data: {
-        ...data,
-        quiz,
-      },
-    })
+    const campaignsListCacheKey = `campaigns:${existingCampaign.companyId}:list`
+    const counterCacheKey = `campaigns-counter:${existingCampaign.companyId}`
+    const notPublishedKey = `not-published-campaign:${id}:details`
+
+    await Promise.all([
+      CacheRepository.delete([campaignsListCacheKey, notPublishedKey, counterCacheKey]),
+      prisma.campaign.update({
+        where: {
+          id,
+        },
+        data: {
+          ...data,
+          quiz,
+        },
+      }),
+    ])
   },
 }

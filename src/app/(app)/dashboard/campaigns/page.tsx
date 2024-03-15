@@ -19,7 +19,7 @@ export default function CampaignsPage() {
   return (
     <section>
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl">Campanhas</h2>
+        <h2 className="text-lg md:text-2xl">Campanhas</h2>
 
         <Link
           className={cn(buttonVariants({ variant: 'outline' }), 'flex items-center gap-2')}

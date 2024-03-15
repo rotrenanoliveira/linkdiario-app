@@ -1,5 +1,6 @@
 import { getAccount } from './account'
-import { getCampaignById, getCampaignBySlug, getCampaignsByCompany } from './campaign'
+import { getAnalyticsByCompany, getAnalyticsForRecentCampaign } from './analytics'
+import { getCampaignById, getCampaignBySlug, getCampaignCounters, getCampaignsByCompany } from './campaign'
 import { getCompany } from './company'
 
 export const Services = {
@@ -8,4 +9,9 @@ export const Services = {
   getCampaignById,
   getCampaignBySlug,
   getCampaignsByCompany,
+  getCampaignCounters,
+  analytics: {
+    getAnalyticsByCompany,
+    getAnalyticsForRecentCampaign,
+  },
 }

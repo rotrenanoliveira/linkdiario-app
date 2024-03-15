@@ -50,7 +50,7 @@ export const dashboardCampaignsColumns: ColumnDef<CampaignToDashboard>[] = [
         status === 'ACTIVE' ? 'success' : status === 'PAUSED' || status === 'NOT_PUBLISHED' ? 'warning' : 'destructive'
 
       return (
-        <Badge variant={variant} className="capitalize">
+        <Badge variant={variant} className="w-32 inline-flex justify-center capitalize ">
           {Translate.campaignStatus(getValue<CampaignStatus>())}
         </Badge>
       )
@@ -66,9 +66,22 @@ export const dashboardCampaignsColumns: ColumnDef<CampaignToDashboard>[] = [
         </Button>
       )
     },
-    cell: ({ getValue }) => (
-      <div>{getValue<Date>().toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}</div>
-    ),
+    cell: ({ getValue }) => {
+      const value = getValue<Date>()
+      const startedAt = new Date(value).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
+
+      return <div>{startedAt}</div>
+    },
+  },
+  {
+    accessorKey: 'analytics.impressions',
+    header: 'Visitas',
+    cell: ({ getValue }) => <div>{getValue<number>()}</div>,
+  },
+  {
+    accessorKey: 'analytics.clicks',
+    header: 'Cliques',
+    cell: ({ getValue }) => <div>{getValue<number>()}</div>,
   },
   {
     id: 'actions',

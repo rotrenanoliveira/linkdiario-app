@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { Blocks, LogOut } from 'lucide-react'
+import { Cake, Link as LinkIcon, LogOut, User, UserRoundPlus } from 'lucide-react'
 
 import { jetBrainsMono } from '@/app/fonts'
 import { SidebarNav } from '@/components/sidebar-nav'
@@ -12,27 +12,28 @@ const sidebarNavItems = [
   {
     title: 'Home',
     href: '/admin',
+    icon: <Cake strokeWidth={0.75} />,
   },
   {
     title: 'Usuários',
     href: '/admin/accounts',
+    icon: <User strokeWidth={0.75} />,
   },
   {
     title: 'Cadastrar Usuários',
     href: '/admin/accounts/register',
+    icon: <UserRoundPlus strokeWidth={0.75} />,
   },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <main className="2xl:max-w-[1440px] 2xl:mx-auto">
-      <div className="space-y-6 p-10 pb-16 md:block">
+      <div className="space-y-6 p-4 md:p-10 pb-16 md:block">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <Blocks size={48} className="text-yellow-400" />
-            <h2 className={cn(jetBrainsMono.className, 'text-lg font-medium tracking-tight')}>
-              linkdiario - dashboard
-            </h2>
+            <LinkIcon size={48} className="text-yellow-400" />
+            <h2 className={cn(jetBrainsMono.className, 'text-lg font-medium tracking-tight')}>admin</h2>
           </div>
 
           <Link
@@ -50,7 +51,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <Separator className="my-6" />
 
         <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
-          <aside className="-mx-4 lg:w-48 lg:max-w-[192px]">
+          <aside className="md:-mx-4 lg:w-48 lg:max-w-[192px]">
             <SidebarNav items={sidebarNavItems} />
           </aside>
 

@@ -2,13 +2,13 @@
 
 import { randomUUID } from 'node:crypto'
 import { revalidatePath } from 'next/cache'
-import { fromZodError } from 'zod-validation-error'
 import { z } from 'zod'
 
-import { Account, ActionResponse } from '@/core/types'
+import { ActionStateResponse } from '@/core/types'
 import { AccountsRepository } from '@/infra/database/db'
+import { ActionResponseError } from '@/utils/action-response-error'
 
-type PrevState = ActionResponse | null
+type PrevState = ActionStateResponse | null
 
 const registerAccountSchema = z.object({
   email: z.string().email({ message: 'Email inválido.' }),
@@ -16,45 +16,32 @@ const registerAccountSchema = z.object({
     .string()
     .min(10, { message: 'Nome completo deve ter pelo menos 10 caracteres.' })
     .transform((value) => value.toLowerCase()),
+  license: z.enum(['STANDARD', 'PRO']),
+  status: z.enum(['ACTIVE', 'INACTIVE']).default('ACTIVE'),
 })
 
 export async function actionRegisterAccount(prevState: PrevState, data: FormData) {
-  // Validation
-  const result = registerAccountSchema.safeParse({
-    email: data.get('account-email'),
-    fullName: data.get('account-full-name'),
-  })
-
-  if (result.success === false) {
-    const validationError = fromZodError(result.error)
-
-    return {
-      success: false,
-      title: 'Algo deu errado!',
-      message: validationError.toString(),
-    }
-  }
-
-  const { email, fullName } = result.data
-  const account: Account = {
-    id: randomUUID(),
-    email,
-    fullName,
-    status: 'ACTIVE',
-  }
-
-  const isEmailAlreadyInUse = !!(await AccountsRepository.findByEmail(account.email))
-
-  if (isEmailAlreadyInUse) {
-    return {
-      success: false,
-      title: 'Algo deu errado!',
-      message: 'E-mail já em uso.',
-    }
-  }
-
   try {
-    await AccountsRepository.create(account)
+    const parseResult = registerAccountSchema.parse({
+      email: data.get('account-email'),
+      fullName: data.get('account-full-name'),
+      license: data.get('account-license'),
+    })
+
+    const isEmailAlreadyInUse = !!(await AccountsRepository.findByEmail(parseResult.email))
+
+    if (isEmailAlreadyInUse) {
+      return {
+        success: false,
+        title: 'Algo deu errado!',
+        message: 'E-mail já em uso.',
+      }
+    }
+
+    await AccountsRepository.create({
+      id: randomUUID(),
+      ...parseResult,
+    })
 
     revalidatePath('/admin/accounts')
 
@@ -64,10 +51,6 @@ export async function actionRegisterAccount(prevState: PrevState, data: FormData
       message: 'Conta criada com sucesso!',
     }
   } catch (error) {
-    return {
-      success: false,
-      title: 'Algo deu errado!',
-      message: 'Ocorreu um erro ao criar a conta.',
-    }
+    return ActionResponseError(error)
   }
 }

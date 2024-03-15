@@ -2,20 +2,20 @@
 
 import { useRouter } from 'next/navigation'
 import { useFormState } from 'react-dom'
-import { useRef, useEffect, useState, ChangeEvent } from 'react'
+import { useRef, useEffect, useState, ChangeEvent, useMemo } from 'react'
+import { toast } from 'sonner'
 
 import { FormItem, FormDescription } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { PendingSubmitButton } from '@/components/pending-submit-button'
+import { PendingSubmitButton, ToastProps } from '@/components/pending-submit-button'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { useToast } from '@/components/ui/use-toast'
+import { CampaignToCustomer } from '@/core/types/campaign'
+import { Slug } from '@/utils/slug'
+import { InputCarouselImages } from './input-carousel-images'
+import { InputAccentColor } from './input-accent-color'
 import { InputPresellCampaign } from './input-presell-campaign'
 import { InputQuizCampaign } from './input-quiz-campaign'
-// import { actionSaveCampaign } from '../actions'
-import { InputCarouselImages } from './input-carousel-images'
-import { Slug } from '@/utils/slug'
-import { CampaignToCustomer } from '@/core/types/campaign'
 import { actionUpdateCampaign } from '../actions'
 
 interface FormRegisterCampaignProps {
@@ -30,31 +30,16 @@ export function FormUpdateCampaign({ campaign, company }: FormRegisterCampaignPr
   const [campaignTitle, setCampaignTitle] = useState<string | null>(campaign.title)
   const [campaignSlug, setCampaignSlug] = useState<string | null>(campaign.slug)
   const [campaignType, setCampaignType] = useState<'PRESELL' | 'QUIZ' | null>(campaign.type)
+  const [campaignCallToActionText, setCampaignCallToActionText] = useState<string>(campaign.ctaText)
 
   const [formState, formAction] = useFormState(actionUpdateCampaign, null)
 
   const ref = useRef<HTMLFormElement>(null)
-  const { toast } = useToast()
   const router = useRouter()
 
-  useEffect(() => {
-    if (formState) {
-      toast({
-        variant: formState.success ? 'default' : 'destructive',
-        title: formState.title,
-        description: formState.message,
-        duration: 3000,
-      })
-
-      if (formState.success === false) {
-        return
-      }
-
-      ref.current?.reset()
-      router.push('/dashboard/campaigns')
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formState])
+  const toastProps = useMemo<ToastProps>(() => {
+    return { id: 'form-campaign', loadingMessage: 'Atualizando campanha...' }
+  }, [])
 
   function handleOnChangeCampaignTitle(e: ChangeEvent<HTMLInputElement>) {
     const newProductName = e.target.value
@@ -63,6 +48,30 @@ export function FormUpdateCampaign({ campaign, company }: FormRegisterCampaignPr
     setCampaignTitle(newProductName)
     setCampaignSlug(newProductSlug)
   }
+
+  function handleChangeOnCallToAction(e: ChangeEvent<HTMLInputElement>) {
+    setCampaignCallToActionText(e.target.value)
+  }
+
+  useEffect(() => {
+    if (formState) {
+      if (formState.success === false) {
+        toast.error(formState.message, {
+          id: toastProps.id,
+        })
+
+        return
+      }
+
+      toast.success(formState.message, {
+        id: toastProps.id,
+      })
+
+      ref.current?.reset()
+      router.push(`/preview/${campaign.id}`)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formState])
 
   return (
     <form ref={ref} action={formAction} className="w-full space-y-4">
@@ -125,13 +134,13 @@ export function FormUpdateCampaign({ campaign, company }: FormRegisterCampaignPr
       <FormItem>
         <Label>Slug - URL personalizada</Label>
 
-        <div className="w-full flex items-center gap-2">
+        <div className="w-full flex flex-col md:flex-row items-center gap-2">
           <Input
             type="text"
             id="company-slug"
             name="company-slug"
             defaultValue={`https://linkdiario.com.br/${company.slug}/`}
-            className="w-1/3 text-black"
+            className="md:w-1/3 text-black"
             disabled
           />
 
@@ -165,6 +174,29 @@ export function FormUpdateCampaign({ campaign, company }: FormRegisterCampaignPr
         <FormDescription>
           Link de afiliado que será exibido na campanha e levará a compra o site do produtor.
         </FormDescription>
+      </FormItem>
+
+      {/* input - campaign call to action */}
+      <FormItem>
+        <Label>Call to action</Label>
+        <div className="w-full flex flex-col md:flex-row items-center gap-2">
+          <Input
+            type="text"
+            id="campaign-call-to-action-description"
+            name="campaign-call-to-action-description"
+            defaultValue={campaignCallToActionText}
+            onChange={handleChangeOnCallToAction}
+            placeholder="Insira a texto do botão."
+            required
+          />
+
+          <InputAccentColor ctaText={campaignCallToActionText} ctaColor={campaign.ctaColor} />
+        </div>
+
+        <FormDescription>
+          Call to action, texto do botão que será exibido na campanha. O tamanho é de 2 palavras.
+        </FormDescription>
+        <FormDescription>A cor selecionada será a cor predominante da campanha.</FormDescription>
       </FormItem>
 
       {/* input - campaign images */}
@@ -204,7 +236,7 @@ export function FormUpdateCampaign({ campaign, company }: FormRegisterCampaignPr
       {campaignType && campaignType === 'PRESELL' && <InputPresellCampaign description={campaign.description} />}
       {campaignType && campaignType === 'QUIZ' && <InputQuizCampaign quiz={campaign.quiz} />}
 
-      <PendingSubmitButton type="submit" className="min-w-32">
+      <PendingSubmitButton type="submit" className="min-w-32" toastProps={toastProps}>
         Salvar campanha
       </PendingSubmitButton>
     </form>

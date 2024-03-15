@@ -1,15 +1,15 @@
 'use client'
 
-import { useFormState } from 'react-dom'
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
+import { useFormState } from 'react-dom'
+import { toast } from 'sonner'
 
 import { actionUpdateProfile } from '../actions'
 import { FormItem, FormDescription } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useToast } from '@/components/ui/use-toast'
-import { PendingSubmitButton } from '@/components/pending-submit-button'
+import { PendingSubmitButton, ToastProps } from '@/components/pending-submit-button'
 import { Account } from '@/core/types/accounts'
 
 interface FormUpdateProfileProps {
@@ -17,24 +17,29 @@ interface FormUpdateProfileProps {
 }
 
 export function FormUpdateProfile({ account }: FormUpdateProfileProps) {
-  const ref = useRef<HTMLFormElement>(null)
   const [formState, formAction] = useFormState(actionUpdateProfile, null)
 
-  const { toast } = useToast()
+  const ref = useRef<HTMLFormElement>(null)
+
+  const toastProps = useMemo<ToastProps>(() => {
+    return { id: 'form-profile', loadingMessage: 'Salvando perfil...' }
+  }, [])
+
   const router = useRouter()
 
   useEffect(() => {
     if (formState) {
-      toast({
-        variant: formState.success ? 'default' : 'destructive',
-        title: formState.title,
-        description: formState.message,
-        duration: 3000,
-      })
+      if (formState.success === false) {
+        toast.error(formState.message, {
+          id: toastProps.id,
+        })
 
-      if (formState.success !== true) {
         return
       }
+
+      toast.success(formState.message, {
+        id: toastProps.id,
+      })
 
       ref.current?.reset()
       router.refresh()
@@ -80,7 +85,7 @@ export function FormUpdateProfile({ account }: FormUpdateProfileProps) {
         <Input type="text" id="account-id" name="account-id" defaultValue={account.id} required />
       </FormItem>
 
-      <PendingSubmitButton type="submit" className="min-w-32">
+      <PendingSubmitButton type="submit" className="min-w-32" toastProps={toastProps}>
         Salvar
       </PendingSubmitButton>
     </form>

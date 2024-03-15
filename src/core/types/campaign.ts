@@ -37,6 +37,8 @@ export type Campaign = {
   companyId: string
   status: CampaignStatus
   affiliateUrl: string
+  ctaText: string
+  ctaColor: string
   title: string
   subtitle: string
   slug: string
@@ -59,6 +61,10 @@ export type CampaignToDashboard = {
   status: CampaignStatus
   type: CampaignType
   startedAt: Date
+  analytics: {
+    clicks: number
+    impressions: number
+  }
 }
 
 /**
@@ -72,6 +78,8 @@ export type CampaignToCustomer = {
   subtitle: string
   slug: string
   affiliateUrl: string
+  ctaText: string
+  ctaColor: string
   type: CampaignType
   carouselImages: CarouselImage[]
   description?: string | null
@@ -110,6 +118,8 @@ export type CampaignCreateInput = {
   name: string // The internal name used for the campaign
   slug: string // A URL-friendly identifier for the campaign
   affiliateUrl: string // A URL for affiliates associated with the campaign
+  ctaText: string // The text for the call to action button
+  ctaColor: string // The color for the call to action button
   status: CampaignStatus // Current status of the campaign
   type: CampaignType // The type of campaign, which determines its behavior and features
   startedAt: Date // The date and time when the campaign starts
@@ -124,6 +134,8 @@ export type CampaignUpdateInput = {
   name?: string
   slug?: string
   affiliateUrl?: string
+  ctaText?: string
+  ctaColor?: string
   status?: CampaignStatus
   type?: CampaignType
   startedAt?: Date
@@ -148,4 +160,14 @@ export type CampaignFindBySlugAndCompanyIdArgs = {
 export type CampaignFindBySlugAndCompanySlugArgs = {
   campaignSlug: string // The slug of the campaign to find
   companySlug: string // The slug of the company associated with the campaign
+}
+
+/**
+ * CampaignCounter represents a count of active and total campaigns.
+ */
+export type CampaignCounter = {
+  active: number
+  removed: number
+  paused: number
+  total: number
 }

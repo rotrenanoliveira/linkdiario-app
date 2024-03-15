@@ -25,11 +25,14 @@ export default async function UpdateCampaignPage({ params }: UpdateCampaignPageP
     return redirect('/dashboard/campaigns')
   }
 
-  const campaign = await Services.getCampaignById(params.id)
-  const company = await Services.getCompany()
+  const [company, campaign] = await Promise.all([Services.getCompany(), Services.getCampaignById(params.id)])
 
-  if (!campaign || !company) {
+  if (!company) {
     redirect('/dashboard/company')
+  }
+
+  if (!campaign) {
+    redirect('/dashboard/campaigns')
   }
 
   const companyData = {
@@ -42,8 +45,6 @@ export default async function UpdateCampaignPage({ params }: UpdateCampaignPageP
     status: campaign.status ?? 'NOT_PUBLISHED',
   }
 
-  // console.log(campaignStatus)
-
   return (
     <div className="space-y-6">
       <div>
@@ -55,8 +56,8 @@ export default async function UpdateCampaignPage({ params }: UpdateCampaignPageP
 
       <Separator />
 
-      <div className="w-full lg:flex gap-4">
-        <div className="w-1/2">
+      <div className="w-full space-y-8 md:space-y-0 lg:flex">
+        <div className="lg:w-1/2">
           <div>
             <h3 className="text-lg font-medium">Atualizar Status da Campanha</h3>
             <p className="text-sm text-muted-foreground">Alterar o status da campanha.</p>
@@ -65,10 +66,14 @@ export default async function UpdateCampaignPage({ params }: UpdateCampaignPageP
           <FormUpdateCampaignStatus campaign={campaignStatus} />
         </div>
 
+        <Separator className="lg:hidden" />
+
+        <Separator orientation="vertical" className="hidden lg:block" />
+
         <div>
           <div>
             <h3 className="text-lg font-medium">Remover Campanha</h3>
-            <p className="text-sm text-muted-foreground">Essa operação não pode ser desfeita.</p>
+            <p className="text-sm text-muted-foreground">Uma campanha removida não pode ser reativada.</p>
           </div>
 
           <AlertDialogRemoveCampaign campaignId={campaign.id} />

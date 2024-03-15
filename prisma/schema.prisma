@@ -34,6 +34,11 @@ enum CAMPAIGN_TYPE {
   QUIZ
 }
 
+enum SERVICE_LICENSE {
+  STANDARD
+  PRO
+}
+
 model User {
   id        String      @id @default(uuid())
   email     String      @unique
@@ -45,8 +50,19 @@ model User {
 
   access_code AccessCode[]
   company     Company?
+  license     License?
 
   @@map("users")
+}
+
+model License {
+  id      String          @id @default(uuid())
+  userId  String          @unique @map("user_id")
+  license SERVICE_LICENSE
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("licenses")
 }
 
 model AccessCode {
@@ -84,6 +100,8 @@ model Campaign {
   status       CAMPAIGN_STATUS
   type         CAMPAIGN_TYPE
   affiliateUrl String          @map("affiliate_url")
+  ctaText      String          @default("Saiba mais")
+  ctaColor     String          @default("#FACC15")
   title        String
   subtitle     String
   slug         String
@@ -95,8 +113,9 @@ model Campaign {
   endedAt      DateTime?       @map("ended_at")
   updatedAt    DateTime?       @updatedAt() @map("updated_at")
 
-  company     Company               @relation(fields: [companyId], references: [id])
-  attachments CampaignAttachments[]
+  company          Company                    @relation(fields: [companyId], references: [id])
+  attachments      CampaignAttachments[]
+  analyticsInicial CampaignAnalyticsInitial[]
 
   @@map("campaigns")
 }
@@ -111,4 +130,16 @@ model CampaignAttachments {
   campaign Campaign @relation(fields: [campaignId], references: [id])
 
   @@map("campaign_attachments")
+}
+
+model CampaignAnalyticsInitial {
+  id         String   @id @default(uuid())
+  campaignId String   @unique @map("campaign_id")
+  pageView   Int      @map("page_view")
+  clickCta   Int      @map("click_cta")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  campaign Campaign @relation(fields: [campaignId], references: [id])
+
+  @@map("campaign-analytics-initial")
 }

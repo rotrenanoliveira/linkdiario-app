@@ -1,7 +1,8 @@
 'use client'
 
-import React from 'react'
 import { useRouter } from 'next/navigation'
+import React from 'react'
+import { toast } from 'sonner'
 
 import {
   AlertDialog,
@@ -27,18 +28,19 @@ export function AlertDialogRemoveCampaign({ campaignId }: AlertDialogRemoveCampa
   const router = useRouter()
 
   async function handleRemoveCampaign() {
-    try {
-      setIsPending(true)
+    setIsPending(true)
 
-      await actionRemoveCampaign(campaignId)
+    toast.promise(actionRemoveCampaign(campaignId), {
+      loading: 'Removendo campanha...',
+      success: () => {
+        router.push('/dashboard/campaigns')
 
-      router.push('/dashboard/campaigns')
-    } catch (error) {
-      console.error(error)
-      alert('Ocorreu um erro ao remover a campanha. Por favor, tente novamente.')
-    } finally {
-      setIsPending(false)
-    }
+        return 'Campanha removida com sucesso!'
+      },
+      error: (error) => error?.message,
+    })
+
+    setIsPending(false)
   }
 
   return (

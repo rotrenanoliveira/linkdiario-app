@@ -1,12 +1,13 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { fromZodError } from 'zod-validation-error'
 import { z } from 'zod'
 
 import { ActionResponse } from '@/core/types'
 import { CompaniesRepository } from '@/infra/database/db'
 import { Services } from '@/infra/services'
+import { uploadCompanyLogo } from '@/infra/storage/company-logo'
+import { ActionResponseError } from '@/utils/action-response-error'
 
 type PrevState = ActionResponse | null
 
@@ -14,6 +15,13 @@ const registerCompanySchema = z.object({
   name: z.string().min(1, { message: 'Por favor, insira o nome da empresa.' }),
   slug: z.string().min(1, { message: 'Por favor, insira o slug da empresa.' }),
   description: z.string().min(1, { message: 'Por favor, insira uma descrição da empresa.' }),
+  logoUrl: z.any().transform((file) => {
+    return {
+      file: file.name,
+      type: file.type,
+      url: URL.createObjectURL(file),
+    }
+  }),
 })
 
 const updateCompanySchema = z.object({
@@ -21,6 +29,13 @@ const updateCompanySchema = z.object({
   slug: z.string().min(1, { message: 'Por favor, insira o slug da empresa.' }),
   description: z.string().min(1, { message: 'Por favor, insira uma descrição da empresa.' }),
   id: z.string().uuid({ message: 'ID inválido.' }),
+  logoUrl: z.any().transform((file) => {
+    return {
+      file: file.name,
+      type: file.type,
+      url: URL.createObjectURL(file),
+    }
+  }),
 })
 
 /**
@@ -31,59 +46,57 @@ const updateCompanySchema = z.object({
  * @return {Promise<ActionResponse>} an object containing success flag, title, and message
  */
 export async function actionRegisterCompany(prevState: PrevState, data: FormData): Promise<ActionResponse> {
-  // Validation
-  const result = registerCompanySchema.safeParse({
-    name: data.get('company-name'),
-    slug: data.get('company-slug'),
-    description: data.get('company-description'),
-  })
+  try {
+    // Zod validation
+    const parseResult = registerCompanySchema.parse({
+      name: data.get('company-name'),
+      slug: data.get('company-slug'),
+      description: data.get('company-description'),
+      logoUrl: data.get('company-logo'),
+    })
 
-  if (result.success === false) {
-    const validationError = fromZodError(result.error)
+    // GET data
+    const [isSlugAlreadyInUse, account] = await Promise.all([
+      CompaniesRepository.findBySlug(parseResult.slug),
+      Services.getAccount(),
+    ])
+    // Slug validation
+    if (isSlugAlreadyInUse) {
+      return {
+        success: false,
+        title: 'Slug ja em uso',
+        message: 'Por favor, escolha outro slug.',
+      }
+    }
+    // Account validation
+    if (!account) {
+      return {
+        success: false,
+        title: 'Algo deu errado!',
+        message: 'Conta inválida.',
+      }
+    }
+    // Upload logo
+    const file = data.get('company-logo')
+    // Upload logo to storage
+    const companyLogo = await uploadCompanyLogo(file as File)
+    // Create company
+    await CompaniesRepository.create({
+      ...parseResult,
+      contactId: account.id,
+      logoUrl: companyLogo.file,
+    })
+    // Revalidate page
+    revalidatePath('/dashboard/company')
+    revalidatePath('/dashboard/', 'layout')
 
     return {
-      success: false,
-      title: 'Algo deu errado!',
-      message: validationError.toString(),
+      success: true,
+      title: 'Sucesso!',
+      message: 'Empresa registrada com sucesso.',
     }
-  }
-
-  // Destructure data
-  const { name, slug, description } = result.data
-
-  // Validate if slug is already in use
-  const isSlugAlreadyInUse = await CompaniesRepository.findBySlug(slug)
-  if (isSlugAlreadyInUse) {
-    return {
-      success: false,
-      title: 'Slug ja em uso',
-      message: 'Por favor, escolha outro slug.',
-    }
-  }
-
-  const account = await Services.getAccount()
-
-  if (!account) {
-    return {
-      success: false,
-      title: 'Algo deu errado!',
-      message: 'Conta inválida.',
-    }
-  }
-
-  await CompaniesRepository.create({
-    contactId: account.id,
-    name,
-    slug,
-    description,
-  })
-
-  revalidatePath('/dashboard/company')
-
-  return {
-    success: true,
-    title: 'Sucesso!',
-    message: 'Empresa registrada com sucesso.',
+  } catch (error) {
+    return ActionResponseError(error)
   }
 }
 
@@ -95,48 +108,53 @@ export async function actionRegisterCompany(prevState: PrevState, data: FormData
  * @return {Promise<ActionResponse>} an object indicating the success status and any messages
  */
 export async function actionUpdateCompany(prevState: PrevState, data: FormData): Promise<ActionResponse> {
-  // Validation
-  const result = updateCompanySchema.safeParse({
-    name: data.get('company-name'),
-    slug: data.get('company-slug'),
-    description: data.get('company-description'),
-    id: data.get('company-id'),
-  })
+  try {
+    // Zod validation
+    const parseResult = updateCompanySchema.parse({
+      name: data.get('company-name'),
+      slug: data.get('company-slug'),
+      description: data.get('company-description'),
+      logoUrl: data.get('company-logo'),
+      id: data.get('company-id'),
+    })
 
-  if (result.success === false) {
-    const validationError = fromZodError(result.error)
+    const companyId = parseResult.id
+
+    // Validate if slug is already in use
+    const isSlugAlreadyInUse = await CompaniesRepository.findBySlug(parseResult.slug)
+    if (isSlugAlreadyInUse && isSlugAlreadyInUse.id !== companyId) {
+      return {
+        success: false,
+        title: 'Slug ja em uso',
+        message: 'Por favor, escolha outro slug.',
+      }
+    }
+
+    let url: string | undefined
+
+    const file = data.get('company-logo')
+
+    if (file && file instanceof File && file.size > 0) {
+      const uploadedLogo = await uploadCompanyLogo(file as File)
+
+      url = uploadedLogo.file
+    }
+
+    // Update company
+    await CompaniesRepository.save(companyId, {
+      ...parseResult,
+      logoUrl: url,
+    })
+
+    revalidatePath('/dashboard/company')
+    revalidatePath('/dashboard/', 'layout')
 
     return {
-      success: false,
-      title: 'Algo deu errado!',
-      message: validationError.toString(),
+      success: true,
+      title: 'Sucesso!',
+      message: 'Empresa atualizada com sucesso.',
     }
-  }
-
-  // Destructure data
-  const { name, slug, description, id: companyId } = result.data
-
-  // Validate if slug is already in use
-  const isSlugAlreadyInUse = await CompaniesRepository.findBySlug(slug)
-  if (isSlugAlreadyInUse && isSlugAlreadyInUse.id !== companyId) {
-    return {
-      success: false,
-      title: 'Slug ja em uso',
-      message: 'Por favor, escolha outro slug.',
-    }
-  }
-
-  await CompaniesRepository.save(companyId, {
-    name,
-    slug,
-    description,
-  })
-
-  revalidatePath('/dashboard/company')
-
-  return {
-    success: true,
-    title: 'Sucesso!',
-    message: 'Empresa atualizada com sucesso.',
+  } catch (error) {
+    return ActionResponseError(error)
   }
 }

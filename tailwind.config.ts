@@ -14,6 +14,7 @@ const config = {
     },
     extend: {
       colors: {
+        'linkdiario-yellow': '#E8D5BA',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

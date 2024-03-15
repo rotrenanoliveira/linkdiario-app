@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { genAccessCode } from '@/lib/access-code'
 import { CampaignQuiz } from '@/core/types'
+import { toast } from 'sonner'
 
 interface InputQuizCampaignProps {
   quiz?: CampaignQuiz | null
@@ -19,7 +20,7 @@ interface Answer {
 }
 
 export function InputQuizCampaign(props: InputQuizCampaignProps) {
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  // const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [answers, setAnswers] = useState<Array<Answer>>(() => {
     if (!props.quiz) {
       return []
@@ -33,18 +34,17 @@ export function InputQuizCampaign(props: InputQuizCampaignProps) {
 
   function handleSetAnswer(event: ChangeEvent<HTMLInputElement>) {
     setAnswer(event.target.value)
-    setErrorMessage(null)
   }
 
   function handleAddAnswer() {
     if (answer) {
       if (answers.length >= 3) {
-        setErrorMessage('O quiz pode ter no máximo 3 respostas.')
+        toast.error('O quiz pode ter no máximo 3 respostas. Por favor, remova alguma para adicionar uma nova.')
         return
       }
 
       setAnswers([...answers, { id: genAccessCode(), answer }])
-      setErrorMessage(null)
+
       setAnswer(null)
     }
   }
@@ -112,11 +112,7 @@ export function InputQuizCampaign(props: InputQuizCampaignProps) {
             placeholder="Insira a resposta da pergunta."
           />
 
-          {errorMessage ? (
-            <FormDescription className="text-red-500">{errorMessage}</FormDescription>
-          ) : (
-            <FormDescription>Insira até 3 respostas válidas para a pergunta do quiz.</FormDescription>
-          )}
+          <FormDescription>Insira até 3 respostas válidas para a pergunta do quiz.</FormDescription>
         </FormItem>
 
         <Button type="button" variant={'outline'} onClick={handleAddAnswer} className="w-fit self-end">

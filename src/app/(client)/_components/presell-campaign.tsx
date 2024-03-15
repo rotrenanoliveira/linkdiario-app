@@ -1,17 +1,16 @@
-import { MoveUpRight } from 'lucide-react'
 import DOMPurify from 'isomorphic-dompurify'
-import Link from 'next/link'
 
-import { satochi } from '@/app/fonts'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { ButtonCta } from './button-cta'
 
 interface PresellCampaignProps {
+  campaignId: string
   description: string
   affiliateUrl: string
+  ctaText: string
+  ctaColor: string
 }
 
-export function PresellCampaign({ description, affiliateUrl }: PresellCampaignProps) {
+export function PresellCampaign({ campaignId, description, affiliateUrl, ctaText, ctaColor }: PresellCampaignProps) {
   const descriptionParsed = description.split('\n')
 
   function sanitize(text: string) {
@@ -36,17 +35,7 @@ export function PresellCampaign({ description, affiliateUrl }: PresellCampaignPr
         })}
       </div>
 
-      <Button className="w-full h-16 rounded-full p-1 bg-[#EAEBEC] hover:bg-[#DDDEDF]">
-        <Link
-          href={affiliateUrl}
-          className={cn(satochi.className, 'w-full flex items-center justify-evenly text-3xl text-foreground')}
-        >
-          <span className="flex-grow text-center font-normal">Saiba mais</span>
-          <div className="size-14 rounded-full bg-yellow-400 flex items-center justify-center">
-            <MoveUpRight size={32} className="text-foreground/85" />
-          </div>
-        </Link>
-      </Button>
+      <ButtonCta ctaText={ctaText} ctaColor={ctaColor} affiliateUrl={affiliateUrl} campaignId={campaignId} />
     </div>
   )
 }

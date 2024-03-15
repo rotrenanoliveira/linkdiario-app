@@ -6,6 +6,7 @@ import { QuizCampaign } from '../../_components/quiz-campaign'
 import { PresellCampaign } from '../../_components/presell-campaign'
 
 import { Services } from '@/infra/services'
+import { updatePageViewCount } from './actions'
 
 interface PreviewCampaignPageProps {
   params: {
@@ -32,7 +33,7 @@ export async function generateMetadata({ params }: PreviewCampaignPageProps): Pr
   }
 }
 
-export default async function PreviewCampaignPage({ params }: PreviewCampaignPageProps) {
+export default async function CampaignPage({ params }: PreviewCampaignPageProps) {
   if (!params.campaignSlug || !params.companySlug) {
     return notFound()
   }
@@ -50,21 +51,32 @@ export default async function PreviewCampaignPage({ params }: PreviewCampaignPag
   const campaignDescription = campaign.description
   const campaignQuiz = campaign.quiz
 
+  await updatePageViewCount(campaign.id)
+
   return (
     <section className="container max-w-screen-xl box-border p-4">
       {/*  CAMPAIGN TITLE  */}
-      <div className="max-w-screen-lg mt-16 space-y-4 text-center capitalize">
+      <div className="max-w-screen-lg mt-8 2xl:mt-16 space-y-4 text-center capitalize">
         <p className="font-normal text-xl md:text-3xl lg:text-5xl">{campaign.title}</p>
         <p className="font-light text-lg md:text-xl lg:text-2xl">{campaign.subtitle}</p>
-        <div className="w-32 h-1 mx-auto bg-yellow-400 rounded-full" />
+        <div className="w-32 h-1 mx-auto rounded-full" style={{ backgroundColor: campaign.ctaColor }} />
       </div>
 
       {/* CAMPAIGN CONTENT */}
-      <div className="mx-auto max-w-screen-lg flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 xl:gap-32 mt-16 lg:mt-32">
-        <div className="w-80 h-96 md:w-[352px] md:h-[448px] bg-foreground/5 rounded-2xl relative">
-          <div className="w-80 h-96 md:w-[352px] md:h-[448px] rounded-2xl absolute bg-foreground/15 rotate-12" />
+      <div className="mx-auto max-w-screen-lg flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 xl:gap-32 mt-10 2xl:mt-32">
+        <div
+          className="w-80 h-96 md:w-[352px] md:h-[448px] rounded-2xl relative"
+          style={{ backgroundColor: `${campaign.ctaColor}0D` }}
+        >
+          <div
+            className="w-80 h-96 md:w-[352px] md:h-[448px] rounded-2xl absolute rotate-12"
+            style={{ backgroundColor: `${campaign.ctaColor}26` }}
+          />
 
-          <div className="w-80 h-96 md:w-[352px] md:h-[448px] rounded-2xl absolute bg-foreground/25 rotate-6" />
+          <div
+            className="w-80 h-96 md:w-[352px] md:h-[448px] rounded-2xl absolute rotate-6"
+            style={{ backgroundColor: `${campaign.ctaColor}42` }}
+          />
 
           <div className="w-80 h-96 md:w-[352px] md:h-[448px] rounded-2xl absolute">
             <Image
@@ -79,7 +91,13 @@ export default async function PreviewCampaignPage({ params }: PreviewCampaignPag
         </div>
 
         {campaign.type === 'PRESELL' && campaignDescription && (
-          <PresellCampaign description={campaignDescription} affiliateUrl={campaign.affiliateUrl} />
+          <PresellCampaign
+            campaignId={campaign.id}
+            description={campaignDescription}
+            affiliateUrl={campaign.affiliateUrl}
+            ctaText={campaign.ctaText}
+            ctaColor={campaign.ctaColor}
+          />
         )}
 
         {campaign.type === 'QUIZ' && campaignQuiz && (

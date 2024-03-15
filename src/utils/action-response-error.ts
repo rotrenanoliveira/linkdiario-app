@@ -5,6 +5,8 @@ import { InvalidCredentialsError } from '@/core/errors/invalid-credentials-error
 import { FailureRequestAccessCodeResponse } from '@/core/types'
 
 export function ActionResponseError(error: unknown): FailureRequestAccessCodeResponse | null {
+  console.error(error)
+
   if (error instanceof InvalidCredentialsError) {
     return {
       success: false,

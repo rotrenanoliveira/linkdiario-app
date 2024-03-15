@@ -11,9 +11,13 @@ export function SignOutForm() {
 
   return (
     <form action={handleSignOut}>
-      <Button type="submit" variant="ghost" className="font-light text-md justify-start flex items-center gap-3">
+      <Button
+        type="submit"
+        variant="ghost"
+        className="font-light text-md h-14 md:h-fit justify-start flex items-center gap-3 bg-foreground/5 md:bg-transparent rounded-full md:rounded-md"
+      >
         <LogOut strokeWidth={1} />
-        Sair
+        <span className="hidden lg:inline">Sair</span>
       </Button>
     </form>
   )

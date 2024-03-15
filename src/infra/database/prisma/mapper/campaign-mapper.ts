@@ -15,6 +15,13 @@ type PrismaCampaignWithAttachments = PrismaCampaign & {
   }
 }
 
+type PrismaCampaignWithAnalytics = PrismaCampaignWithAttachments & {
+  analyticsInicial: Array<{
+    pageView: number
+    clickCta: number
+  }>
+}
+
 export class PrismaCampaignMapper {
   static toDomain(raw: PrismaCampaignWithAttachments): PresellCampaign | QuizCampaign {
     const carouselImages = raw.attachments.map((attachment) => {
@@ -29,6 +36,8 @@ export class PrismaCampaignMapper {
       companyId: raw.companyId,
       status: raw.status,
       affiliateUrl: raw.affiliateUrl,
+      ctaText: raw.ctaText,
+      ctaColor: raw.ctaColor,
       title: raw.title,
       subtitle: raw.subtitle,
       slug: raw.slug,
@@ -61,8 +70,11 @@ export class PrismaCampaignMapper {
     }
   }
 
-  static toDashboard(raw: PrismaCampaignWithAttachments): CampaignToDashboard {
+  static toDashboard(raw: PrismaCampaignWithAnalytics): CampaignToDashboard {
     const campaignUrl = String(`${env.APP_URL}`).concat('/', raw.company.slug).concat('/', raw.slug)
+
+    const pageView = raw.analyticsInicial.reduce((total, current) => total + current.pageView, 0)
+    const clickCta = raw.analyticsInicial.reduce((total, current) => total + current.clickCta, 0)
 
     return {
       id: raw.id,
@@ -71,6 +83,10 @@ export class PrismaCampaignMapper {
       status: raw.status,
       type: raw.type,
       startedAt: raw.startedAt,
+      analytics: {
+        impressions: pageView,
+        clicks: clickCta,
+      },
       campaignUrl,
     }
   }
@@ -91,6 +107,8 @@ export class PrismaCampaignMapper {
       subtitle: raw.subtitle,
       slug: raw.slug,
       affiliateUrl: raw.affiliateUrl,
+      ctaText: raw.ctaText,
+      ctaColor: raw.ctaColor,
       carouselImages,
     }
 
@@ -122,8 +140,11 @@ export class PrismaCampaignMapper {
       id: campaign.id,
       title: campaign.title,
       subtitle: campaign.subtitle,
+      status: raw.status,
       slug: campaign.slug,
       affiliateUrl: campaign.affiliateUrl,
+      ctaText: raw.ctaText,
+      ctaColor: raw.ctaColor,
       type: campaign.type,
       description: campaign.description,
       quiz: campaign.quiz,
