@@ -47,10 +47,12 @@ export default function HomePage() {
   return (
     <>
       {/* HEADER - HERO */}
-      <section className="header-gradient">
+      <section className="header-gradient mb-40 md:mb-0">
+        {/* HERO */}
         <div className="header-hero z-20 space-y-8">
           {/* NAV */}
           <nav className="w-full rounded-full h-16 inline-flex items-center justify-between px-3">
+            {/* LOGO */}
             <div
               className={cn(
                 satochi.className,
@@ -60,7 +62,7 @@ export default function HomePage() {
               <Icons.linkdiario />
               linkdiario
             </div>
-
+            {/* MENU */}
             <ul className={cn(satochi.className, 'hidden lg:flex items-center gap-4 font-medium')}>
               <Link href="#sobre">
                 <Button className="text-xl" variant="link">
@@ -78,9 +80,8 @@ export default function HomePage() {
                 </Button>
               </Link>
             </ul>
-
-            {/* <Link href="/auth/sign-in"> */}
-            <Link href="#">
+            {/* LOGIN BUTTON */}
+            <Link href="/auth/sign-in">
               {/* <Button className="inline-flex items-center gap-2 p-2 md:p-3 md:h-12 rounded-lg hover:rounded-[48px] bg-[#8AB8A1] hover:bg-[#94BCA6] transition-all duration-300"> */}
               <Button variant="outline" className="inline-flex items-center gap-2">
                 <span className="hidden md:inline">Entrar</span>
@@ -89,33 +90,48 @@ export default function HomePage() {
             </Link>
           </nav>
           {/* HERO */}
-          <div className="p-2">
-            <h1 className="font-light mb-3 text-4xl md:text-6xl lg:text-7xl xl:text-8xl">Lorem ipsum dolor sit amet</h1>
-
-            <span className="font-light text-foreground/75">
-              A neque inventore necessitatibus, est quia amet ratione, aspernatur culpa sed molestiae voluptates alias?
-            </span>
-          </div>
-          {/* BTN - CTA */}
-          <div className="hero-cta-bg">
-            <Link href="#" className="w-full py-4 px-6 inline-flex gap-2 items-center justify-between">
-              <button type="button" className="text-lg">
-                Lorem ipsum dolor
-              </button>
-
-              <div className="hero-cta-icon">
-                <ChevronRight size={24} strokeWidth={2} />
+          <div className="flex flex-col gap-8 md:items-end lg:flex-row lg:items-start xl:h-full xl:items-center">
+            {/* HERO CONTENT */}
+            <div className="space-y-4 md:space-y-8 lg:w-2/3 xl:self-start xl:mt-24 xl:space-y-16">
+              <div className="p-2">
+                {/* HERO TITLE */}
+                <h1 className="font-light mb-3 text-4xl md:text-6xl 2xl:text-7xl 2xl:max-w-3xl xl:mb-8">
+                  Transforme ideias em vendas
+                </h1>
+                {/* HERO DESCRIPTION */}
+                <span className="font-light text-foreground/75 md:text-xl 2xl:text-2xl 2xl:inline-block 2xl:max-w-3xl 2xl:p-8 2xl:rounded-3xl 2xl:bg-[rgba(255,255,255,0.15)] 2xl:backdrop-blur-sm 2xl:shadow-sm">
+                  Construa em minutos presells para afiliados. Experimente linkdiario agora e conquiste o sucesso que
+                  você merece.
+                </span>
               </div>
-            </Link>
-          </div>
+              {/* BTN - CTA */}
+              <div className="hero-cta-bg">
+                <Link href="#precos" className="w-full py-4 px-6 inline-flex gap-2 items-center justify-between">
+                  <button type="button" className="text-lg">
+                    Começar agora
+                  </button>
 
-          <div className="hero-image-cover mx-auto relative">
-            <div className="hero-image-cover absolute rotate-12 opacity-50 border border-black/15" />
+                  <div className="hero-cta-icon">
+                    <ChevronRight size={24} strokeWidth={2} />
+                  </div>
+                </Link>
+              </div>
+            </div>
+            {/* HERO IMAGE */}
+            <div className="hero-image-cover mx-auto md:mx-0 relative">
+              <div className="hero-image-cover absolute opacity-50 border -rotate-6" />
 
-            <div className="hero-image-cover absolute rotate-6 opacity-75 border border-black/15" />
+              <div className="hero-image-cover absolute opacity-75 border rotate-6" />
 
-            <div className="hero-image-cover absolute border border-black/15">
-              {/* <Image src="" alt="" width={352} height={448} className="hero-image-cover absolute" /> */}
+              <div className="hero-image-cover absolute">
+                <Image
+                  src="/hero.avif"
+                  alt=""
+                  width={352}
+                  height={448}
+                  className="w-80 h-96 md:w-[352px] md:h-[448px] rounded-2xl absolute"
+                />
+              </div>
             </div>
           </div>
         </div>
