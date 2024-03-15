@@ -81,7 +81,7 @@
 }
 /* HEADER HERO */
 .header-hero {
-  @apply w-full h-full rounded-xl xl:rounded-3xl p-3 md:p-9 lg:p-12 xl:p-16 relative;
+  @apply w-full h-full rounded-xl xl:rounded-3xl p-3 md:p-9 lg:p-12 2xl:p-16 relative;
 
   background: rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 32px 0 rgba(16, 16, 16, 0.12 );
