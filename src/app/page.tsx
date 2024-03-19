@@ -282,7 +282,7 @@ export default function Home() {
                 </span>
               </CardContent>
               <CardFooter>
-                <Link href="#" className="w-full">
+                <Link href="https://pay.hotmart.com/X91777961C?bid=1710790174922" className="w-full" prefetch={true}>
                   <Button className="w-full text-md" variant="secondary">
                     Assinar
                   </Button>
@@ -316,7 +316,7 @@ export default function Home() {
                 </span>
               </CardContent>
               <CardFooter>
-                <Link href="#" className="w-full">
+                <Link href="https://pay.hotmart.com/X91777961C?off=igo8ttcn" className="w-full" prefetch={true}>
                   <Button
                     className="w-full text-md bg-linkdiario-yellow/75 hover:bg-linkdiario-yellow text-zinc-700"
                     variant="default"
