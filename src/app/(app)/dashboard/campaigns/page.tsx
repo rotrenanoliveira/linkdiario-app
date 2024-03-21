@@ -10,7 +10,7 @@ import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = {
-  title: 'Campanhas | linkdiario',
+  title: 'Campanhas ・ linkdiario',
   description: 'linkdiario - Campanhas',
   icons: '/favicon.ico',
 }

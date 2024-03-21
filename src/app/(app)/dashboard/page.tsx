@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const company = await Services.getCompany()
 
   return {
-    title: `Dashboard | ${company?.name} - linkdiario`,
+    title: `Dashboard ・ ${company?.name} - linkdiario`,
     icons: '/favicon.ico',
   }
 }

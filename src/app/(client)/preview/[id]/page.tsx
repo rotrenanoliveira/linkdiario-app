@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: PreviewCampaignPageProps): Pr
     : ''
 
   return {
-    title: `Preview - ${titleCapitalized}`,
+    title: `Preview ・ ${titleCapitalized}`,
     description: campaign?.subtitle,
   }
 }

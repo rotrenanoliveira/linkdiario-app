@@ -9,7 +9,7 @@ import { AlertDialogRemoveCampaign } from './_components/alert-dialog-remove-cam
 import { FormUpdateCampaignStatus } from './_components/form-update-campaign-status'
 
 export const metadata: Metadata = {
-  title: 'Atualizar Campanha | linkdiario',
+  title: 'Atualizar Campanha ・ linkdiario',
   description: 'linkdiario - Cadastrar Campanha',
   icons: '/favicon.ico',
 }
