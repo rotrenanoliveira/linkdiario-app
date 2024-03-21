@@ -77,9 +77,9 @@
 
 ## Credits
 
-* App created by [rotrenanoliveira](https://github.com/rotrenanoliveira) with the help of [P3DR0DEV](https://github.com/P3DR0DEV)
+* App created by [rotrenanoliveira](https://github.com/rotrenanoliveira) with the help of [Pedro Henrique](https://github.com/P3DR0DEV)
 
-* Design by [@rotrenanoliveira](https://rotrenanoliveira.com/)
+* Design by [rotrenanoliveira](https://rotrenanoliveira.com/) using [shadcn/ui](https://ui.shadcn.com/)
 * Icons from [Phosphor Icons](https://phosphoricons.com/) and [Lucide](https://lucide.dev/)
 * Images from [Unsplash](https://unsplash.com/)
 * Deployed on [Vercel](https://vercel.com/)
