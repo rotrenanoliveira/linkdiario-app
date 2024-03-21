@@ -9,7 +9,7 @@ import { getSession } from '@/infra/auth'
 import { AuthenticateUserForm } from './components/authenticate-user-form'
 
 export const metadata: Metadata = {
-  title: 'Entrar | linkdiario',
+  title: 'Entrar ・ linkdiario',
   description: 'Faça login para continuar para ter acesso ao linkdiario.',
 }
 

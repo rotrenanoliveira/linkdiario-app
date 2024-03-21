@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator'
 import { Services } from '@/infra/services'
 
 export const metadata: Metadata = {
-  title: 'Sua conta | linkdiario',
+  title: 'Sua conta ・ linkdiario',
   description: 'linkdiario - Sua conta',
   icons: '/favicon.ico',
 }

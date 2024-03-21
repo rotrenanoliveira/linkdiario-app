@@ -7,7 +7,7 @@ import { Separator } from '@/components/ui/separator'
 import { Services } from '@/infra/services'
 
 export const metadata: Metadata = {
-  title: 'Cadastrar Campanha | linkdiario',
+  title: 'Cadastrar Campanha ・ linkdiario',
   description: 'linkdiario - Cadastrar Campanha',
   icons: '/favicon.ico',
 }
