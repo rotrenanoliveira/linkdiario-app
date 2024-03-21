@@ -83,6 +83,6 @@
 * Icons from [Phosphor Icons](https://phosphoricons.com/) and [Lucide](https://lucide.dev/)
 * Images from [Unsplash](https://unsplash.com/)
 * Deployed on [Vercel](https://vercel.com/)
-* Database is powered by [PostgreSQL on Neon](https://neon.dev/postgres)
+* Database is powered by [PostgreSQL on Neon](https://neon.tech/)
 * Cache is powered by [Redis on Upstash](https://upstash.com/)
 
