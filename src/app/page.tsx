@@ -355,7 +355,7 @@ export default function Home() {
 
               <div className="footer-cta-button-bg">
                 <div className="group w-fit h-fit p-2 border rounded-2xl hover:-rotate-45 transition border-foreground/25 hover:border-foreground/5">
-                  <Link href="#">
+                  <Link href="#precos">
                     <Button className="footer-cta-button hover:bg-white">
                       <ArrowRight size={24} strokeWidth={1.5} className="group-hover:rotate-45 invert" />
                     </Button>
@@ -376,26 +376,26 @@ export default function Home() {
               <div className="flex flex-col gap-2 lg:gap-4">
                 <p className="font-light text-lg md:text-2xl xl:text-3xl text-zinc-800">Comunidade</p>
 
-                <Link href={'#'}>
+                <Link href="https://www.instagram.com/link.diario/">
                   <Button variant="link" className="p-0 h-fit text-md xl:text-xl font-light text-zinc-800/75">
                     <Icons.instagram className="fill-zinc-800/75 mr-2" />
                     Instagram
                   </Button>
                 </Link>
 
-                <Link href={'#'}>
+                {/* <Link href={'#'}>
                   <Button variant="link" className="p-0 h-fit text-md xl:text-xl font-light text-zinc-800/75">
                     <Icons.youtube className="fill-zinc-800/75 mr-2" />
                     YouTube
                   </Button>
-                </Link>
+                </Link> */}
 
-                <Link href={'#'}>
+                {/* <Link href={'#'}>
                   <Button variant="link" className="p-0 h-fit text-md xl:text-xl font-light text-zinc-800/75">
                     <Icons.tiktok className="fill-zinc-800/75 mr-2" />
                     TikTok
                   </Button>
-                </Link>
+                </Link> */}
               </div>
             </div>
             {/* FOOTER COPYRIGHT */}
